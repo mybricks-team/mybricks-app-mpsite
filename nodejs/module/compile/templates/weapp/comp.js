@@ -1,0 +1,1 @@
+"use strict";(wx["webpackJsonp"]=wx["webpackJsonp"]||[]).push([["comp"],{},function(n){var e=function(e){return n(n.s=e)};n.O(0,["taro","vendors"],(function(){return e("../../../node_modules/@tarojs/webpack5-runner/dist/template/comp.js")}));n.O()}]);

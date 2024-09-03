@@ -1,0 +1,1 @@
+"use strict";(my["webpackJsonp"]=my["webpackJsonp"]||[]).push([["common"],{"./src/utils.ts":function(n,t,r){r.d(t,{rC:function(){return c}});var u=r("../../../node_modules/@tarojs/taro/index.js"),e=r.n(u),o=(e().getEnv()===e().ENV_TYPE.WEB||e().getEnv(),{currunt:{}}),c=function(){return void 0===getApp()&&(getApp=function(){return o.currunt}),o.currunt}}}]);

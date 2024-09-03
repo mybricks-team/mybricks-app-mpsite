@@ -1,0 +1,1 @@
+export { default as fileReader } from './file-reader'

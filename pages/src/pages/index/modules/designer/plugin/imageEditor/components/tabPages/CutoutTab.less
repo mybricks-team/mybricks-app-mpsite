@@ -1,0 +1,87 @@
+.mattingModal {
+    width: 100%;
+    height: 100%;
+    padding: 0px 16px 0 16px;
+    display: flex;
+    flex-direction: column;
+
+    :global {
+        .ant-radio-button-wrapper-checked:not([class*=" ant-radio-button-wrapper-disabled"]).ant-radio-button-wrapper:first-child {
+            border-right-color: #fa6400;
+        }
+
+        .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):first-child {
+            border-color: #fa6400;
+        }
+
+        .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+            color: #fa6400;
+            border-color: #fa6400;
+        }
+
+        .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):before {
+            background-color: #fa6400;
+        }
+
+        .ant-radio-button-wrapper:hover {
+            color: #fa6400;
+        }
+
+        .ant-radio-button-wrapper:focus-within {
+            box-shadow: none;
+        }
+        .ant-radio-button-wrapper{
+        }
+    }
+
+    .operation {
+        width: 100%;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        margin-bottom: 10px;
+    }
+
+    .preview {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+
+        .original {
+            height: 520px;
+            background: url("https://s2-11744.kwimgs.com/kos/nlav11744/static/bg_transparent_mini.png");
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            >img {
+                width: 100%;
+                height: 320px;
+                object-fit: contain;
+            }
+        }
+
+        .result {
+            height: 520px;
+            border-left: 2px dashed #fa6400;
+            background: url("https://s2-11744.kwimgs.com/kos/nlav11744/static/bg_transparent_mini.png");
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            :global {
+                .ant-spin-dot-item {
+                    background-color: #fa6400;
+                }
+            }
+
+            >img {
+                width: 100%;
+                height: 320px;
+                object-fit: contain;
+            }
+        }
+    }
+}

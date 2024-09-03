@@ -1,0 +1,1 @@
+export { default as globalModal } from './global-modal'

@@ -1,0 +1,162 @@
+.domainModal {
+  :global {
+    .ant-modal-body {
+      padding: 0;
+    }
+  }
+
+  .domainContainer {
+    height: 520px;
+    display: flex;
+
+    .header {
+      height: 28px;
+      flex-shrink: 0;
+      font-size: 14px;
+      line-height: 28px;
+      font-weight: bold;
+      margin: 4px 0;
+    }
+
+    .panelContent {
+      flex: 1;
+      overflow: auto;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+
+    .leftPanel,
+    .rightPanel {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      padding: 6px 12px;
+    }
+
+    .leftPanel {
+      width: 280px;
+      background-color: #f8fafb;
+
+      .sqlHttp {
+        min-height: 34px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 6px;
+        border-radius: 4px;
+        color: #5c6066;
+
+        &:hover {
+          cursor: pointer;
+          background: #3d5c8014;
+        }
+
+        & > svg {
+          margin-right: 10px;
+          flex-shrink: 0;
+          fill: currentColor;
+        }
+
+        .title {
+          flex: 1;
+          text-overflow: ellipsis;
+          word-break: break-all;
+          white-space: nowrap;
+          overflow: hidden;
+        }
+
+        .operate {
+          margin-left: 10px;
+
+          & > svg:hover {
+            color: #FA6400;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+
+    .rightPanel {
+      flex: 1;
+
+      .panelContent {
+        display: block;
+        padding-top: 4px;
+      }
+
+      .sqlHttpGroup {
+        border: 1px solid #EEE;
+        border-radius: 5px;
+        width: 100%;
+        margin-top: 4px;
+        margin-bottom: 20px;
+        padding: 10px 8px 0;
+
+        .groupTitle {
+          font-style: italic;
+          color: #999999;
+          margin-bottom: 10px;
+        }
+
+        .groupContent {
+          display: block;
+
+          .sqlHttpItem:nth-of-type(2n) {
+            margin-left: 10px;
+          }
+        }
+      }
+
+      .sqlHttpItem {
+        width: 234px;
+        height: 34px;
+        display: inline-flex;
+        align-items: center;
+        padding: 0 6px 0 10px;
+        border-radius: 4px;
+        color: #5c6066;
+        margin-bottom: 16px;
+        vertical-align: top;
+        cursor: pointer;
+        position: relative;
+        background: #F7F7F7;
+
+        & > svg {
+          margin-right: 10px;
+          flex-shrink: 0;
+        }
+
+        &:nth-of-type(2n) {
+          margin-left: 28px;
+        }
+
+        &:hover {
+          background-color: #F3F3F3;
+        }
+
+        .title {
+          flex: 1;
+          text-overflow: ellipsis;
+          word-break: break-all;
+          white-space: nowrap;
+          overflow: hidden;
+        }
+      }
+    }
+  }
+}
+
+.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-style: italic;
+  color: #AAA;
+  font-size: 12px;
+  width: 100%;
+  height: 100%;
+}
+

@@ -1,0 +1,28 @@
+
+.show {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  border: 1px solid #EEE;
+  
+  .designer {
+    flex: 1;
+    overflow: hidden;
+
+    .loading {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #999;
+    }
+
+    :global {
+      blockquote {
+        margin-bottom: 0!important;
+      }
+    }
+  }
+}

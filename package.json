@@ -1,0 +1,72 @@
+{
+  "name": "mybricks-app-mpsite",
+  "version": "0.4.33",
+  "description": "mybricks 小程序应用",
+  "scripts": {
+    "start:dev": "NODE_ENV=development node nodejs/index.ts",
+    "start:watch": "nodemon --ext js,ts --exec 'NODE_ENV=development MYBRICKS_PLATFORM_ADDRESS=https://my.mybricks.world node nodejs/index.ts'",
+    "test:watch": "nodemon --ext js,ts --exec 'NODE_ENV=development MYBRICKS_PLATFORM_ADDRESS=http://work.manateeai.com/ node nodejs/index.ts'",
+    "bootstrap": "cd ./pages && npm install",
+    "dev": "cd ./pages && npm run dev",
+    "build": "npm run bootstrap && cd ./pages && npm run build",
+    "publishToNpm:offline": "npm i && cd pages && npm run build:offline && cd ../ && node sync_offline.js",
+    "publishToNpm:serviceUpdate": "npm run build && npm publish --registry=https://registry.npmjs.org && node sync.js --origin=https://my.mybricks.world",
+    "publishToNpm": "npm run build && npm publish --registry=https://registry.npmjs.org && node sync.js --origin=https://my.mybricks.world --noServiceUpdate"
+  },
+  "keywords": [
+    "mybricks",
+    "application"
+  ],
+  "files": [
+    "nodejs",
+    "assets",
+    "README.md",
+    "package.json",
+    "!/nodejs/.tmp"
+  ],
+  "author": "MyBricks Team",
+  "license": "ISC",
+  "dependencies": {
+    "@mybricks/color-picker": "^1.0.9",
+    "@mybricks/rocker-commons": "^0.0.2",
+    "@mybricks/sdk-for-app": "^1.0.35",
+    "@nestjs/common": "^8.0.0",
+    "@nestjs/core": "^8.0.0",
+    "@nestjs/platform-express": "^8.0.0",
+    "axios": "^1.3.4",
+    "fs-extra": "^11.1.0",
+    "glob": "^9.3.1",
+    "https": "^1.0.0",
+    "jszip": "^3.10.1",
+    "minidev": "^2.1.7",
+    "miniprogram-ci": "^1.9.8",
+    "pako": "^2.1.0",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^7.8.0"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^20.11.24",
+    "ts-node": "^8.9.1",
+    "typescript": "^4.2.3"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "mybricks": {
+    "name": "mybricks-app-mpsite",
+    "extName": "mpsite",
+    "icon": "https://ali-ec.static.yximgs.com/udata/pkg/eshop/fangzhou/temp/aaa.acdd544c01dde964.svg",
+    "title": "小程序、H5应用",
+    "setting": "setting.html"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "nodejs/.tmp"
+    ]
+  },
+  "resolutions": {
+    "@swc/core": "1.3.42"
+  }
+}

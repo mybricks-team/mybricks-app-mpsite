@@ -1,0 +1,39 @@
+.body {
+  // padding: 0px 20px;
+  margin-top: 36px;
+
+  .content {
+    margin-top: 20px;
+  }
+
+  :global {
+
+    .ant-form-item {
+      margin-bottom: 16px;
+    }
+    .ant-form-item-row {
+      flex-direction: column;
+    }
+  }
+
+  .autoReadKey {
+    input {
+      display: none !important;
+    }
+
+    font-size: 13px;
+    cursor: pointer;
+    margin-top: 3px;
+    &:hover {
+      color: var(--color-primary)
+    }
+  }
+}
+
+.footer {
+  width: 100%;
+  padding-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}

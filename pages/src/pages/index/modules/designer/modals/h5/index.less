@@ -1,0 +1,90 @@
+.h5Require {
+  margin-top: -15px;
+  :global {
+    .ant-form-item {
+      margin-bottom: 16px;
+    }
+    .ant-form-item-row {
+      flex-direction: column;
+    }
+  }
+
+  .footer {
+    padding-top: 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    button {
+      margin-left: 10px;
+    }
+  }
+}
+
+.h5Publish {
+  margin-top: -15px;
+
+  .desc {
+    display: flex;
+    padding: 10px 0px;
+  }
+
+  .body {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .url {
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    
+    strong {
+      margin-right: 5px;
+    }
+
+    div {
+      padding-top: 5px;
+      color: #415058;
+      font-size: 13px;
+      word-break: break-all;
+    }
+
+    a {
+      padding-top: 10px;
+      font-size: 13px;
+      &:hover {
+        color: #FA6400;
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .qrcode {
+    flex-shrink: 0;
+    width: 100px;
+    height: 100px;
+  }
+  
+  .footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    :global {
+      .ant-checkbox-wrapper {
+        font-size: 13px;
+        color: #7e7e7e;
+      }
+    }
+  }
+
+  .second {
+    // color: #7e7e7e;
+    font-size: 13px;
+    &:hover {
+      color: #FA6400;
+      text-decoration: underline;
+    }
+  }
+}

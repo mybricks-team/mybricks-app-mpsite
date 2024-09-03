@@ -1,0 +1,1 @@
+{"entryPagePath":"pages/index/index","pages":["pages/index/index","pages/404/index"],"tabBar":{"customize":true,"items":[{"pagePath":"pages/index/index","name":"首页"},{"pagePath":"pages/404/index","name":"需要删除"}]},"networkTimeout":{"request":10000,"downloadFile":10000}}

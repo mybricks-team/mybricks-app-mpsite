@@ -1,0 +1,63 @@
+.toolsContainer {
+  width: 320px;
+  height: 100%;
+}
+
+.toolsTitle {
+  height: 50px;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 600;
+  border-bottom: 1px solid #eee;
+}
+
+.toolsContent {
+  padding: 12px 10px;
+  overflow-y: auto;
+  height: calc(100% - 50px);
+}
+
+.toolsItem {
+  .toolsItemTitle {
+    &:before {
+      position: absolute;
+      content: "";
+      top: 3px;
+      left: 0;
+      border-left: 3px solid #FA6400;
+      height: 12px;
+    }
+
+    position: relative;
+    font-weight: 600;
+    font-size: 12px;
+    margin-bottom: 8px;
+    padding-left: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.toolsIBtn {
+  border: 1px solid #DDD;
+  border-radius: 3px;
+  padding: 4px 12px;
+  cursor: pointer;
+  background-color: #FFF;
+  font-size: 12px;
+  box-shadow: 0px 1px 3px 0px #ddd;
+
+  +.toolsIBtn {
+    margin-left: 4px;
+  }
+
+  &.toolsIBtnBlock {
+    width: 100%;
+    padding: 4px 0;
+    margin-bottom: 12px;
+    margin-left: 0;
+  }
+}

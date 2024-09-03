@@ -1,0 +1,115 @@
+.bindPanel {
+  .header {
+    font-size: 13px;
+  }
+
+  color: #787878;
+
+  font-style: italic;
+
+  a {
+    font-style: normal;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.compileConfig {
+  position: relative;
+
+  color: #787878;
+
+  > .title {
+    color: #415058;
+    font-weight: 800;
+  }
+
+  .content {
+    font-style: italic;
+    margin-top: 5px;
+
+    word-break: break-all;
+
+    strong {
+      cursor: pointer;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    a {
+      font-style: normal;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .desc {
+    margin-bottom: 10px;
+    opacity: 0.7;
+  }
+
+  &::before {
+    content: " ";
+    position: absolute;
+    top: -20px;
+    left: 0px;
+    // height: 1px;
+    width: 100%;
+    // background-color: #eee;
+    border-top: 1px #ddd solid;
+  }
+}
+
+.item {
+  padding-bottom: 5px;
+  .title {
+    font-size: 12px;
+    padding: 5px 0px;
+    color: #555;
+  }
+
+  :global {
+    .ant-input {
+      padding: 3px 5px;
+      border-radius: 3px;
+      border: 1px solid #eee;
+      font-size: 12px;
+      letter-spacing: 0px;
+    }
+  }
+}
+
+.distPath {
+  font-style: italic;
+  font-size: 11px !important;
+  // padding: 2px 8px;
+  color: #767272;
+  // border-radius: 2px;
+  // user-select: text;
+}
+
+.comlibAdder {
+  .button {
+    font-size: 12px;
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    text-align: center;
+    border: none;
+    height: 26px;
+    line-height: 26px;
+    border-radius: 3px;
+    background-color: #f9f9f9;
+    box-shadow: 0 1px 4px -1px #777;
+    margin-bottom: 10px;
+  }
+
+  .tips {
+    font-size: 12px;
+    color: #555;
+    margin-top: 5px;
+  }
+}

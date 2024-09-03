@@ -1,0 +1,132 @@
+body {
+  overflow: hidden;
+  // 禁止浏览器双指滑动前进后退事件
+  overscroll-behavior-x: none;
+}
+
+.view {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+
+  .toolbar {
+    height: 40px;
+    padding: 5px 15px 5px 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #ccc;
+    background: #f7f7f7;
+    font-size: 12px;
+
+    .icon {
+      height: 30px;
+      margin-left: 5px;
+      cursor: pointer;
+
+      svg {
+        max-width: 16px;
+      }
+    }
+
+    .projectName {
+      padding: 3px 0 0 10px;
+    }
+
+    label {
+      margin-right: 10px;
+    }
+
+    input {
+      margin-right: auto;
+      border: 1px solid #ddd;
+      padding: 5px 10px;
+      flex: 1;
+    }
+
+    .defined {
+      margin-left: 10px;
+      font-size: 14px;
+      font-style: italic;
+      color: #aaa;
+    }
+
+    button {
+      border: 1px solid #ddd;
+      border-radius: 3px;
+      padding: 3px 12px;
+      margin: 0 5px;
+      font-size: 12px;
+      height: 26px;
+      background-color: #fff;
+      cursor: pointer;
+    }
+
+    .dropdownMenu {
+      .actions {
+        padding: 4px 20px;
+      }
+      .divider {
+        width: 100%;
+        height: 1px;
+        background-color: #eeeeee;
+      }
+    }
+
+    :global {
+      .ant-select:not(.ant-select-disabled):hover .ant-select-selector {
+        border-color: var(--primary-color);
+        border-right-width: 1px !important;
+      }
+      .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input)
+        .ant-select-selector {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px #fa640033;
+        -webkit-box-shadow: 0 0 0 2px #fa640033;
+      }
+    }
+
+    .primary {
+      background-color: #fa6400;
+      color: #fff;
+      font-weight: bold;
+      border: 0;
+    }
+
+    .badge {
+      position: relative;
+
+      &:after {
+        position: absolute;
+        right: -7px;
+        top: -7px;
+        content: '*';
+        color: #fa6400;
+        font-size: 13px;
+      }
+    }
+  }
+
+  .designer {
+    flex: 1;
+    overflow: hidden;
+
+    .loading {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #999;
+    }
+  }
+}
+
+
+:global {
+  div[class^=designer] div[class^=lyMain] div[class^=lyStage] div[class^=navs] {
+    z-index: 999;
+  }
+}
