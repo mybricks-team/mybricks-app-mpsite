@@ -47,9 +47,9 @@ const DesignerView = (props: DesignerViewProps) => {
   const [tempInputValue, setTempInputValue] = useState({});
 
   //初始化时给变量列表追加notifyBindings
-  useEffect(()=>{
+  useEffect(() => {
     const apiAry = variables.getAll();
-    if(!apiAry) return
+    if (!apiAry) return
     const updatedVarAry = varAry.map((item) => {
       const apiItem = apiAry.find((apiItem) => item.title === apiItem.title);
       if (apiItem) {
@@ -59,8 +59,7 @@ const DesignerView = (props: DesignerViewProps) => {
       }
     });
     setVarAry(updatedVarAry);
-    console.log("updatedVarAry",updatedVarAry)
-  },[variables])
+  }, [variables])
 
   useEffect(() => {
     if (varAry.length == 0) {
@@ -128,8 +127,11 @@ const DesignerView = (props: DesignerViewProps) => {
       value: '',
       type,
     };
+
+    const colorId = Math.random().toString(36).slice(-6)
     const newItemColor = {
-      id: '--' + Math.random().toString(36).slice(-6),
+      apiId: colorId,
+      id: '--' + colorId,
       title: uniqueTitle,
       value: '#FFFFFF',
       type,
@@ -138,7 +140,6 @@ const DesignerView = (props: DesignerViewProps) => {
     if (type === itemTypes.STRING || type === itemTypes.IMAGE) {
       variables.add({ title: uniqueTitle, schema: { type: 'string' }, initValue: '' });
       let apiAry = variables.getAll();
-      console.log("新增变量后的apiAry",apiAry)
       const updatedVarAry = [...varAry, newItem].map((item) => {
         const apiItem = apiAry.find((apiItem) => item.title === apiItem.title);
         if (apiItem) {
@@ -333,7 +334,7 @@ const DesignerView = (props: DesignerViewProps) => {
             className={css.tabs}
             defaultActiveKey="1"
             activeKey={activeKey}
-            onTabClick={(e) => {}}
+            onTabClick={(e) => { }}
             onChange={(e) => {
               onTabChange(e);
             }}
@@ -376,7 +377,6 @@ const DesignerView = (props: DesignerViewProps) => {
                           className={css.varFiledTitle}
                         />
                       </div>
-                      
                     </div>
 
                     <div className={css.varbox}>
@@ -427,7 +427,12 @@ const DesignerView = (props: DesignerViewProps) => {
                         <div className={css.colorVarRound} style={{ backgroundColor: item.value }}></div>
                       </Colorpicker>
                       <div className={css.colorVarTitle}>
-                        <EditableDiv value={item.title} onBlur={() => {}} onChange={() => {}}></EditableDiv>
+                        <EditableDiv value={item.title} onChange={(e) => {
+                          handleInputTitleChange(e, item.apiId);
+                        }}
+                          onBlur={(e) => {
+                            handleInputTitleBlur(item.apiId, e);
+                          }}></EditableDiv>
                       </div>
                     </div>
                     <div
