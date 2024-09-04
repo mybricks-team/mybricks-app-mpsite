@@ -3,7 +3,7 @@ import css from './index.less';
 import { message, Tabs } from 'antd';
 import { ImageEditor } from '../../imageEditor/index';
 import EditableDiv from '../components/editable-div';
-import { hsla2rgba, parseColor,rgb2Hex } from '../utils/color';
+import { hsla2rgba, parseColor, rgb2Hex } from '../utils/color';
 import { Colorpicker } from '../components/color-picker';
 import { setCSSVar } from "../utils/index"
 import { itemTypes } from "../enum"
@@ -60,7 +60,6 @@ const DesignerView = (props: DesignerViewProps) => {
   }, [variables])
 
   useEffect(() => {
-    console.log("varAry",varAry)
     if (varAry.length == 0) {
       data.varAry = [{}];
       return;
@@ -104,12 +103,12 @@ const DesignerView = (props: DesignerViewProps) => {
     item.notifyBindings(value); //通知item对应的bindings
   };
 
-  const _generateUniqueTitle = () => {
+  const _generateUniqueTitle = (perfix = "图文") => {
     let titleNumber = 1;
     let uniqueTitle = false;
     let newTitle = '';
     while (!uniqueTitle) {
-      newTitle = `图文同步项${titleNumber}`;
+      newTitle = `${perfix}-同步项${titleNumber}`;
       const isDuplicate = varAry.some((item) => item.title === newTitle);
       if (!isDuplicate) {
         uniqueTitle = true;
@@ -121,7 +120,8 @@ const DesignerView = (props: DesignerViewProps) => {
   };
 
   const addVar = (type: itemTypes) => {
-    const uniqueTitle = _generateUniqueTitle();
+    const titlePerFix = type === itemTypes.COLOR ? '颜色' : type === itemTypes.STRING ? '文本' : '图片';
+    const uniqueTitle = _generateUniqueTitle(titlePerFix);
     const randomId = Math.random().toString(36).slice(-6);
 
     const newItem = {
@@ -141,17 +141,17 @@ const DesignerView = (props: DesignerViewProps) => {
     // };
     //非颜色变量的处理
     // if (type === itemTypes.STRING || type === itemTypes.IMAGE) {
-      variables.add({ title: uniqueTitle, schema: { type: 'string' }, initValue: '' });
-      let apiAry = variables.getAll();
-      const updatedVarAry = [...varAry, newItem].map((item) => {
-        const apiItem = apiAry.find((apiItem) => item.title === apiItem.title);
-        if (apiItem) {
-          return { ...item, apiId: apiItem.id, notifyBindings: apiItem.notifyBindings };
-        } else {
-          return item;
-        }
-      });
-      setVarAry(updatedVarAry);
+    variables.add({ title: uniqueTitle, schema: { type: 'string' }, initValue: '' });
+    let apiAry = variables.getAll();
+    const updatedVarAry = [...varAry, newItem].map((item) => {
+      const apiItem = apiAry.find((apiItem) => item.title === apiItem.title);
+      if (apiItem) {
+        return { ...item, apiId: apiItem.id, notifyBindings: apiItem.notifyBindings };
+      } else {
+        return item;
+      }
+    });
+    setVarAry(updatedVarAry);
     // }
 
     // if (type === itemTypes.COLOR) {
@@ -263,7 +263,7 @@ const DesignerView = (props: DesignerViewProps) => {
   };
 
   const delColor = (item) => {
-    const {id,apiId} = item;
+    const { id, apiId } = item;
     theme.remove(id);
     delVar(apiId)
     let newVarAry = varAry.filter((item) => item.id !== item);
