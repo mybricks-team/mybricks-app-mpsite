@@ -3,7 +3,7 @@ import css from './index.less';
 import { message, Tabs } from 'antd';
 import { ImageEditor } from '../../imageEditor/index';
 import EditableDiv from '../components/editable-div';
-import { hsla2rgba, parseColor } from '../utils/color';
+import { hsla2rgba, parseColor,rgb2Hex } from '../utils/color';
 import { Colorpicker } from '../components/color-picker';
 import { setCSSVar } from "../utils/index"
 import { itemTypes } from "../enum"
@@ -60,6 +60,7 @@ const DesignerView = (props: DesignerViewProps) => {
   }, [variables])
 
   useEffect(() => {
+    console.log("varAry",varAry)
     if (varAry.length == 0) {
       data.varAry = [{}];
       return;
@@ -121,23 +122,25 @@ const DesignerView = (props: DesignerViewProps) => {
 
   const addVar = (type: itemTypes) => {
     const uniqueTitle = _generateUniqueTitle();
+    const randomId = Math.random().toString(36).slice(-6);
+
     const newItem = {
-      id: Math.random().toString(36).slice(-6),
+      id: type === itemTypes.COLOR ? `--${randomId}` : randomId,
       title: uniqueTitle,
       value: '',
       type,
     };
 
-    const colorId = Math.random().toString(36).slice(-6)
-    const newItemColor = {
-      apiId: colorId,
-      id: '--' + colorId,
-      title: uniqueTitle,
-      value: '#FFFFFF',
-      type,
-    };
+    // const colorId = Math.random().toString(36).slice(-6)
+    // const newItemColor = {
+    //   apiId: colorId,
+    //   id: '--' + colorId,
+    //   title: uniqueTitle,
+    //   value: '#FFFFFF',
+    //   type,
+    // };
     //非颜色变量的处理
-    if (type === itemTypes.STRING || type === itemTypes.IMAGE) {
+    // if (type === itemTypes.STRING || type === itemTypes.IMAGE) {
       variables.add({ title: uniqueTitle, schema: { type: 'string' }, initValue: '' });
       let apiAry = variables.getAll();
       const updatedVarAry = [...varAry, newItem].map((item) => {
@@ -149,12 +152,12 @@ const DesignerView = (props: DesignerViewProps) => {
         }
       });
       setVarAry(updatedVarAry);
-    }
+    // }
 
-    if (type === itemTypes.COLOR) {
-      const updatedVarAry = [...varAry, newItemColor];
-      setVarAry(updatedVarAry);
-    }
+    // if (type === itemTypes.COLOR) {
+    //   const updatedVarAry = [...varAry, newItemColor];
+    //   setVarAry(updatedVarAry);
+    // }
   };
 
   const delVar = useCallback((id) => {
@@ -252,15 +255,18 @@ const DesignerView = (props: DesignerViewProps) => {
     let newVarAry = varAry.map((item) => {
       if (item.id === id) {
         item.value = val;
+        notify(item, rgb2Hex(val));
       }
       return item;
     });
     setVarAry(newVarAry);
   };
 
-  const delColor = (id) => {
+  const delColor = (item) => {
+    const {id,apiId} = item;
     theme.remove(id);
-    let newVarAry = varAry.filter((item) => item.id !== id);
+    delVar(apiId)
+    let newVarAry = varAry.filter((item) => item.id !== item);
     setVarAry(newVarAry);
   };
 
@@ -436,7 +442,7 @@ const DesignerView = (props: DesignerViewProps) => {
                     </div>
                     <div
                       onClick={() => {
-                        delColor(item.id);
+                        delColor(item);
                       }}
                     >
                       <img
