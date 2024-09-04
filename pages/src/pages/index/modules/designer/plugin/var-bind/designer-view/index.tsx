@@ -127,7 +127,7 @@ const DesignerView = (props: DesignerViewProps) => {
     const newItem = {
       id: type === itemTypes.COLOR ? `--${randomId}` : randomId,
       title: uniqueTitle,
-      value: '',
+      value: type === itemTypes.COLOR ? '#fff' : '',
       type,
     };
 
