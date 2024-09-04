@@ -18,3 +18,7 @@ export function hsla2rgba(hsla: ColorFormats.HSLA) {
   const color = tinycolor(hsla).toRgbString();
   return color;
 }
+
+export function rgb2Hex(rgb){
+  return tinycolor(rgb).toHexString();
+}

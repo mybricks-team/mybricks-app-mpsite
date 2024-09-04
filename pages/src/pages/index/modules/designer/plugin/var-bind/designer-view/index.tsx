@@ -5,6 +5,8 @@ import { ImageEditor } from '../../imageEditor/index';
 import EditableDiv from '../components/editable-div';
 import { hsla2rgba, parseColor } from '../utils/color';
 import { Colorpicker } from '../components/color-picker';
+import { setCSSVar } from "../utils/index"
+import { itemTypes } from "../enum"
 
 interface EditItem {
   apiId: string;
@@ -19,11 +21,6 @@ interface DesignerViewProps {
   theme: any;
 }
 
-enum itemTypes {
-  STRING = 'string',
-  COLOR = 'color',
-  IMAGE = 'image',
-}
 
 interface MultiAddItemProps {
   type: itemTypes;
@@ -59,6 +56,7 @@ const DesignerView = (props: DesignerViewProps) => {
       }
     });
     setVarAry(updatedVarAry);
+
   }, [variables])
 
   useEffect(() => {
@@ -72,9 +70,11 @@ const DesignerView = (props: DesignerViewProps) => {
     colorList = colorList.map((item) => {
       return { ...item, name: item.title };
     });
-    window.getTheme = () => {
-      return colorList;
-    };
+    // window.getTheme = () => {
+    //   return colorList;
+    // };
+    console.log('colorList', colorList)
+    setCSSVar(colorList)
   }, [varAry]);
 
   useEffect(() => {
@@ -100,7 +100,7 @@ const DesignerView = (props: DesignerViewProps) => {
     if (item?.notifyBindings === undefined) {
       return;
     }
-    item.notifyBindings(value); //通知所有bindings
+    item.notifyBindings(value); //通知item对应的bindings
   };
 
   const _generateUniqueTitle = () => {
@@ -197,7 +197,7 @@ const DesignerView = (props: DesignerViewProps) => {
       if (item.apiId === itemId) {
         if (isDuplicate) {
           message.error('变量名重复！请重新输入新的变量名');
-          return { ...item, title: originalTitle };
+          return item
         } else {
           variables.update(itemId, {
             title: eventValue,
@@ -211,7 +211,6 @@ const DesignerView = (props: DesignerViewProps) => {
         return item;
       }
     });
-
     setVarAry(updatedVarAry);
   };
 

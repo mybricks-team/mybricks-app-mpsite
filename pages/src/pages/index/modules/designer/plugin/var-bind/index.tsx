@@ -1,10 +1,11 @@
 import data from './data';
 import VarList from './VarList';
-
 import { Plugin } from './Icons';
+import { setCSSVar } from "./utils/index"
+import { itemTypes } from './enum';
+
 
 export default function pluginVarbind(config?: any) {
-  console.log('pluginVarbind', config);
   return {
     name: 'mybricks.desn.plugin.var-bind',
     title: '图文同步列表',
@@ -27,7 +28,14 @@ export default function pluginVarbind(config?: any) {
         },
       },
     },
-    activate(args) { },
+    activate(args) {
+      //初始化时挂载颜色变量
+      let colorList = args.data.varAry.filter((item) => item.type === itemTypes.COLOR);
+      colorList = colorList.map((item) => {
+        return { ...item, name: item.title };
+      });
+      setCSSVar(colorList)
+    },
     beforeDump(args) {
       //当dump总体数据时回调（保存）
       //debugger
