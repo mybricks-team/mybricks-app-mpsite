@@ -166,6 +166,14 @@ const DesignerView = (props: DesignerViewProps) => {
     setVarAry(updatedVarAry);
   }, []);
 
+  const delColor = (item) => {
+    const { id, apiId } = item;
+    // theme.remove(id);
+    delVar(apiId)
+    let newVarAry = varAry.filter((item) => item.id !== id);
+    setVarAry(newVarAry);
+  };
+
   const handleInputTitleChange = (event, itemId) => {
     let eventValue = typeof event === 'string' ? event : event?.target?.value;
 
@@ -251,7 +259,7 @@ const DesignerView = (props: DesignerViewProps) => {
   const onSelectColor = (hsl, id) => {
     //操作选中后，length为3
     const val = hsla2rgba(hsl);
-    theme.set(id, val);
+    // theme.set(id, val);
     let newVarAry = varAry.map((item) => {
       if (item.id === id) {
         item.value = val;
@@ -262,13 +270,7 @@ const DesignerView = (props: DesignerViewProps) => {
     setVarAry(newVarAry);
   };
 
-  const delColor = (item) => {
-    const { id, apiId } = item;
-    theme.remove(id);
-    delVar(apiId)
-    let newVarAry = varAry.filter((item) => item.id !== item);
-    setVarAry(newVarAry);
-  };
+
 
   const getLimitByItemId = (itemId) => {
     let limit = '0';
