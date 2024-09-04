@@ -177,7 +177,7 @@ const DesignerView = (props: DesignerViewProps) => {
   const handleInputTitleChange = (event, itemId) => {
     let eventValue = typeof event === 'string' ? event : event?.target?.value;
 
-    // 临时保存用户输入，不直接更新 varAry
+    // 临时保存用户输入，不直接更新 varAry,只是为了让列表实时显示用户的输入
     setTempInput((prevInput) => ({ ...prevInput, [itemId]: eventValue }));
   };
 
@@ -257,17 +257,18 @@ const DesignerView = (props: DesignerViewProps) => {
   };
 
   const onSelectColor = (hsl, id) => {
-    //操作选中后，length为3
     const val = hsla2rgba(hsl);
     // theme.set(id, val);
-    let newVarAry = varAry.map((item) => {
-      if (item.id === id) {
-        item.value = val;
-        notify(item, rgb2Hex(val));
-      }
-      return item;
+    setVarAry((prevVarAry) => {
+      let newVarAry = prevVarAry.map((item) => {
+        if (item.id === id) {
+          item.value = val;
+          notify(item, rgb2Hex(val));
+        }
+        return item;
+      });
+      return newVarAry;
     });
-    setVarAry(newVarAry);
   };
 
 
