@@ -498,6 +498,7 @@ const DesignerView = (props: DesignerViewProps) => {
                       />
                       <div className={css.desc}>
                         <EditableDiv
+                          textAlign='center'
                           value={tempInput[item.apiId] !== undefined ? tempInput[item.apiId] : item.title}
                           onChange={(e) => {
                             handleInputTitleChange(e, item.apiId);

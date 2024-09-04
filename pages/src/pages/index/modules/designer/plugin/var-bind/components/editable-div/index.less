@@ -3,7 +3,28 @@
 
     .inputEditing {
         width: 90px;
+        text-align: left;
+    }
+    // span {
+    //     width: 120px;
+    //     overflow: hidden;
+    //     text-overflow: ellipsis;
+    //     white-space: nowrap;
+    // }
+
+    .inputDisplay{
+        display: flex;
+        max-width: 120px;
+        //限制一行，超过显示省略号
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
         text-align: center;
+    }
+
+    .inputDisplay:hover {
+        cursor: pointer;
+        border-radius: 6px;
     }
 
     .btn {

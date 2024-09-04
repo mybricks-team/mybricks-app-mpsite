@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import css from './index.less';
 interface Props {
   value: string;
+  textAlign?: string;
   onBlur: (text: string) => void;
   onChange: (text: any) => void;
 }
 
-function EditableDiv({ value, onBlur, onChange }: Props) {
+function EditableDiv({ value, textAlign = "left", onBlur, onChange }: Props) {
   const [isEditing, setIsEditing] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const [inputValue, setInputValue] = useState(value);
@@ -27,6 +28,9 @@ function EditableDiv({ value, onBlur, onChange }: Props) {
       {isEditing ? (
         <input
           className={css.inputEditing}
+          style={{
+            textAlign: textAlign,
+          }}
           type="text"
           value={inputValue}
           onChange={handleInputChange}
@@ -37,15 +41,15 @@ function EditableDiv({ value, onBlur, onChange }: Props) {
           autoFocus
         />
       ) : (
-        <span>{value}</span>
+        <div className={css.inputDisplay}>{value}</div>
       )}
-      {isHovering && !isEditing && (
+      {/* {isHovering && !isEditing && (
         <img
           src="https://f2.eckwai.com/kos/nlav12333/fangzhou/pub/compress/image-95eb0eaa-9033-4ead-9c01-dc41137c8e97.png"
           className={css.btn}
           onClick={() => setIsEditing(true)}
         />
-      )}
+      )} */}
     </div>
   );
 }
