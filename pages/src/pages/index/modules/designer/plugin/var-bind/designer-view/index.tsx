@@ -435,7 +435,7 @@ const DesignerView = (props: DesignerViewProps) => {
                         <div className={css.colorVarRound} style={{ backgroundColor: item.value }}></div>
                       </Colorpicker>
                       <div className={css.colorVarTitle}>
-                        <EditableDiv value={item.title} onChange={(e) => {
+                        <EditableDiv maxWidth='200' value={item.title} onChange={(e) => {
                           handleInputTitleChange(e, item.apiId);
                         }}
                           onBlur={(e) => {

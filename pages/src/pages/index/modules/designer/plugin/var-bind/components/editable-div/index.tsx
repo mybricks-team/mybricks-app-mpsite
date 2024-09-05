@@ -3,11 +3,12 @@ import css from './index.less';
 interface Props {
   value: string;
   textAlign?: string;
+  maxWidth?: string;
   onBlur: (text: string) => void;
   onChange: (text: any) => void;
 }
 
-function EditableDiv({ value, textAlign = "left", onBlur, onChange }: Props) {
+function EditableDiv({ value, textAlign = "left", maxWidth = "110" , onBlur, onChange }: Props) {
   const [isEditing, setIsEditing] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const [inputValue, setInputValue] = useState(value);
@@ -30,6 +31,7 @@ function EditableDiv({ value, textAlign = "left", onBlur, onChange }: Props) {
           className={css.inputEditing}
           style={{
             textAlign: textAlign,
+            width:maxWidth + "px"
           }}
           type="text"
           value={inputValue}
@@ -41,7 +43,7 @@ function EditableDiv({ value, textAlign = "left", onBlur, onChange }: Props) {
           autoFocus
         />
       ) : (
-        <div className={css.inputDisplay}>{value}</div>
+        <div className={css.inputDisplay} style={{maxWidth:maxWidth + "px"}}>{value}</div>
       )}
       {/* {isHovering && !isEditing && (
         <img
