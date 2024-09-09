@@ -73,7 +73,6 @@ const DesignerView = (props: DesignerViewProps) => {
     // window.getTheme = () => {
     //   return colorList;
     // };
-    console.log('colorList', colorList)
     setCSSVar(colorList)
   }, [varAry]);
 
@@ -227,6 +226,7 @@ const DesignerView = (props: DesignerViewProps) => {
 
   const getPicUrlFromEditor = (url: string) => {
     setUrlFromEditor(url);
+    setEditUrl(url)
   };
 
   //在编辑器点确认的时候，把编辑器的url传给变量
@@ -334,6 +334,11 @@ const DesignerView = (props: DesignerViewProps) => {
     });
     setVarAry(updatedVarAry);
   };
+
+  const imgOnConfirm = useCallback(() => {
+    setImageEditorShow(false);
+    setEditType(Math.random().toString(36).slice(-6));
+  },[]) 
 
   return (
     <div className="fangzhou-theme">
@@ -531,7 +536,7 @@ const DesignerView = (props: DesignerViewProps) => {
           show={imageEditorShow}
           onCancel={() => setImageEditorShow(false)}
           onConfirm={() => {
-            setImageEditorShow(false), setEditType(Math.random().toString(36).slice(-6));
+            imgOnConfirm()
           }}
           picUrlProps={getPicUrlFromEditor}
           picUrlSet={editUrl}

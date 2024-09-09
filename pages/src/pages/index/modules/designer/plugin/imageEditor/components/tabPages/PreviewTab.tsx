@@ -8,15 +8,14 @@ import ModalFooter from '../modalFooter/index';
 import Context from '../../context/index';
 
 interface Props {
-  value: string;
-  visible: boolean;
+  value?: string;
+  visible?: boolean;
   onOk: (value?: string) => void;
   onCancel: () => void;
-  从本地导入;
 }
 
 export const PreviewTab = ({ value, onOk, onCancel }: Props) => {
-  const { url,setUrl } = useContext(Context);
+  const { url, setUrl } = useContext(Context);
   const [picUrl, setPicUrl] = useState('');
   const [picUrlRes, setPicUrlRes] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -29,11 +28,15 @@ export const PreviewTab = ({ value, onOk, onCancel }: Props) => {
   };
 
   useEffect(() => {
-    setUrl(picUrl)
+    if (url !== picUrl) {
+      setUrl(picUrl);
+    }
   }, [picUrl]);
 
   useEffect(() => {
-    setPicUrl(url);
+    if (picUrl !== url) {
+      setPicUrl(url);
+    }
   }, [url]);
 
   const uploadImages = (files: any) => {

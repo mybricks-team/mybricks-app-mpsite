@@ -10,15 +10,17 @@ import { MaterialTab } from './tabPages/MaterialTab';
 import Context from '../context/index';
 
 export const ImgTab = ({ picUrlProp, picUrlSet, onPreviewOk, onPreviewCancel }) => {
-  const [url, setUrl] = useState('');
+  const [url, setUrl] = useState("");
 
   useEffect(() => {
-    if (picUrlSet === '') {
-      setUrl('');
-      return;
-    }
     setUrl(picUrlSet);
   }, [picUrlSet]);
+
+  useEffect(() => {
+    if (url) {
+      picUrlProp(url);
+    }
+  }, [url]);
 
   const [activeKey, setActiveKey] = useState('1');
   useEffect(() => {
@@ -39,11 +41,6 @@ export const ImgTab = ({ picUrlProp, picUrlSet, onPreviewOk, onPreviewCancel }) 
     setActiveKey(key);
   };
 
-  useEffect(() => {
-    if (url) {
-      picUrlProp(url);
-    }
-  }, [url]);
 
   return (
     <Context.Provider value={{ url, setUrl }}>

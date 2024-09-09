@@ -5,17 +5,16 @@ import css from './index.less';
 
 export const ImageEditor = ({ picUrlProps, picUrlSet, show, onConfirm, onCancel }) => {
   const [picUrl, setPicUrl] = useState('');
+  const [picUrlSets, setPicUrlSets] = useState(picUrlSet);
 
-  // let buttonText = '点击上传';
-  // if (buttonText === undefined) {
-  //   buttonText = '点击上传';
-  // }
+  useEffect(()=>{
+    setPicUrlSets(picUrlSet)
+  },[picUrlSet])
 
   const getPicUrl = (url: string) => {
     setPicUrl(url);
   };
   const previewOk = () => {
-
     onConfirm();
     picUrlProps(picUrl);
   };
@@ -35,7 +34,7 @@ export const ImageEditor = ({ picUrlProps, picUrlSet, show, onConfirm, onCancel 
         <div className={css.box}>
           <ImgTab
             picUrlProp={getPicUrl}
-            picUrlSet={picUrlSet}
+            picUrlSet={picUrlSets}
             onPreviewOk={previewOk}
             onPreviewCancel={onCancel}
           ></ImgTab>
