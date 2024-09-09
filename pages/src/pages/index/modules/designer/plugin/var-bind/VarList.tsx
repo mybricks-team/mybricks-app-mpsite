@@ -5,6 +5,7 @@ import { message } from 'antd';
 import { ImageEditor } from '../imageEditor/index';
 import OperatorView from './operator-view';
 import DesignerView from './designer-view';
+import { HelpModal } from './help-modal';
 
 
 
@@ -22,39 +23,22 @@ enum CURRENT_ROLE {
 
 const VarList = (props: Props) => {
   const { variables, data, canvas, theme } = props;
-  // const [varAry, setVarAry] = useState(data.varAry || []);
+  const [showHelpModal, setShowHelpModal] = useState(false);
 
-  // useEffect(() => {
-  //   let apiAry = variables.getAll();
-  //   if (!varAry || varAry.length === 0) {
-  //     if (JSON.stringify(apiAry) !== JSON.stringify(varAry)) {
-  //       setVarAry(apiAry);
-  //     }
-  //   } else {
-  //     const updatedVarAry = varAry.map((item) => {
-  //       const apiItem = apiAry.find((apiItem) => apiItem.title === item.title);
-  //       if (apiItem) {
-  //         return {
-  //           ...item,
-  //           apiId: apiItem.id,
-  //           notifyBindings: apiItem.notifyBindings,
-  //         };
-  //       }
-  //       return item;
-  //     });
-  //     if (JSON.stringify(updatedVarAry) !== JSON.stringify(varAry)) {
-  //       setVarAry(updatedVarAry);
-  //     }
 
-  //   }
-  // }, [variables, varAry]);
+
 
   return (
     <>
       <div className={css.view}>
-        <div className={css.title}>图文同步列表</div>
+        <div className={css.title}>
+          <div className={css.title_main}>图文同步列表</div>
+          <div className={css.title_help} onClick={() => { setShowHelpModal(true) }}>使用帮助 <img src="https://assets.mybricks.world/Yn2pLojPMnK8jrwAXHgY7o7tRdEL53W5-1725609731194.png" alt="" /></div>
+        </div>
         <DesignerView varAryList={data.varAry} variables={variables} data={data} theme={theme}></DesignerView>
       </div>
+
+      <HelpModal show={showHelpModal} onCancel={()=>{setShowHelpModal(false)}} onConfirm={()=>{}}></HelpModal>
     </>
   );
 }

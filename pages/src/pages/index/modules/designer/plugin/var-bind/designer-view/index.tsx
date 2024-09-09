@@ -247,9 +247,10 @@ const DesignerView = (props: DesignerViewProps) => {
 
   useEffect(() => {
     if (!editItem?.id) {
+      setEditUrl("")
       return;
     }
-    setEditUrl(editItem.value);
+    setEditUrl(editItem.value || "");
   }, [editItem]);
 
   const onTabChange = (key) => {

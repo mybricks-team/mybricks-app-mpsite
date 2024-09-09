@@ -6,10 +6,10 @@ import css from './index.less';
 export const ImageEditor = ({ picUrlProps, picUrlSet, show, onConfirm, onCancel }) => {
   const [picUrl, setPicUrl] = useState('');
 
-  let buttonText = '点击上传';
-  if (buttonText === undefined) {
-    buttonText = '点击上传';
-  }
+  // let buttonText = '点击上传';
+  // if (buttonText === undefined) {
+  //   buttonText = '点击上传';
+  // }
 
   const getPicUrl = (url: string) => {
     setPicUrl(url);
