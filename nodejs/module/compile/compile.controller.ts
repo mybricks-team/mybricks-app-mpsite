@@ -16,7 +16,7 @@ import * as path from "path";
 import * as fs from "fs";
 import * as fse from "fs-extra";
 import * as ci from "miniprogram-ci";
-import { minidev } from "minidev";
+// import { minidev } from "minidev";
 import API from "@mybricks/sdk-for-app/api";
 import {
   PublishError,
@@ -295,77 +295,77 @@ export default class CompileController {
   /**
    * 支付宝预览
    */
-  @Post("/alipay/preview")
-  @UseInterceptors(LimitInterceptor)
-  async alipayPreview(
-    @Body("userId") userId: string,
-    @Body("fileId") fileId: number,
-    @Body("fileName") fileName: string,
-    @Body("data") data: any,
-    @Body("type") type: string = CompileType.alipay,
-    @Req() req: any
-  ) {
-    try {
-      fse.ensureDirSync(tempFolderPath);
+  // @Post("/alipay/preview")
+  // @UseInterceptors(LimitInterceptor)
+  // async alipayPreview(
+  //   @Body("userId") userId: string,
+  //   @Body("fileId") fileId: number,
+  //   @Body("fileName") fileName: string,
+  //   @Body("data") data: any,
+  //   @Body("type") type: string = CompileType.alipay,
+  //   @Req() req: any
+  // ) {
+  //   try {
+  //     fse.ensureDirSync(tempFolderPath);
 
-      const projectName = `project-${fileId}-preview-${type}`;
-      const projectPath = path.resolve(tempFolderPath, `./${projectName}`);
+  //     const projectName = `project-${fileId}-preview-${type}`;
+  //     const projectPath = path.resolve(tempFolderPath, `./${projectName}`);
 
-      await fse.ensureDir(projectPath);
-      await fse.emptyDir(projectPath);
-      await fse.copy(getTemplatePath(type), projectPath);
+  //     await fse.ensureDir(projectPath);
+  //     await fse.emptyDir(projectPath);
+  //     await fse.copy(getTemplatePath(type), projectPath);
 
-      if (type === CompileType.alipay) {
-        if (!data?.ci?.appid || !data?.ci.privateKey) {
-          throw new PublishError(
-            PublishErrCode.NoAppIdAndUploadKey,
-            "请先配置小程序ID和小程序上传密钥"
-          );
-        }
-      }
+  //     if (type === CompileType.alipay) {
+  //       if (!data?.ci?.appid || !data?.ci.privateKey) {
+  //         throw new PublishError(
+  //           PublishErrCode.NoAppIdAndUploadKey,
+  //           "请先配置小程序ID和小程序上传密钥"
+  //         );
+  //       }
+  //     }
 
-      Logger.info("[preview] init miniapp template start");
+  //     Logger.info("[preview] init miniapp template start");
 
-      await compilerMiniapp(
-        {
-          data,
-          projectPath,
-          projectName,
-          fileName,
-          depModules: getDepModules(data.depModules),
-          origin: req.headers.origin,
-          type,
-        },
-        { Logger }
-      );
+  //     await compilerMiniapp(
+  //       {
+  //         data,
+  //         projectPath,
+  //         projectName,
+  //         fileName,
+  //         depModules: getDepModules(data.depModules),
+  //         origin: req.headers.origin,
+  //         type,
+  //       },
+  //       { Logger }
+  //     );
 
-      Logger.info("[preview] init miniapp template success");
+  //     Logger.info("[preview] init miniapp template success");
 
-      let timestamp = new Date().getTime();
-      Logger.info("[preview] compile miniapp");
-      const res = await compileAlipayAppCI(projectPath, data, "preview");
-      Logger.info("[preview] compile miniapp success");
-      Logger.info(
-        "[preview] 上传小程序耗时" +
-          (new Date().getTime() - timestamp).toString() +
-          "ms"
-      );
-      return {
-        code: 1,
-        message: "构建成功",
-        // qrcode: res.qrcode,
-      };
-    } catch (error) {
-      Logger.error("[preview] preview fail " + error.message, error);
-      return {
-        code: -1,
-        errCode: error.errCode,
-        message: error.message || "构建失败，未知错误",
-        qrcode: "",
-        stack: error?.stack,
-      };
-    }
-  }
+  //     let timestamp = new Date().getTime();
+  //     Logger.info("[preview] compile miniapp");
+  //     const res = await compileAlipayAppCI(projectPath, data, "preview");
+  //     Logger.info("[preview] compile miniapp success");
+  //     Logger.info(
+  //       "[preview] 上传小程序耗时" +
+  //         (new Date().getTime() - timestamp).toString() +
+  //         "ms"
+  //     );
+  //     return {
+  //       code: 1,
+  //       message: "构建成功",
+  //       // qrcode: res.qrcode,
+  //     };
+  //   } catch (error) {
+  //     Logger.error("[preview] preview fail " + error.message, error);
+  //     return {
+  //       code: -1,
+  //       errCode: error.errCode,
+  //       message: error.message || "构建失败，未知错误",
+  //       qrcode: "",
+  //       stack: error?.stack,
+  //     };
+  //   }
+  // }
 
   /**
    * compile
@@ -880,76 +880,76 @@ async function compileWxAppCI(
 }
 
 /** 上传支付宝小程序 */
-async function compileAlipayAppCI(
-  projectPath,
-  data,
-  type: "preview" | "publish" = "preview"
-) {
-  let timestamp = new Date().getTime();
+// async function compileAlipayAppCI(
+//   projectPath,
+//   data,
+//   type: "preview" | "publish" = "preview"
+// ) {
+//   let timestamp = new Date().getTime();
 
-  if (!data?.ci?.appid || !data?.ci.privateKey) {
-    throw new Error("构建失败，请配置小程序ID和小程序上传密钥");
-  }
+//   if (!data?.ci?.appid || !data?.ci.privateKey) {
+//     throw new Error("构建失败，请配置小程序ID和小程序上传密钥");
+//   }
 
-  console.log("开始上传项目", projectPath);
-  Logger.info("开始上传项目", projectPath);
-  // const project = new ci.Project({
-  //   // appid: "2021004166659416",
-  //   // privateKey: data.ci.privateKey,
-  //   // type: "miniProgram",
-  //   // projectPath: projectPath,
-  // });
+//   console.log("开始上传项目", projectPath);
+//   Logger.info("开始上传项目", projectPath);
+//   // const project = new ci.Project({
+//   //   // appid: "2021004166659416",
+//   //   // privateKey: data.ci.privateKey,
+//   //   // type: "miniProgram",
+//   //   // projectPath: projectPath,
+//   // });
 
-  try {
-    if (type === "publish") {
-      const uploadResult = await ci.upload({
-        version: data.ci.version || "1.0.0",
-        project,
-        desc: data.ci.desc || "默认描述",
-        setting: {
-          es6: false,
-          es7: false,
-          minify: false,
-          codeProtect: false,
-          autoPrefixWXSS: false,
-        },
-        useCOS: true,
+//   try {
+//     if (type === "publish") {
+//       const uploadResult = await ci.upload({
+//         version: data.ci.version || "1.0.0",
+//         project,
+//         desc: data.ci.desc || "默认描述",
+//         setting: {
+//           es6: false,
+//           es7: false,
+//           minify: false,
+//           codeProtect: false,
+//           autoPrefixWXSS: false,
+//         },
+//         useCOS: true,
 
-        /** 这个分析无用文件非常占用性能 */
-        allowIgnoreUnusedFiles: false,
-        // threads: 3,
-      });
-      console.log("上传耗时", new Date().getTime() - timestamp, "ms");
-      return {
-        qrcode: "",
-      };
-    } else {
-      const previewResult = await minidev.preview({
-        appId: "2021004166659416",
-        clientType: "alipay",
-        project: projectPath,
-        ignoreHttpDomainCheck: true,
-        ignoreWebViewDomainCheck: true,
-      });
+//         /** 这个分析无用文件非常占用性能 */
+//         allowIgnoreUnusedFiles: false,
+//         // threads: 3,
+//       });
+//       console.log("上传耗时", new Date().getTime() - timestamp, "ms");
+//       return {
+//         qrcode: "",
+//       };
+//     } else {
+//       const previewResult = await minidev.preview({
+//         appId: "2021004166659416",
+//         clientType: "alipay",
+//         project: projectPath,
+//         ignoreHttpDomainCheck: true,
+//         ignoreWebViewDomainCheck: true,
+//       });
 
-      Logger.info("上传耗时", new Date().getTime() - timestamp, "ms");
-      console.log("上传耗时", new Date().getTime() - timestamp, "ms");
-      return {
-        qrcode: fs.readFileSync(
-          path.resolve(projectPath, "./destination.txt"),
-          "utf-8"
-        ),
-      };
-    }
-  } catch (error) {
-    if (error.code == 20003 && error.message?.indexOf?.("-10008")) {
-      // 'Error: {"errCode":-10008,"errMsg":"invalid ip: 122.224.86.195, reference: https://developers.weixin.qq.com/miniprogram/dev/devtools/ci.html"}'
-      throw new PublishError(PublishErrCode.NoUploadWhiteList, error.message);
-    } else if (error.code == 20003 && error.message?.indexOf?.("ticket")) {
-      // Error: {"errCode":-1,"errMsg":"get new ticket fail: innerCode: -80002"}
-      throw new PublishError(PublishErrCode.InvalidAppSecret, error.message);
-    } else {
-      throw new Error(error.message);
-    }
-  }
-}
+//       Logger.info("上传耗时", new Date().getTime() - timestamp, "ms");
+//       console.log("上传耗时", new Date().getTime() - timestamp, "ms");
+//       return {
+//         qrcode: fs.readFileSync(
+//           path.resolve(projectPath, "./destination.txt"),
+//           "utf-8"
+//         ),
+//       };
+//     }
+//   } catch (error) {
+//     if (error.code == 20003 && error.message?.indexOf?.("-10008")) {
+//       // 'Error: {"errCode":-10008,"errMsg":"invalid ip: 122.224.86.195, reference: https://developers.weixin.qq.com/miniprogram/dev/devtools/ci.html"}'
+//       throw new PublishError(PublishErrCode.NoUploadWhiteList, error.message);
+//     } else if (error.code == 20003 && error.message?.indexOf?.("ticket")) {
+//       // Error: {"errCode":-1,"errMsg":"get new ticket fail: innerCode: -80002"}
+//       throw new PublishError(PublishErrCode.InvalidAppSecret, error.message);
+//     } else {
+//       throw new Error(error.message);
+//     }
+//   }
+// }

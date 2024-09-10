@@ -265,24 +265,15 @@ function getAppConfig(toJson) {
     // 启用 tabbar 时，首页为 tabbar 的第一个页面
     result.entryPagePath = `pages/${tabBar[0].scene.id}/index`;
   } else {
-    // // 未启用 tabbar 时，首页为排除掉 tarbar、login 的 scenes 的第一个页面
-    // let scenes = toJson.scenes.filter(item => {
-    //   return item.id !== 'tabbar' && item.id !== 'login';
-    // });
+    // 未启用 tabbar 时，如果 main 页面存在，则首页为 main 页面，否则为第一个页面
+    const isMainPageExist = toJson.scenes.some((item) => {
+      return item.id === "main";
+    });
 
-    // result.entryPagePath = `pages/${scenes[0].id}/index`;
-
-    if (
-      toJson.scenes
-        .filter((item) => {
-          return isPageScene(item);
-        })
-        .some((t) => t.id === "u_6ysM_")
-    ) {
-      result.entryPagePath = `pages/u_6ysM_/index`;
-    } else {
-      // 未启用 tabbar 时，首页 为 main 页面
+    if (isMainPageExist) {
       result.entryPagePath = `pages/main/index`;
+    } else {
+      result.entryPagePath = `pages/${toJson.scenes[0].id}/index`;
     }
   }
 

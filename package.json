@@ -1,6 +1,6 @@
 {
   "name": "mybricks-app-mpsite",
-  "version": "0.4.33",
+  "version": "0.4.40",
   "description": "mybricks 小程序应用",
   "scripts": {
     "start:dev": "NODE_ENV=development node nodejs/index.ts",
@@ -38,7 +38,6 @@
     "glob": "^9.3.1",
     "https": "^1.0.0",
     "jszip": "^3.10.1",
-    "minidev": "^2.1.7",
     "miniprogram-ci": "^1.9.8",
     "pako": "^2.1.0",
     "reflect-metadata": "^0.1.13",

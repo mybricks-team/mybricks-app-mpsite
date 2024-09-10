@@ -6,7 +6,7 @@ import servicePlugin, {
 import notePlugin from "@mybricks/plugin-note";
 import axios from "axios";
 import toolsPlugin from "./plugin/tools";
-import VarBind from './plugin/var-bind';
+import VarBind from "./plugin/varBind";
 import { render as renderUI } from "@mybricks/render-web";
 import comlibLoaderFunc from "./configs/comlibLoader";
 import { comLibAdderFunc } from "./configs/comLibAdder";
@@ -18,6 +18,7 @@ import { LOCAL_EDITOR_ASSETS } from "@/constants";
 import { MpConfig, CompileConfig, ComlibAdder } from "./custom-configs";
 import { getAiEncryptData } from "./utils/get-ai-encrypt-data";
 import extendsConfig from "./configs/extends";
+import typeConfig from "./configs/type";
 
 // 加密展示
 // 输入一个字符串，一行或者多行，需要把中间的内容隐藏，只显示前面几个字符和后面几个字符，中间用*号代替
@@ -58,7 +59,7 @@ function getComs() {
 
 export default function ({ ctx, pageModel, save, designerRef, FxService }) {
   return {
-    // type: "mpa",
+    ...typeConfig,
     shortcuts: {
       "ctrl+s": [() => save()],
     },
@@ -74,12 +75,15 @@ export default function ({ ctx, pageModel, save, designerRef, FxService }) {
           pageModel.versionApi = versionApi;
         },
         needSavePreview: true,
+        saveConfig: {
+          limit: 0,
+        },
       }),
       toolsPlugin({
         dump: contentModel.dump,
         loadContent: (importData) => contentModel.loadContent(importData, ctx),
       }),
-      VarBind()
+      VarBind(),
     ],
     // comLibLoader: comlibLoader(ctx),
     // comLibLoader: () => {
@@ -494,24 +498,24 @@ export default function ({ ctx, pageModel, save, designerRef, FxService }) {
           //     asRoot: true,
           //   },
           // },
-          {
-            id: "main",
-            title: "首页",
-            template: {
-              namespace: "mybricks.taro.systemPage",
-              deletable: false,
-              asRoot: true,
-            },
-            inputs: [
-              {
-                id: "open",
-                title: "打开",
-                schema: {
-                  type: "object",
-                },
-              },
-            ],
-          },
+          // {
+          //   id: "main",
+          //   title: "首页",
+          //   template: {
+          //     namespace: "mybricks.taro.systemPage",
+          //     deletable: false,
+          //     asRoot: true,
+          //   },
+          //   inputs: [
+          //     {
+          //       id: "open",
+          //       title: "打开",
+          //       schema: {
+          //         type: "object",
+          //       },
+          //     },
+          //   ],
+          // },
           // {
           //   id: "login",
           //   title: "登录",

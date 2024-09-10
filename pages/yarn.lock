@@ -4352,10 +4352,10 @@ multicast-dns@^7.2.5:
     dns-packet "^5.2.2"
     thunky "^1.0.2"
 
-mybricks-plugin-version@^0.0.22:
-  version "0.0.22"
-  resolved "https://npm.corp.kuaishou.com/mybricks-plugin-version/-/mybricks-plugin-version-0.0.22.tgz"
-  integrity sha512-yrvHOEfd2VoVURkVU8mZHEqxqBJPJH0LI7exP82WUwW/d+P/wpUYZm5dvXjwsdwIzNJPZMDiBserFXo+1IV9jg==
+mybricks-plugin-version@^0.0.26:
+  version "0.0.26"
+  resolved "https://registry.npmjs.org/mybricks-plugin-version/-/mybricks-plugin-version-0.0.26.tgz"
+  integrity sha512-Oz46QnaqDdZriI3dtIz6pBXxJkRt0JZvO+qHLxcv8Hxt0hOgSe+hbBydmWWO8SzZRxpYY+J5kfBfWHtvq5uezg==
   dependencies:
     antd "^4.23.6"
     axios "^1.1.3"
