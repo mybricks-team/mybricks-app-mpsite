@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect , useMemo } from 'react';
 import css from './index.less';
 import { message, Tabs } from 'antd';
 import { ImageEditor } from '../../imageEditor/index';
@@ -340,6 +340,18 @@ const DesignerView = (props: DesignerViewProps) => {
     setEditType(Math.random().toString(36).slice(-6));
   },[]) 
 
+  const addButtonText = useMemo(()=>{
+    if(currentType === itemTypes.STRING){
+      return '添加文本'
+    }else if(currentType === itemTypes.COLOR){
+      return '添加颜色'
+    }else if(currentType === itemTypes.IMAGE){
+      return '添加图片'
+    }else{
+      return '添加'
+    }
+  },[currentType])
+
   return (
     <div className="fangzhou-theme">
       <div className={css.view}>
@@ -528,7 +540,7 @@ const DesignerView = (props: DesignerViewProps) => {
               addVar(currentType);
             }}
           >
-            新增图文配置
+            {addButtonText}
           </button>
         </div>
 
