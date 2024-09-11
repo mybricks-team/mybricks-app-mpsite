@@ -59,6 +59,7 @@
     "@mybricks/plugin-connector-http": "^1.2.21",
     "@mybricks/plugin-note": "^0.0.7",
     "@mybricks/plugin-tools": "^1.0.12",
+    "@mybricks/plugin-varbind": "^1.0.0",
     "@mybricks/render-utils": "^0.0.43",
     "@mybricks/render-web": "^1.2.68",
     "@mybricks/rxui": "^1.0.87",
