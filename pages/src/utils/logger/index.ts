@@ -1,6 +1,7 @@
 class Logger {
   private basePrefix: string;
   private dynamicPrefix: string | null = null;
+  private colorCache: { [key: string]: string } = {};
 
   constructor(basePrefix: string, dynamicPrefix?: string) {
     this.basePrefix = basePrefix;
@@ -16,16 +17,25 @@ class Logger {
   }
 
   private serialize(value: any): any {
-    try {
-      return JSON.parse(JSON.stringify(value));
-    } catch (e) {
-      return value;
+    // 仅在需要时进行深拷贝
+    if (typeof value === 'object' && value !== null) {
+      try {
+        return JSON.parse(JSON.stringify(value));
+      } catch (e) {
+        return value;
+      }
     }
+    return value;
   }
 
   private getColorForPrefix(prefix: string): string {
+    if (this.colorCache[prefix]) {
+      return this.colorCache[prefix];
+    }
     const hash = this.hashString(prefix);
-    return this.hashToColor(hash);
+    const color = this.hashToColor(hash);
+    this.colorCache[prefix] = color;
+    return color;
   }
 
   private hashString(str: string): number {

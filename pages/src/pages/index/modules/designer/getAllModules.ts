@@ -81,6 +81,7 @@ export const getAllModulesJsCode = async (pages, plugins) => {
       markList: ${JSON.stringify(item.markList)},
       globalParamsFn: ${eval(`(${plugins["@mybricks/plugins/service"].config.paramsFn})`)},
       globalResultFn: ${eval(`(${plugins["@mybricks/plugins/service"].config.resultFn})`)},
+      globalErrorResultFn: ${eval(`(${plugins["@mybricks/plugins/service"].config.errorResultFn})`)},
       path: '${item.path}',
       type: '${item.type}',
     }`;

@@ -1,23 +1,29 @@
 import { getAllModulesJsCode, getPageCssCode } from "../getAllModules";
 import axios from "axios";
-import { BaseJson } from './base'
+import { BaseJson } from "./base";
 import { Css } from "./utils";
 
 export class GetH5Json extends BaseJson {
-
   constructor() {
-    super()
+    super();
   }
 
-  getJson = async ({ toJson, comlibs, status, title = '', events = {} }) => {
-
-    const { pages, fxFrames, tabBarJson, scenes, depModules, pageCssMap, appConfig } = await this.initJson({ toJson, events, comlibs })
+  getJson = async ({ toJson, comlibs, status, title = "", events = {} }) => {
+    const {
+      pages,
+      fxFrames,
+      tabBarJson,
+      scenes,
+      depModules,
+      pageCssMap,
+      appConfig,
+    } = await this.initJson({ toJson, events, comlibs });
 
     const rootConfig = {
       scenes,
       fxFrames,
       status,
-    }
+    };
 
     let cssContent: any = [];
     pages.forEach(({ id }) => {
@@ -27,15 +33,18 @@ export class GetH5Json extends BaseJson {
         .${key} ${selector} {
           ${transformStyleToCss(css)} 
         }
-        `)
-      })
-    })
-    cssContent = cssContent.join('\n');
+        `);
+      });
+    });
+    cssContent = cssContent.join("\n");
 
     // popup已经被包含到pages里了，所以不要重复提取
-    const forAllModules = [...(fxFrames ?? [])].map(j => ({ pageToJson: j }));
+    const forAllModules = [...(fxFrames ?? [])].map((j) => ({ pageToJson: j }));
     // 提取 js计算 连接器 等组件，并删除 pages, popups,fxFrames中的代码
-    let allModules = await getAllModulesJsCode([...pages, ...forAllModules], toJson.plugins);
+    let allModules = await getAllModulesJsCode(
+      [...pages, ...forAllModules],
+      toJson.plugins
+    );
 
     const injectScriptContent = await genInjectScript({
       pages,
@@ -48,7 +57,7 @@ export class GetH5Json extends BaseJson {
     // 最后再清理一次 json
     // 最后再清理一次 json
     // 最后再清理一次 json
-    this.cleanPagesFromJson(this.json)
+    this.cleanPagesFromJson(this.json);
 
     delete this.json.pages;
     delete this.json.tabBarJson;
@@ -59,19 +68,24 @@ export class GetH5Json extends BaseJson {
       ...this.json,
       title,
       allComponents: {
-        comlibs
+        comlibs,
       },
       allModules,
       cssContent,
-      depModules
-    }
+      depModules,
+    };
 
     console.warn("toJson2Json", params);
     return params;
-  }
+  };
 }
 
 async function genInjectScript({ tabBarJson, pages, rootConfig, appConfig }) {
+  const pageOnLoadFx = rootConfig.fxFrames.find((t) => t.name === "pageOnLoad");
+  const mybricksPageFx = {
+    pageOnLoad: pageOnLoadFx ?? {},
+  };
+
   let scriptContent = ``;
 
   /** 注入全局配置和路由 */
@@ -131,6 +145,9 @@ async function genInjectScript({ tabBarJson, pages, rootConfig, appConfig }) {
         const sceneId = p.pagePath.split('/').reverse()[1];
         _mybricks_page_config_[sceneId]= p;
       })
+
+      // 注入页面钩子
+      window._mybricks_page_fx_ = ${JSON.stringify(JSON.stringify(mybricksPageFx))};
     `;
 
   // /** 注入所有组件Rt */
@@ -177,4 +194,3 @@ function transformStyleToCss(obj) {
   });
   return result.join("\n");
 }
-
