@@ -423,7 +423,7 @@ class Content {
    * */
   getPageContent = async ({ sceneId }) => {
     // 本地有远程缓存的话使用缓存
-    const preloadPage = this.originPagesJson.find(p => p.id === sceneId);
+    const preloadPage = this.originPagesJson.find(p => p?.id === sceneId);
     if (preloadPage) {
       return cloneDeep(preloadPage)
     }
