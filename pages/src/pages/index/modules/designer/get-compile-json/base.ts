@@ -406,7 +406,7 @@ function rgbaToHex(rgbaStr) {
   if (a === 1) {
     return hex;
   }
-  return hex + Math.round(a * 255).toString(16);
+  return hex + Math.round(a * 255).toString(16).padStart(2, '0');
 }
 
 function deleteUnuseDataFromPage(pageToJson) {
