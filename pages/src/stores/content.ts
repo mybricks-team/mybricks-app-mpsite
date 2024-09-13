@@ -467,9 +467,9 @@ class Content {
         wxConfig: pageModel.wxConfig,
         customComlib: pageModel.customComlib,
         debug: pageModel.debug,
-        tabbar: window.__tabbar__.get(),
         comlibs: ctx.comlibs,
-
+        tabbar: window.__tabbar__.get(),
+        entryPagePath: window.__entryPagePath__?.get() || "",
         ...extra // 额外的数据，或者强制覆盖上方的数据
       }),
       operationList: operationListStr

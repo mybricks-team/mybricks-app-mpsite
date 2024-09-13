@@ -260,20 +260,27 @@ function getAppConfig(toJson) {
   });
 
   let useTabBar = tabBar.length >= 2 && tabBar.length <= 5;
+  const entryPagePathSceneId = window.__entryPagePath__?.get() || "";
 
-  if (useTabBar) {
-    // 启用 tabbar 时，首页为 tabbar 的第一个页面
-    result.entryPagePath = `pages/${tabBar[0].scene.id}/index`;
+  if (entryPagePathSceneId) {
+    // 当设置了 entryPagePath 时，首页为 entryPagePath 指定的页面
+    result.entryPagePath = `pages/${entryPagePathSceneId}/index`;
   } else {
-    // 未启用 tabbar 时，如果 main 页面存在，则首页为 main 页面，否则为第一个页面
-    const isMainPageExist = toJson.scenes.some((item) => {
-      return item.id === "main";
-    });
-
-    if (isMainPageExist) {
-      result.entryPagePath = `pages/main/index`;
+    // 否则走老逻辑
+    if (useTabBar) {
+      // 启用 tabbar 时，首页为 tabbar 的第一个页面
+      result.entryPagePath = `pages/${tabBar[0].scene.id}/index`;
     } else {
-      result.entryPagePath = `pages/${toJson.scenes[0].id}/index`;
+      // 未启用 tabbar 时，如果 main 页面存在，则首页为 main 页面，否则为第一个页面
+      const isMainPageExist = toJson.scenes.some((item) => {
+        return item.id === "main";
+      });
+
+      if (isMainPageExist) {
+        result.entryPagePath = `pages/main/index`;
+      } else {
+        result.entryPagePath = `pages/${toJson.scenes[0].id}/index`;
+      }
     }
   }
 
@@ -333,8 +340,6 @@ function getAppConfig(toJson) {
   // 全局中是否有用到特殊组件
   let isContainChooseLocation = false;
   let isContainGetLocation = false;
-
-  console.warn("toJson~~~~~~~~~~", toJson);
 
   toJson.scenes.forEach((scene) => {
     if (findCom(scene, "mybricks.taro._chooseLocation")) {
@@ -406,7 +411,12 @@ function rgbaToHex(rgbaStr) {
   if (a === 1) {
     return hex;
   }
-  return hex + Math.round(a * 255).toString(16).padStart(2, '0');
+  return (
+    hex +
+    Math.round(a * 255)
+      .toString(16)
+      .padStart(2, "0")
+  );
 }
 
 function deleteUnuseDataFromPage(pageToJson) {

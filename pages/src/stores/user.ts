@@ -1,28 +1,15 @@
-import { observable } from 'rxui-t';
-import { UserInfo } from '@/types/user';
-import { removeCookie, setCookie } from '@/utils';
-import { COOKIE_LOGIN_USER } from '@/constants';
+import { makeAutoObservable } from "mobx";
 
 class User {
-	user: UserInfo = null;
+  user = null;
 
-	constructor() {
-	}
+  constructor() {
+    makeAutoObservable(this);
+  }
 
-	setUser(user: UserInfo) {
-		this.user = user;
-	}
-	
-	login(user: UserInfo) {
-		this.user = user;
-		
-		setCookie(COOKIE_LOGIN_USER, JSON.stringify(user), 30);
-	}
-	
-	logout() {
-		this.user = null;
-		removeCookie(COOKIE_LOGIN_USER);
-	}
+  setUser(user) {
+    this.user = user;
+  }
 }
 
-export const userModel: User = observable(new User());
+export const userModel = new User();

@@ -6,8 +6,6 @@ import servicePlugin, {
 import notePlugin from "@mybricks/plugin-note";
 import axios from "axios";
 import toolsPlugin from "./plugin/tools";
-// import VarBind from "./plugin/varBind";
-// import VarBind from "/Users/stuzhaoxing-office/Program/plugin-varbind/src/index";
 import VarBind from "@mybricks/plugin-varbind";
 
 import { render as renderUI } from "@mybricks/render-web";
