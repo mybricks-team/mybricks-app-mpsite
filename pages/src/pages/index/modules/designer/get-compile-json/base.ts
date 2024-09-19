@@ -420,7 +420,7 @@ function rgbaToHex(rgbaStr) {
 }
 
 function deleteUnuseDataFromPage(pageToJson) {
-  const jsonComs = pageToJson.coms;
+  const jsonComs = pageToJson?.coms || {};
   Object.keys(jsonComs).forEach((key) => {
     let value = jsonComs[key];
 
@@ -471,7 +471,7 @@ function getPageDepsMap(toJson) {
         }
       }
     });
-    Object.values(json.coms).forEach((com) => {
+    Object.values(json?.coms || {}).forEach((com) => {
       if (
         com.def?.namespace === "mybricks.core-comlib.scenes" &&
         com?.model?.data?._sceneShowType === "popup"

@@ -20,6 +20,7 @@ import { MpConfig, CompileConfig, ComlibAdder } from "./custom-configs";
 import { getAiEncryptData } from "./utils/get-ai-encrypt-data";
 import extendsConfig from "./configs/extends";
 import typeConfig from "./configs/type";
+// import { PcEditor } from "/Users/stuzhaoxing-office/Program/editors-pc-common/src/index";
 
 // 加密展示
 // 输入一个字符串，一行或者多行，需要把中间的内容隐藏，只显示前面几个字符和后面几个字符，中间用*号代替
@@ -110,6 +111,9 @@ export default function ({ ctx, pageModel, save, designerRef, FxService }) {
       return cont;
     },
     editView: {
+      // editorAppender(editConfig) {
+      //   return PcEditor({editConfig})
+      // },
       editorAppender(editConfig) {
         return editorAppenderFn(editConfig, pageModel);
       },

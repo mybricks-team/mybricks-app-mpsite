@@ -327,10 +327,7 @@ export const compilerMiniapp = async (
 
     // 修改index.js 中的引入的config名称，保证每次个config都是独立的，因为external名称一样的话都是一个引用
     modifyFileContent(path.resolve(target, "./index.js"), (str) => {
-      return str.replace(
-        /\/mybricks\/page-fx/g,
-        `/mybricks/${pageId}-fx`
-      );
+      return str.replace(/\/mybricks\/page-fx/g, `/mybricks/${pageId}-fx`);
     });
 
     // 修改index.js 中的引入的config名称，保证每次个config都是独立的，因为external名称一样的话都是一个引用
@@ -342,16 +339,28 @@ export const compilerMiniapp = async (
     });
   }
 
+  console.log("==========================");
+  console.log();
+  console.log("==========================");
+
   // --- 分包逻辑 ---
-  const SPLIT_PACK_LIMIT = 500 * 1024,
-    SINGLE_PACK_LIMIT = 400 * 1024; //
-  const whiteList = [
+  const SPLIT_PACK_LIMIT = 500 * 1024;
+  const SINGLE_PACK_LIMIT = 400 * 1024;
+  let whiteList = [
     "404",
     "index",
     "login",
     "main",
     ...(tabBarJson || []).map((t) => t?.pagePath?.split("/")?.[1]),
   ];
+
+  // 如果首页不在白名单内，添加首页
+  if (data.appConfig.entryPagePath) {
+    let sceneId = data.appConfig.entryPagePath.split("/")[1];
+    if (!whiteList.includes(sceneId)) {
+      whiteList.push(sceneId);
+    }
+  }
 
   const { total, pageSizes } = await getFolderSize(
     path.resolve(projectPath, "./pages")
@@ -427,6 +436,7 @@ export const compilerMiniapp = async (
             );
           }
         );
+
         routeMap[page.name] = {
           path: `/${newPagePath}`,
           isTabbar: false, // 分包的都是非tabbar页面
@@ -449,6 +459,17 @@ export const compilerMiniapp = async (
           path.resolve(pkgTarget, `./pages/${page.name}`, "./index.json"),
           (str) => {
             return str.replace(/..\/..\//g, "../../../");
+          }
+        );
+
+        // 修改 components/comDefs 相对路径
+        modifyFileContent(
+          path.resolve(pkgTarget, `./pages/${page.name}`, "./index.js"),
+          (str) => {
+            return str.replace(
+              /\.\/\.\.\/\.\.\/components\/comDefs/g,
+              "./../../../components/comDefs"
+            );
           }
         );
       });
@@ -495,7 +516,7 @@ export const compilerMiniapp = async (
   // 服务
   cloneStatus.serviceFx = {
     url: data.serviceFxUrl,
-    env: data.status.apiEnv
+    env: data.status.apiEnv,
   };
 
   writeRootConfig(
