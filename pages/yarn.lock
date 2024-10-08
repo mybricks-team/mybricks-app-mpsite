@@ -780,10 +780,10 @@
   dependencies:
     classnames "^2.3.2"
 
-"@mybricks/plugin-varbind@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.npmjs.org/@mybricks/plugin-varbind/-/plugin-varbind-1.0.0.tgz"
-  integrity sha512-/1o8lu1YyJ+Q/8QEY1DJBu4f64mj5dLqgMst1YUpqHZySsI54PDLYv4e7wB1zAQCBoOSg0K31bLBh2H0NFH9iw==
+"@mybricks/plugin-varbind@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.npmjs.org/@mybricks/plugin-varbind/-/plugin-varbind-1.0.1.tgz"
+  integrity sha512-4FYt3WojTZ4zDkD0OYqXj//lIDZUg3pRAwe2ntJyrRBWcMuLbj/wFgGzrLnjnJnE0Dsb8yuV+JPiA2eJeCkQSg==
   dependencies:
     "@mybricks/color-picker" "^1.0.9"
     "@mybricks/rxui" "^1.0.87"
@@ -5205,9 +5205,16 @@ qr.js@0.0.0:
   resolved "https://npm.corp.kuaishou.com/qr.js/-/qr.js-0.0.0.tgz"
   integrity sha512-c4iYnWb+k2E+vYpRimHqSu575b1/wKl4XFeJGpFmrJQz5I88v9aY2czh7s0w36srfCM1sXgC/xpoJz5dJfq+OQ==
 
+qs@^6.13.0:
+  version "6.13.0"
+  resolved "https://registry.npmjs.org/qs/-/qs-6.13.0.tgz"
+  integrity sha512-+38qI9SOr8tfZ4QmJNplMUxqjbe7LKvvZgWdExBOmd+egZTtjLB67Gu0HRX3u/XOq7UU2Nx6nsjvS16Z9uwfpg==
+  dependencies:
+    side-channel "^1.0.6"
+
 qs@6.11.0:
   version "6.11.0"
-  resolved "https://npm.corp.kuaishou.com/qs/-/qs-6.11.0.tgz"
+  resolved "https://registry.npmjs.org/qs/-/qs-6.11.0.tgz"
   integrity sha512-MvjoMCJwEarSbUYk5O+nmoSzSutSsTwF85zcHPQ9OrlFoZOYIjaqBAJIqIXjptyD5vThxGq52Xu/MaJzRkIk4Q==
   dependencies:
     side-channel "^1.0.4"

@@ -40,8 +40,6 @@ class Page {
 
   compileLocalPath = '';
 
-  customComlib: [];
-
   /** 打开高级模式，一般一些隐藏功能放在这里 */
   constructor() {}
 }

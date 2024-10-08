@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useComputed } from "rxui-t";
 import { Input } from "antd";
 import { pageModel } from "@/stores";
-import { showMpConfig, showComlibAdder } from "../../publishModal";
+import { showMpConfig } from "../../publishModal";
 import {
   selectRootDirectory,
   getCacheRootDirectoryHandle,
@@ -182,41 +182,6 @@ export const CompileConfig = () => {
         </div>
       )}
       {/* </Item> */}
-    </div>
-  );
-};
-
-export const ComlibAdder = () => {
-  // const hasBind = useComputed(() => {
-  //   return (
-  //     pageModel?.customComlib?.editJs &&
-  //     pageModel?.customComlib?.rtJs &&
-  //     pageModel?.customComlib?.rtComJs
-  //   );
-  // });
-
-  return (
-    <div className={css.comlibAdder}>
-      <div
-        className={css.button}
-        onClick={(e) => {
-          e.preventDefault();
-          showComlibAdder();
-        }}
-      >
-        {"去设置"}
-      </div>
-
-      <div className={css.tips}>
-        组件开发教程：
-        <a
-          href="https://docs.mybricks.world/docs/miniprogram/custom-component/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          点击查看
-        </a>
-      </div>
     </div>
   );
 };

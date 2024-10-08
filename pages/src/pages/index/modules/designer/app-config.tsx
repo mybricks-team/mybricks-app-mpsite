@@ -16,7 +16,7 @@ import versionPlugin from "mybricks-plugin-version";
 import { editorAppenderFn } from "./editorAppender";
 
 import { LOCAL_EDITOR_ASSETS } from "@/constants";
-import { MpConfig, CompileConfig, ComlibAdder } from "./custom-configs";
+import { MpConfig, CompileConfig } from "./custom-configs";
 import { getAiEncryptData } from "./utils/get-ai-encrypt-data";
 import extendsConfig from "./configs/extends";
 import typeConfig from "./configs/type";
@@ -446,23 +446,6 @@ export default function ({ ctx, pageModel, save, designerRef, FxService }) {
                 } catch (e) {}
               },
             },
-          },
-        ];
-
-        cate2.title = "高级";
-        cate2.items = [
-          {
-            title: "设置自定义组件库",
-            items: [
-              {
-                type: "editorRender",
-                options: {
-                  render: () => {
-                    return <ComlibAdder ctx={ctx} />;
-                  },
-                },
-              },
-            ],
           },
         ];
         // cate0.items = cate0.items.concat([

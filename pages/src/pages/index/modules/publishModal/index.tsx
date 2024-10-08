@@ -414,67 +414,6 @@ export const showMpConfig = ({ activeIndex } = {}) => {
   });
 };
 
-const ComlibModal = () => {
-  const [form] = Form.useForm();
-
-  useEffect(() => {
-    form.setFieldsValue({
-      editJs: pageModel.customComlib?.editJs,
-      rtJs: pageModel.customComlib?.rtJs,
-      rtComJs: pageModel.customComlib?.rtComJs,
-    });
-  }, []);
-
-  const submit = useCallback(async () => {
-    pageModel.customComlib = pageModel.customComlib || {};
-
-    pageModel.customComlib.editJs = form.getFieldValue("editJs");
-    pageModel.customComlib.rtJs = form.getFieldValue("rtJs");
-    pageModel.customComlib.rtComJs = form.getFieldValue("rtComJs");
-
-    globalModal.hide();
-
-    message.success("设置成功，保存并刷新页面后生效");
-
-  }, []);
-
-  const layout = {
-    labelCol: { span: 6 },
-    wrapperCol: { span: 18 },
-  };
-
-  return (
-    <div>
-      <Form name="basic" form={form} {...layout}>
-        <Form.Item label="rt.js 文件地址" name="rtJs">
-          <Input />
-        </Form.Item>
-        <Form.Item label="edit.js 文件地址" name="editJs">
-          <Input />
-        </Form.Item>
-        <Form.Item label="rtCom.js 文件地址" name="rtComJs">
-          <Input />
-        </Form.Item>
-      </Form>
-      <div className={styles.footer}>
-        <Button type="primary" onClick={submit}>
-          设置
-        </Button>
-      </div>
-    </div>
-  );
-};
-
-export const showComlibAdder = () => {
-  globalModal.show({
-    title: "自定义组件库",
-    footer: null,
-    width: 700,
-    maskClosable: false,
-    children: <ComlibModal />,
-  });
-};
-
 export const showCompileSuccess = ({
   type,
   backEndProjectPath,

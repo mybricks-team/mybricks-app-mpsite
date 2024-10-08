@@ -528,7 +528,6 @@ class Content {
           dumpJson,
           appConfig: pageModel.appConfig,
           wxConfig: pageModel.wxConfig,
-          customComlib: pageModel.customComlib,
           debug: pageModel.debug,
           comlibs: ctx.comlibs,
           tabbar: window.__tabbar__.get(),
@@ -591,7 +590,7 @@ class Content {
       extra: {
         appConfig: pageModel.appConfig,
         // wxConfig: pageModel.wxConfig,
-        customComlib: pageModel.customComlib,
+        // customComlib: pageModel.customComlib,
         // debug: pageModel.debug,
         tabbar: window.__tabbar__.get(),
         comlibs: pageModel.comlibs,

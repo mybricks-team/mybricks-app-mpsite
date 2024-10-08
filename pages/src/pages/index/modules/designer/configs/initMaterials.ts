@@ -15,8 +15,19 @@ export const initMaterials = async (ctx: Record<string, any>) => {
   }
 
   // 用户自定义配置
-  if (pageModel.customComlib?.editJs) {
-    libs.push(pageModel.customComlib?.editJs);
+  if (window.__DEBUG_COMLIB__) {
+    let containIndex = libs.findIndex((lib) => {
+      return (
+        lib.id === window.__DEBUG_COMLIB__.id ||
+        lib.namespace === window.__DEBUG_COMLIB__.namespace
+      );
+    });
+
+    if (containIndex > -1) {
+      libs.splice(containIndex, 1, window.__DEBUG_COMLIB__);
+    } else {
+      libs.push(window.__DEBUG_COMLIB__);
+    }
   }
 
   if (!libs.length) return [];

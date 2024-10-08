@@ -1,4 +1,5 @@
 import React, { useCallback } from "react";
+import qs from "qs";
 import { View as App } from "@mybricks/sdk-for-app/ui";
 import { pageModel, userModel, tabbarModel, EntryPagePath } from "@/stores";
 import MyDesigner from "./modules/designer";
@@ -37,7 +38,6 @@ const Application = () => {
 
     pageModel.appConfig = data.fileContent.content?.appConfig || {};
     pageModel.wxConfig = data.fileContent.content?.wxConfig || {};
-    pageModel.customComlib = data.fileContent.content?.customComlib || {};
     pageModel.debug = data.fileContent.content?.debug || {};
 
     // 首页配置
@@ -45,6 +45,26 @@ const Application = () => {
 
     // 底部导航栏
     tabbarModel.initFromFileContent(data.fileContent.content);
+
+    // 组件库开发模式
+    const urlParams = qs.parse(location.href.split("?")[1]);
+    if (
+      urlParams["debugServerUrl"] &&
+      urlParams["packageName"] &&
+      urlParams["namespace"]
+    ) {
+
+      logger("launch").log("组件开发模式", urlParams["namespace"]);
+
+      window.__DEBUG_COMLIB__ = {
+        id: urlParams["packageName"],
+        namespace: urlParams["namespace"],
+        version: "0.0.0",
+        editJs: `${urlParams["debugServerUrl"]}/libEdt.js`,
+        rtJs: `${urlParams["debugServerUrl"]}/rt.js`,
+        coms: `${urlParams["debugServerUrl"]}/rtCom.js`,
+      };
+    }
   }, []);
 
   return (

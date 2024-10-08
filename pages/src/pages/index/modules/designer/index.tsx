@@ -290,15 +290,20 @@ const Designer = ({ appData }) => {
       // pageModel.previewStatusTips.push("正在加载所有搭建数据...");
       const toJson = await contentModel.toJSON();
 
-      let customComlib = {};
-      if (pageModel.customComlib.rtComJs) {
-        customComlib = {
-          id: "customComlib",
-          version: "1.0.0",
-          coms: pageModel.customComlib.rtComJs,
-          editJs: pageModel.customComlib.editJs,
-          rtJs: pageModel.customComlib.rtJs,
-        };
+      let comlibs = [...ctx.comlibs];
+      if (window.__DEBUG_COMLIB__) {
+        let containIndex = comlibs.findIndex((lib) => {
+          return (
+            lib.id === window.__DEBUG_COMLIB__.id ||
+            lib.namespace === window.__DEBUG_COMLIB__.namespace
+          );
+        });
+
+        if (containIndex > -1) {
+          comlibs.splice(containIndex, 1, window.__DEBUG_COMLIB__);
+        } else {
+          comlibs.push(window.__DEBUG_COMLIB__);
+        }
       }
 
       const json = await getMiniappJson({
@@ -320,7 +325,7 @@ const Designer = ({ appData }) => {
           appid: pageModel.wxConfig.appid,
           appsecret: pageModel.wxConfig.appsecret,
         },
-        comlibs: [...ctx.comlibs, customComlib],
+        comlibs: comlibs,
         events: {
           onBeforeTransformJson: () => {
             // pageModel.previewStatusTips.push("正在处理搭建数据...");
@@ -390,15 +395,21 @@ const Designer = ({ appData }) => {
       try {
         const toJson = await contentModel.toJSON();
 
-        let customComlib = {};
-        if (pageModel.customComlib.rtComJs) {
-          customComlib = {
-            id: "customComlib",
-            version: "1.0.0",
-            coms: pageModel.customComlib.rtComJs,
-            editJs: pageModel.customComlib.editJs,
-            rtJs: pageModel.customComlib.rtJs,
-          };
+        //
+        let comlibs = [...ctx.comlibs];
+        if (window.__DEBUG_COMLIB__) {
+          let containIndex = comlibs.findIndex((lib) => {
+            return (
+              lib.id === window.__DEBUG_COMLIB__.id ||
+              lib.namespace === window.__DEBUG_COMLIB__.namespace
+            );
+          });
+
+          if (containIndex > -1) {
+            comlibs.splice(containIndex, 1, window.__DEBUG_COMLIB__);
+          } else {
+            comlibs.push(window.__DEBUG_COMLIB__);
+          }
         }
 
         const json = await getMiniappJson({
@@ -421,7 +432,7 @@ const Designer = ({ appData }) => {
             appid: pageModel.wxConfig.appid,
             appsecret: pageModel.wxConfig.appsecret,
           },
-          comlibs: [...ctx.comlibs, customComlib],
+          comlibs: comlibs,
         });
 
         const res = await axios({
@@ -480,15 +491,20 @@ const Designer = ({ appData }) => {
     (async () => {
       const toJson = await contentModel.toJSON();
 
-      let customComlib = {};
-      if (pageModel.customComlib.rtComJs) {
-        customComlib = {
-          id: "customComlib",
-          version: "1.0.0",
-          coms: pageModel.customComlib.rtComJs,
-          editJs: pageModel.customComlib.editJs,
-          rtJs: pageModel.customComlib.rtJs,
-        };
+      let comlibs = [...ctx.comlibs];
+      if (window.__DEBUG_COMLIB__) {
+        let containIndex = comlibs.findIndex((lib) => {
+          return (
+            lib.id === window.__DEBUG_COMLIB__.id ||
+            lib.namespace === window.__DEBUG_COMLIB__.namespace
+          );
+        });
+
+        if (containIndex > -1) {
+          comlibs.splice(containIndex, 1, window.__DEBUG_COMLIB__);
+        } else {
+          comlibs.push(window.__DEBUG_COMLIB__);
+        }
       }
 
       const json = await getMiniappJson({
@@ -510,7 +526,7 @@ const Designer = ({ appData }) => {
           appid: pageModel.wxConfig.appid,
           appsecret: pageModel.wxConfig.appsecret,
         },
-        comlibs: [...ctx.comlibs, customComlib],
+        comlibs: comlibs,
         events: {
           onBeforeTransformJson: () => {
             // pageModel.previewStatusTips.push("正在处理搭建数据...");
@@ -634,15 +650,21 @@ const Designer = ({ appData }) => {
     (async () => {
       const toJson = await contentModel.toJSON();
 
-      let customComlib = {};
-      if (pageModel.customComlib.editJs && pageModel.customComlib.rtJs) {
-        customComlib = {
-          id: "customComlib",
-          version: "1.0.0",
-          coms: pageModel.customComlib.rtComJs,
-          editJs: pageModel.customComlib.editJs,
-          rtJs: pageModel.customComlib.rtJs,
-        };
+      //
+      let comlibs = [...ctx.comlibs];
+      if (window.__DEBUG_COMLIB__) {
+        let containIndex = comlibs.findIndex((lib) => {
+          return (
+            lib.id === window.__DEBUG_COMLIB__.id ||
+            lib.namespace === window.__DEBUG_COMLIB__.namespace
+          );
+        });
+
+        if (containIndex > -1) {
+          comlibs.splice(containIndex, 1, window.__DEBUG_COMLIB__);
+        } else {
+          comlibs.push(window.__DEBUG_COMLIB__);
+        }
       }
 
       const json = await getH5Json({
@@ -654,7 +676,7 @@ const Designer = ({ appData }) => {
           ...pageModel.appConfig,
         },
         title: pageModel.file?.name,
-        comlibs: [...ctx.comlibs, customComlib],
+        comlibs: comlibs,
       });
       const ComlibsScriptContent = await injectComlibsScriptContent(json);
 
@@ -732,15 +754,20 @@ const Designer = ({ appData }) => {
       try {
         const toJson = await contentModel.toJSON();
 
-        let customComlib = {};
-        if (pageModel.customComlib.rtComJs) {
-          customComlib = {
-            id: "customComlib",
-            version: "1.0.0",
-            coms: pageModel.customComlib.rtComJs,
-            editJs: pageModel.customComlib.editJs,
-            rtJs: pageModel.customComlib.rtJs,
-          };
+        let comlibs = [...ctx.comlibs];
+        if (window.__DEBUG_COMLIB__) {
+          let containIndex = comlibs.findIndex((lib) => {
+            return (
+              lib.id === window.__DEBUG_COMLIB__.id ||
+              lib.namespace === window.__DEBUG_COMLIB__.namespace
+            );
+          });
+
+          if (containIndex > -1) {
+            comlibs.splice(containIndex, 1, window.__DEBUG_COMLIB__);
+          } else {
+            comlibs.push(window.__DEBUG_COMLIB__);
+          }
         }
 
         const json = await getMiniappJson({
@@ -763,7 +790,7 @@ const Designer = ({ appData }) => {
             appid: pageModel.wxConfig.appid,
             appsecret: pageModel.wxConfig.appsecret,
           },
-          comlibs: [...ctx.comlibs, customComlib],
+          comlibs: comlibs,
         });
 
         const res = await axios({
