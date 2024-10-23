@@ -392,8 +392,8 @@ function getAppConfig(toJson, status) {
   }
 
   // 自定义注入 header
-  if (status.h5Head) {
-    result.h5Head = status.h5Head;
+  if (status?.h5Head) {
+    result.h5Head = status?.h5Head;
   }
 
   return result;

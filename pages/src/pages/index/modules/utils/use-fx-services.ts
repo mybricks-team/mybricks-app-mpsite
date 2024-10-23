@@ -68,7 +68,7 @@ export const useFxServices = (
 
         axios
           .post(
-            `${runtimeApiPrefix}/service/${scopeIdRef.current}/${id}`,
+            `${runtimeApiPrefix}/debug/start/${scopeIdRef.current}/${id}`,
             { params },
             { headers: { "x-mybricks-target": "debug" } }
           )
