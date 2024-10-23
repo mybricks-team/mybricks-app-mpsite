@@ -60,7 +60,7 @@
     "@mybricks/plugin-note": "^0.0.7",
     "@mybricks/plugin-tools": "^1.0.12",
     "@mybricks/plugin-varbind": "^1.0.1",
-    "@mybricks/render-utils": "^0.0.43",
+    "@mybricks/render-utils": "^0.0.46",
     "@mybricks/render-web": "^1.2.68",
     "@mybricks/rxui": "^1.0.87",
     "@mybricks/sdk-for-app": "^1.0.50",

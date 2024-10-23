@@ -17,7 +17,7 @@ export class GetH5Json extends BaseJson {
       depModules,
       pageCssMap,
       appConfig,
-    } = await this.initJson({ toJson, events, comlibs });
+    } = await this.initJson({ toJson, events, comlibs, status });
 
     const rootConfig = {
       scenes,

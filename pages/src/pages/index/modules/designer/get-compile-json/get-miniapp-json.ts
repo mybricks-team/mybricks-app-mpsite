@@ -124,6 +124,7 @@ const genLazyloadComs = async (comlibs, toJSON) => {
     "mybricks.core-comlib.module",
     "mybricks.core-comlib.selection",
     "mybricks.core-comlib.group",
+    "mybricks.core-comlib.service",
   ];
 
   let definedComsDeps = [];
@@ -204,6 +205,9 @@ const genLazyloadComs = async (comlibs, toJSON) => {
           if (noThrowError) {
             return;
           } else {
+
+            console.log()
+
             throw new Error(
               `找不到 ${component.namespace}@${component.version} 对应的组件资源`
             );

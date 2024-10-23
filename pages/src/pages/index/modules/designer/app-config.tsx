@@ -135,6 +135,29 @@ export default function ({ ctx, pageModel, save, designerRef, FxService }) {
             ],
           },
           {
+            title: "H5 配置",
+            items: [
+              {
+                title: "head 注入",
+                description: "内容将被插入到页面的 <head> 标签中",
+                type: "code",
+                options: ({ data, output }) => {
+                  return {
+                    language: "html",
+                  };
+                },
+                value: {
+                  get() {
+                    return pageModel.appConfig.h5Head;
+                  },
+                  set(_, value) {
+                    pageModel.appConfig.h5Head = value;
+                  },
+                },
+              },
+            ],
+          },
+          {
             title: "连接器",
             items: [
               {

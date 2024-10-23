@@ -607,6 +607,7 @@ const Designer = ({ appData }) => {
             ...json,
           },
           injectComlibsScriptContent: encodeURIComponent(ComlibsScriptContent),
+          injectH5Head: pageModel.appConfig.h5Head,
         },
         withCredentials: false,
       });

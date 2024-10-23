@@ -4,8 +4,7 @@ import API from "@mybricks/sdk-for-app/api";
 import cloneDeep from "lodash/cloneDeep";
 import _flatten from "lodash/flatten";
 import { message } from "antd";
-// import { toJSONFromPageDump, toJSONFromProjectDump } from '@mybricks/file-parser'
-import { toJSONFromPageDump } from "./../utils/file-parser";
+import { toJSONFromPageDump } from "../utils/file-parser";
 import {
   ToJsonSchema,
   DumpMetaJson,
@@ -301,7 +300,6 @@ class Content {
   /** 把 originPagesJson 跟 changedPagesMap 合并，获取最新的页面Json */
   private getMergedPages = () => {
     let pages: Record<string, DumpPageJson> = {};
-
     this.originPagesJson.forEach((page) => {
       pages[page.id] = page;
     });
@@ -320,8 +318,9 @@ class Content {
 
     return {
       toJsonPages: Object.values(pages).map((json) => {
-        console.error(json);
-        return toJSONFromPageDump(JSON.stringify(json)) as ToJsonScene;
+        return toJSONFromPageDump(JSON.stringify(json), {
+          forMPA: true,
+        });
       }),
       dumpJsonPages: Object.values(pages).map((json) => {
         return json;
@@ -636,12 +635,17 @@ class Content {
     console.log("[toJSON] start");
     const toJson = cloneDeep(this.designerRef.current?.toJSON());
     const { json: desnJson } = this.designerRef.current?.dump?.(true);
+
+    // console.warn("toJson", JSON.parse(JSON.stringify(toJson)));
+    // console.warn("dump", JSON.parse(JSON.stringify(desnJson)));
+
     const { updatedPageAry, deletedPageAry } = desnJson;
     await this.cacheDumpChanges({ updatedPageAry, deletedPageAry });
 
     await this.loadPagesReady();
 
     const { toJsonPages } = this.getMergedPages();
+    console.log("[toJSON] toJsonPages", toJsonPages);
     toJson.scenes = toJsonPages;
 
     (toJson?.scenes ?? []).forEach((scene) => {

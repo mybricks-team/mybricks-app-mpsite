@@ -85,7 +85,10 @@ function _mybricks_inject_code_ () {
     //   return str.replace(/\'TEMPLATE\:COMMODULES\'/g, allModules).replace(/\"TEMPLATE\:COMMODULES\"/g, allModules)
     // })
 
-    htmlContent = htmlContent.replace('<meta injectscript>', `<script src="./js/${configFileName}"></script><script src="./js/${injectCodeFileName}"></script>`)
+    let injectcustom = data?.appConfig?.h5Head ? decodeURIComponent(data?.appConfig?.h5Head) : "";
+    htmlContent = htmlContent
+      .replace('<meta injectcustom>', `${injectcustom}`)
+      .replace('<meta injectscript>', `<script src="./js/${configFileName}"></script><script src="./js/${injectCodeFileName}"></script>`)
       .replace('<meta injectcomlibs>', `<script src="./js/${comlibsFileName}"></script>`)
       .replace('<meta injectcss>', `<link href="./css/${projectCssFileName}" rel="stylesheet">`)
       .replace('<meta injectvconsole>', `<script>(function(){var openVconsole=new URL(location.href).searchParams.get('vconsole');if(openVconsole){var script=document.createElement('script');script.src='./js/vconsole.min.js';document.getElementsByTagName('head')[0].appendChild(script);script.onload=function(){if(VConsole){new VConsole()}}}})()</script>`)

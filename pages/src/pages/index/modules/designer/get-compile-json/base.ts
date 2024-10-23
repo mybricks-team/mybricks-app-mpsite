@@ -2,7 +2,7 @@ import cloneDeep from "lodash/cloneDeep";
 import { getAllModulesJsCode, getPageCssCode } from "../getAllModules";
 // import { transformToJSON, transformSingleToJSON } from '../json-util'
 import { Css, getComsFromPageJson } from "./utils";
-import { transformToJSON, transformSingleToJSON } from "@mybricks/render-utils";
+import { transformToJSON } from "@mybricks/render-utils";
 import axios from "axios";
 
 interface SceneToJson {}
@@ -54,7 +54,12 @@ const babelScript = (code) => {
 export class BaseJson {
   json: any = {};
 
-  initJson = async ({ toJson, events, comlibs }): Promise<GenerateJsons> => {
+  initJson = async ({
+    toJson,
+    events,
+    comlibs,
+    status,
+  }): Promise<GenerateJsons> => {
     toJson = cloneDeep(toJson);
     log("before toJson", JSON.parse(JSON.stringify(toJson)));
 
@@ -62,8 +67,7 @@ export class BaseJson {
     events?.onBeforeTransformJson?.();
 
     transformToJSON(toJson);
-    log("处理全局变量和FX中完成");
-
+    // log("处理全局变量和FX中完成");
     log("toJson", toJson);
 
     this.json = {};
@@ -71,7 +75,7 @@ export class BaseJson {
     /**
      * app.json 配置
      */
-    const appConfig = getAppConfig(toJson);
+    const appConfig = getAppConfig(toJson, status);
     // app.json 配置
     this.json.appConfig = appConfig;
 
@@ -237,7 +241,7 @@ export class BaseJson {
   };
 }
 
-function getAppConfig(toJson) {
+function getAppConfig(toJson, status) {
   toJson = cloneDeep(toJson);
 
   // resutl
@@ -387,11 +391,21 @@ function getAppConfig(toJson) {
     };
   }
 
+  // 自定义注入 header
+  if (status.h5Head) {
+    result.h5Head = status.h5Head;
+  }
+
   return result;
 }
 
 function findCom(pageToJson, namespace) {
   pageToJson = cloneDeep(pageToJson);
+
+  if (!pageToJson.coms) {
+    console.log(pageToJson);
+  }
+
   return Object.values(pageToJson.coms).find((item) => {
     return item.def.namespace.toLowerCase() === namespace.toLowerCase();
   });
