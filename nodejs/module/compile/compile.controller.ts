@@ -18,6 +18,7 @@ import * as fse from "fs-extra";
 import * as ci from "miniprogram-ci";
 // import { minidev } from "minidev";
 import API from "@mybricks/sdk-for-app/api";
+import { AppProject } from './api';
 import {
   PublishError,
   PublishErrCode,
@@ -113,25 +114,22 @@ export default class CompileController {
         }
       }
 
-      Logger.info("[preview] upload system api");
-      // 发布接口
-      // https://my.mybricks.world
       try {
-        let serviceRes = await axios.post(
-          `${req.headers.origin}/paas/api/project/service/push`,
-          {
-            target: "staging",
-            fileId: `${fileId}`,
+        Logger.info("[preview] upload system api");
+        await AppProject.pushService({
+          metaInfo: {
+            fileId,
+            envType: "staging",
             version: "1.0.0",
-            json: data.services,
-            database: data.database,
-          }
-        );
+            type
+          },
+          json: data.services,
+          database: data.database,
+        })
+        Logger.info("[preview] upload system success");
       } catch (e) {
-        console.log("本地调试，跳过接口上传");
+        Logger.info(`[preview] upload system fail, ${e?.stack ?? e?.message ?? '未知错误'}`);
       }
-
-      Logger.info("[preview] upload system success");
 
       Logger.info("[preview] init miniapp template start");
       await compilerMiniapp(
@@ -214,25 +212,22 @@ export default class CompileController {
         }
       }
 
-      Logger.info("[preview] upload system api");
-      // 发布接口
-      // https://my.mybricks.world
       try {
-        await axios.post(
-          `${req.headers.origin}/paas/api/project/service/push`,
-          {
-            target: "prod",
-            fileId: `${fileId}`,
+        Logger.info("[preview] upload system api");
+        await AppProject.pushService({
+          metaInfo: {
+            fileId,
+            envType: "prod",
             version: "1.0.0",
-            json: data.services,
-            database: data.database,
-          }
-        );
+            type
+          },
+          json: data.services,
+          database: data.database,
+        })
+        Logger.info("[preview] upload system success");
       } catch (e) {
-        console.log("本地调试，跳过接口上传");
+        Logger.info(`[preview] upload system fail, ${e?.stack ?? e?.message ?? '未知错误'}`);
       }
-
-      Logger.info("[preview] upload system success");
 
       Logger.info("[publish] init miniapp template start");
 
@@ -390,26 +385,24 @@ export default class CompileController {
       await fse.emptyDir(projectPath);
       await fse.copy(getTemplatePath(type), projectPath);
 
-      Logger.info("[preview] upload system api");
-      // 发布接口
-      // https://my.mybricks.world
-      try {
-        var backEndRes = await axios.post(
-          `${"https://my.mybricks.world"}/paas/api/project/service/push`,
-          {
-            // await axios.post(`${req.headers.origin}/paas/api/project/service/push`, {
-            target: "prod",
-            fileId: `${fileId}`,
-            version: "1.0.0",
-            json: data.services,
-            database: data.database,
-          }
-        );
-      } catch (e) {
-        console.log("本地调试，跳过接口上传");
-      }
+      let backEndRes = {};
 
-      Logger.info("[preview] upload system success");
+      try {
+        Logger.info("[preview] upload system api");
+        backEndRes = await AppProject.pushService({
+          metaInfo: {
+            fileId,
+            envType: "prod",
+            version: "1.0.0",
+            type
+          },
+          json: data.services,
+          database: data.database,
+        })
+        Logger.info("[preview] upload system success");
+      } catch (e) {
+        Logger.info(`[preview] upload system fail, ${e?.stack ?? e?.message ?? '未知错误'}`);
+      }
 
       Logger.info("[compile] init miniapp template start");
 
