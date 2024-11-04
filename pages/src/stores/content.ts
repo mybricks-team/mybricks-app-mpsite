@@ -531,6 +531,7 @@ class Content {
           comlibs: ctx.comlibs,
           tabbar: window.__tabbar__.get(),
           entryPagePath: window.__entryPagePath__?.get() || "",
+          type: window.__type__,
           ...extra, // 额外的数据，或者强制覆盖上方的数据
         }),
         operationList: operationListStr,
@@ -634,19 +635,21 @@ class Content {
   toJSON = async () => {
     console.log("[toJSON] start");
     const toJson = cloneDeep(this.designerRef.current?.toJSON());
+    console.log("[toJSON] !!!!!!!!", JSON.parse(JSON.stringify(toJson)));
+
+    // return;
+
     const { json: desnJson } = this.designerRef.current?.dump?.(true);
-
-    // console.warn("toJson", JSON.parse(JSON.stringify(toJson)));
-    // console.warn("dump", JSON.parse(JSON.stringify(desnJson)));
-
     const { updatedPageAry, deletedPageAry } = desnJson;
     await this.cacheDumpChanges({ updatedPageAry, deletedPageAry });
 
     await this.loadPagesReady();
 
     const { toJsonPages } = this.getMergedPages();
-    console.log("[toJSON] toJsonPages", toJsonPages);
-    toJson.scenes = toJsonPages;
+
+    if (window.__type__ === "spa") {
+      toJson.scenes = toJsonPages;
+    }
 
     (toJson?.scenes ?? []).forEach((scene) => {
       Object.keys(scene?.coms ?? {}).forEach((comKey) => {

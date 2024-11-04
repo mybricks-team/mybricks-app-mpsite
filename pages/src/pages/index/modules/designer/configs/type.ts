@@ -1,3 +1,3 @@
 export default {
-  // type: "mpa",
+  // type: window.__type__, // "spa" "mpa",
 };
