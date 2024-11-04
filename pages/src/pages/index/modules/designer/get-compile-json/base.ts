@@ -66,7 +66,9 @@ export class BaseJson {
     log("处理全局变量和FX中");
     events?.onBeforeTransformJson?.();
 
-    transformToJSON(toJson);
+    if (window.__type__ === "spa") {
+      transformToJSON(toJson);
+    }
     // log("处理全局变量和FX中完成");
     log("toJson", toJson);
 

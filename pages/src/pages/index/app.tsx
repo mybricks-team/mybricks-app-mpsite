@@ -27,6 +27,18 @@ const Application = () => {
      */
     logger("launch").log(data);
 
+    // 老页面继续走 spa，新页面走 mpa，避免 spa 升级到 mpa 时出现问题
+    if (
+      data.fileContent.content.type?.toLowerCase() === "mpa" ||
+      (JSON.stringify(data.fileContent.content) === "{}" && !data.fileContent.content?.type?.toLowerCase())
+    ) {
+      window.__type__ = "mpa";
+    } else {
+      window.__type__ = "spa";
+    }
+    console.log("type", window.__type__);
+
+    //
     userModel.setUser(data.user);
 
     pageModel.file = data.fileContent;
@@ -53,7 +65,6 @@ const Application = () => {
       urlParams["packageName"] &&
       urlParams["namespace"]
     ) {
-
       logger("launch").log("组件开发模式", urlParams["namespace"]);
 
       window.__DEBUG_COMLIB__ = {
