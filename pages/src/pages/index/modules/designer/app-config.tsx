@@ -19,6 +19,7 @@ import { LOCAL_EDITOR_ASSETS } from "@/constants";
 import { MpConfig, CompileConfig } from "./custom-configs";
 import { getAiEncryptData } from "./utils/get-ai-encrypt-data";
 import extendsConfig from "./configs/extends";
+import system from "../../../../../../system.txt"
 // import typeConfig from "./configs/type";
 // import { PcEditor } from "/Users/stuzhaoxing-office/Program/editors-pc-common/src/index";
 
@@ -100,8 +101,8 @@ export default function ({ ctx, pageModel, save, designerRef, FxService }) {
     },
     ...(ctx.hasMaterialApp
       ? {
-          comLibAdder: comLibAdderFunc(ctx),
-        }
+        comLibAdder: comLibAdderFunc(ctx),
+      }
       : {}),
     comLibLoader: comlibLoaderFunc(ctx),
     pageContentLoader: async (sceneId) => {
@@ -118,7 +119,7 @@ export default function ({ ctx, pageModel, save, designerRef, FxService }) {
         return editorAppenderFn(editConfig, pageModel);
       },
       // eslint-disable-next-line no-empty-pattern
-      items({}, cate0, cate1, cate2) {
+      items({ }, cate0, cate1, cate2) {
         cate0.title = "配置";
         cate0.items = [
           {
@@ -466,7 +467,7 @@ export default function ({ ctx, pageModel, save, designerRef, FxService }) {
                     "_MYBRICKS_GLOBAL_HEADERS_",
                     JSON.stringify({ data })
                   );
-                } catch (e) {}
+                } catch (e) { }
               },
             },
           },
@@ -714,7 +715,16 @@ export default function ({ ctx, pageModel, save, designerRef, FxService }) {
           // 返回结果: ${content}`);
         }
       },
-      async requestAsStream(messages,tools,{ write, complete, error }) {
+      async requestAsStream(messages, tools, { write, complete, error }) {
+
+        const message2 = [
+          {
+            role: "system",
+            content: system,
+          },
+          ...messages.slice(1)
+        ]
+
         try {
           const response = await fetch("//ai.mybricks.world/stream", {
             method: "POST",
@@ -723,7 +733,7 @@ export default function ({ ctx, pageModel, save, designerRef, FxService }) {
             },
             body: JSON.stringify(
               getAiEncryptData({
-                messages,
+                messages:message2,
               })
             ),
           });
