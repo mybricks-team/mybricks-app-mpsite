@@ -904,6 +904,7 @@ const Designer = ({ appData }) => {
               save: onSave,
               designerRef,
               FxService,
+              appConfig,
             })}
             ref={designerRef}
             onEdit={onEdit}
