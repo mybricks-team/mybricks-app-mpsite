@@ -1,6 +1,6 @@
 {
   "name": "mybricks-app-mpsite",
-  "version": "0.4.57",
+  "version": "0.4.59",
   "description": "mybricks 小程序应用",
   "scripts": {
     "start:dev": "NODE_ENV=development node nodejs/index.ts",

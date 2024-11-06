@@ -29,11 +29,15 @@ export class GetH5Json extends BaseJson {
     pages.forEach(({ id }) => {
       const cssMap = pageCssMap[id];
       Css.forEachCssMap(cssMap, (key, selector, css) => {
-        cssContent.push(`
-        .${key} ${selector} {
-          ${transformStyleToCss(css)} 
+        if (!selector && typeof css === "string") {
+          cssContent.push(transformStyleToCss(css))
+        } else {
+          cssContent.push(`
+            .${key} ${selector} {
+              ${transformStyleToCss(css)} 
+            }
+            `);
         }
-        `);
       });
     });
     cssContent = cssContent.join("\n");
@@ -185,7 +189,50 @@ async function genInjectScript({ tabBarJson, pages, rootConfig, appConfig }) {
   `;
 }
 
+function getUnitRegexp(unit) {
+  return new RegExp('"[^"]+"|\'[^\']+\'|url\\([^\\)]+\\)|(\\d*\\.?\\d+)' + unit, 'g');
+}
+
+const pxRegex = getUnitRegexp("px");
+
+const pxToVwConfigs = {
+  unitToConvert: 'px',
+  // viewportWidth: 320,
+  viewportWidth: 375,
+  viewportHeight: 568,
+  // unitPrecision: 5,
+  unitPrecision: 13,
+  viewportUnit: 'vw',
+  fontViewportUnit: 'vw',
+  // selectorBlackList: [],
+  selectorBlackList: ['-noPxToVw'],
+  propList: ['*'],
+  minPixelValue: 1,
+  mediaQuery: false,
+  replace: true,
+  landscape: false,
+  landscapeUnit: 'vw',
+  landscapeWidth: 568
+}
+function toFixed(number, precision) {
+  var multiplier = Math.pow(10, precision + 1),
+    wholeNumber = Math.floor(number * multiplier);
+  return Math.round(wholeNumber / 10) * 10 / multiplier;
+}
+function createPxReplace(opts, viewportUnit, viewportSize) {
+  return function (m, $1) {
+    if (!$1) return m;
+    var pixels = parseFloat($1);
+    if (pixels <= opts.minPixelValue) return m;
+    var parsedVal = toFixed((pixels / viewportSize * 100), opts.unitPrecision);
+    return parsedVal === 0 ? '0' : parsedVal + viewportUnit;
+  };
+}
+
 function transformStyleToCss(obj) {
+  if (typeof obj === "string") {
+    return obj.replace(pxRegex, createPxReplace(pxToVwConfigs, pxToVwConfigs.landscapeUnit, pxToVwConfigs.landscapeWidth))
+  }
   let result = [];
   Object.keys(obj).forEach((key) => {
     if (key !== "styleEditorUnfold") {

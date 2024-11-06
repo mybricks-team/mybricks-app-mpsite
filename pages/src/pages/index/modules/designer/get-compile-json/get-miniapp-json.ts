@@ -20,11 +20,15 @@ export class GetMiniappJson extends BaseJson {
       let pageCssContent: any = [];
       const cssMap = pageCssMap[id];
       Css.forEachCssMap(cssMap, (key, selector, css) => {
-        pageCssContent.push(`
-        .${key} ${selector} {
-          ${transformStyleToCss(css)}
+        if (!selector && typeof css === "string") {
+          pageCssContent.push(transformStyleToCss(css))
+        } else {
+          pageCssContent.push(`
+            .${key} ${selector} {
+              ${transformStyleToCss(css)}
+            }
+            `);
         }
-        `);
       });
       item.cssContent = pageCssContent.join("\n");
     });
@@ -243,7 +247,105 @@ const genLazyloadComs = async (comlibs, toJSON) => {
   return curComLibs;
 };
 
+const pxRegex = (units = ['px']) => new RegExp(`"[^"]+"|'[^']+'|url\\([^\\)]+\\)|(\\d*\\.?\\d+)(${units.join('|')})`, 'g')
+const designWidth = (input) => 375;
+
+const pxToRpxConfigs = {
+  platform: 'weapp',
+  // designWidth: 750,
+  designWidth: 375,
+  deviceRatio: {
+    375: 4 / 2,
+    640: 2.34 / 2,
+    750: 2 / 2,
+    828: 1.81 / 2,
+  },
+  targetUnit: 'rpx',
+  rootValue: (input) => 1 / pxToRpxConfigs.deviceRatio[designWidth(input)]
+}
+const targetUnit = 'rpx'
+
+const legacyOptions = {
+  root_value: 'rootValue',
+  unit_precision: 'unitPrecision',
+  selector_black_list: 'selectorBlackList',
+  prop_white_list: 'propList',
+  media_query: 'mediaQuery',
+  propWhiteList: 'propList'
+}
+
+function convertLegacyOptions (options) {
+  if (typeof options !== 'object') return
+  if (
+    (
+      (typeof options.prop_white_list !== 'undefined' &&
+        options.prop_white_list.length === 0) ||
+      (typeof options.propWhiteList !== 'undefined' &&
+        options.propWhiteList.length === 0)
+    ) &&
+    typeof options.propList === 'undefined'
+  ) {
+    options.propList = ['*']
+    delete options.prop_white_list
+    delete options.propWhiteList
+  }
+  Object.keys(legacyOptions).forEach(function (key) {
+    if (options.hasOwnProperty(key)) {
+      options[legacyOptions[key]] = options[key]
+      delete options[key]
+    }
+  })
+}
+
+convertLegacyOptions(pxToRpxConfigs)
+
+const defaults = {
+  methods: ['platform', 'size'],
+  rootValue: 16,
+  unitPrecision: 5,
+  selectorBlackList: [],
+  propList: ['*'],
+  replace: true,
+  mediaQuery: false,
+  minPixelValue: 0
+}
+
+const opts = Object.assign({}, defaults, pxToRpxConfigs)
+const onePxTransform = true;
+const transUnits = ['px']
+const pxRgx = pxRegex(transUnits)
+
+function toFixed (number, precision) {
+  const multiplier = Math.pow(10, precision + 1)
+  const wholeNumber = Math.floor(number * multiplier)
+  return (Math.round(wholeNumber / 10) * 10) / multiplier
+}
+
+function createPxReplace (rootValue, unitPrecision, minPixelValue, onePxTransform) {
+  return function (input) {
+    return function (m, $1) {
+      if (!$1) return m
+      const pixels = parseFloat($1)
+      let val = pixels / rootValue(input, m, $1)
+      if (unitPrecision >= 0 && unitPrecision <= 100) {
+        val = toFixed(val, unitPrecision)
+      }
+      return val + targetUnit
+    }
+  }
+}
+
+const pxReplace = createPxReplace(
+  opts.rootValue,
+  opts.unitPrecision,
+  opts.minPixelValue,
+  onePxTransform
+)("?")
+
 function transformStyleToCss(obj) {
+  if (typeof obj === "string") {
+    return obj.replace(pxRgx, pxReplace);
+  }
   let result = [];
   Object.keys(obj).forEach((key) => {
     if (key !== "styleEditorUnfold") {

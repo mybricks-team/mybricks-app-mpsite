@@ -52,6 +52,15 @@ export const getPageCssMap = (pageToJson) => {
   Object.keys(jsonComs).forEach((key) => {
     let styleAry = jsonComs[key]?.model?.style?.styleAry || [];
     pageCss[key] = styleAry;
+    if (jsonComs[key]?.def?.namespace === "mybricks.taro.ai") {
+      const _styleCode = jsonComs[key]?.model?.data?._styleCode;
+      if (_styleCode) {
+        pageCss[key].push({
+          selector: null,
+          css: decodeURIComponent(_styleCode).replaceAll('__id__', jsonComs[key]["id"])
+        })
+      }
+    }
     // delete jsonComs[key]?.model?.style?.styleAry
   });
 
