@@ -714,7 +714,7 @@ export default function ({ ctx, pageModel, save, designerRef, FxService }) {
           // 返回结果: ${content}`);
         }
       },
-      async requestAsStream(messages, { write, complete, error }) {
+      async requestAsStream(messages,tools,{ write, complete, error }) {
         try {
           const response = await fetch("//ai.mybricks.world/stream", {
             method: "POST",
