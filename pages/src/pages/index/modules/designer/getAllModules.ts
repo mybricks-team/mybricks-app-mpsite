@@ -16,7 +16,8 @@ const babelScript = (code) => {
 };
 
 /** 根据Json生成所有页面的Js，并按引用删除数据 */
-export const getAllModulesJsCode = async (pages, plugins) => {
+export const getAllModulesJsCode = async (pages, plugins, config = {}) => {
+  const { isH5 } = config;
   let allModules = `
   function convertObject2Array(input) {
     let result = [];
@@ -194,6 +195,36 @@ export const getAllModulesJsCode = async (pages, plugins) => {
       } catch (e) {
         console.log(e);
       }
+    }
+  }
+
+  if (!isH5) {
+    // 小程序环境
+    // 生成ai组件代码
+    for (let i = 0; i < pages.length; i++) {
+      let page = pages[i];
+
+      let json = page?.pageToJson ?? {};
+
+      let jsonComs = getComsFromPageJson(json);
+
+      Object.keys(jsonComs ?? {}).forEach((key) => {
+        if (jsonComs[key].def.namespace === "mybricks.taro.ai") {
+          const com = jsonComs[key];
+          const code = com.model.data._renderCode;
+          if (code) {
+            // 有code才生成
+            let moduleContent = `
+            ;const ui_${key} = (exports, require) => {
+              ${decodeURIComponent(code)}
+            };comModules['${key}'] = ui_${key};`
+
+            allModules += moduleContent;
+
+            delete com.model.data._renderCode;
+          }
+        }
+      });
     }
   }
 

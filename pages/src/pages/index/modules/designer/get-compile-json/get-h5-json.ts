@@ -47,7 +47,10 @@ export class GetH5Json extends BaseJson {
     // 提取 js计算 连接器 等组件，并删除 pages, popups,fxFrames中的代码
     let allModules = await getAllModulesJsCode(
       [...pages, ...forAllModules],
-      toJson.plugins
+      toJson.plugins,
+      {
+        isH5: true,
+      }
     );
 
     const injectScriptContent = await genInjectScript({

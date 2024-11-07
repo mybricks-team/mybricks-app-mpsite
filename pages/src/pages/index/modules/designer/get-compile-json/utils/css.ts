@@ -59,6 +59,7 @@ export const getPageCssMap = (pageToJson) => {
           selector: null,
           css: decodeURIComponent(_styleCode).replaceAll('__id__', jsonComs[key]["id"])
         })
+        delete jsonComs[key]?.model?.data?._styleCode;
       }
     }
     // delete jsonComs[key]?.model?.style?.styleAry
