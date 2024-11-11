@@ -965,15 +965,19 @@ const getAiView = (enableAI, option) => {
 
         const { write, complete, error } = context ?? {};
 
-        let usedModel = undefined
+        let usedModel = 'openai/gpt-4o-mini'
 
         switch (true) {
           case extraOption?.expert === 'image': {
-            usedModel = 'openai/gpt-4o';
+            usedModel = 'anthropic/claude-3.5-sonnet';
             break;
           }
-          case ['image', 'architect'].includes(extraOption?.aiRole): {
-            usedModel = 'openai/gpt-4o';
+          case ['image'].includes(extraOption?.aiRole): {
+            usedModel = 'anthropic/claude-3.5-sonnet';
+            break
+          }
+          case ['architect'].includes(extraOption.aiRole): {
+            usedModel = 'openai/gpt-4o-2024-08-06';
             break
           }
           default: {
