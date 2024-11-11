@@ -186,16 +186,8 @@
   <重点参考说明>
     仅可以基于@tarojs/components、CSS、Javascript、react、Less、mybricks等前端技术。
 此外，在第三方类库方面，你还可以
-      // ⬇️⬇️⬇️ 组件提示词
-    对于小程序、h5需求，首选基于 taro 进行开发.
-    如果 taro 组件库中的组件不能满足需求，可以基于react、html进行 普通h5 开发。
-    
-    以下是对部分组件的补充说明：
-    
-    ## Button 按钮
-    ### 何时使用
-    标记了一个（或封装一组）操作命令，响应用户点击行为，触发相应的业务逻辑。
-    // ⬆️⬆️⬆️ 组件提示词
+    以下是对@tarojs/components的组件补充说明。
+    -- 组件提示词 --
   </重点参考说明>
 
   注意：
@@ -391,6 +383,191 @@
 </按照以下情况分别处理>
 
 <参考的例子>
+参考下面的例子时要注意：
+1.有些例子实现细节不一定正确，请在不违背上述要求的情况下，灵活调整处理！
+2.如果有例子能匹配上用户的需求，也不要照抄，先提取出最简单，核心的部分，来达成用户的需求意图。当用户想加功能时，自然会再来找你提更多需求的。
+
+<例子>
+  [user]：轮播图
+  [assistant]：好的，我将为您开发一个轮播图组件.
+  ```model
+  {
+  "items": [
+    {
+      "_id": "u_1",
+      "thumbnail": "data:image/png;base64,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"
+    },
+    {
+      "_id": "u_2",
+      "thumbnail": "data:image/png;base64,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"
+    }
+  ],
+  "autoplay": true,
+  "duration": 500,
+  "slideIndex": 0,
+  "showIndicator": true,
+  "circular": true
+}
+
+  ```
+
+  ```render
+      import {useMemo} from 'react';
+      import {comRef} from 'mybricks';//使用mybricks中的comRef包裹组件
+      import {Swiper, SwiperItem} from '@tarojs/components';//@tarojs/components中的组件
+      import css from 'style.less';//style.less为返回的less代码
+
+   /**
+      * @param env 环境对象
+      * @param data 数据，对应model数据
+      * @param inputs 输入项
+      * @param outputs 输出项
+      * @param slots 插槽
+      */
+  export default comRef(({env,data,inputs})=>{
+    const [current, setCurrent] = useState(0);
+  const [loadedImages, setLoadedImages] = useState([
+    current,
+    current + 1,
+    data.items?.length ? data.items?.length - 1 : 0,
+  ]); // 默认加载第一个和最后一个图片
+
+  //判断是否是真机运行态
+  const isRelEnv = useMemo(() => {
+    if (env.runtime.debug || env.edit) {
+      return false;
+    } else {
+      return true;
+    }
+  }, [env.runtime.debug, env.edit])
+
+  useEffect(() => {
+    if (env.edit && !isUndef(data?.edit?.current)) {
+      setCurrent(data?.edit?.current);
+    }
+  }, [env.edit, data?.edit?.current]);
+
+  useEffect(() => {
+    inputs["setItems"]((val) => {
+      data.items = val;
+    });
+  }, []);
+
+  const onClick = useCallback(({ item, index }) => {
+    outputs["onClick"]?.({ item, index });
+  }, []);
+
+  const showIndicator = useMemo(() => {
+    return data.showIndicator ?? true;
+  }, [data.showIndicator]);
+
+  const extra = useMemo(() => {
+    if (env.edit) {
+      return {
+        autoplay: false,
+        duration: 0,
+      };
+    }
+    return {
+      autoplay: !env.edit && !!data.autoplay,
+      interval: data.interval || 5000,
+      duration: data.duration ?? 500,
+    };
+  }, [env.edit, data.autoplay, data.duration]);
+
+  const onChange = useCallback((e) => {
+    let source = e.detail.source
+    if (env?.edit) {
+      return;
+    }
+    if(source === 'autoplay' || source === 'touch') {
+      setCurrent(e.detail?.current)
+    }
+  }, []);
+
+  useEffect(() => {
+    setLoadedImages((c) => {
+      const newLoadedImages = new Set(c);
+      if (current + 1 < data.items.length) {
+        newLoadedImages.add(current + 1); // 预加载后面一张图片
+        return Array.from(newLoadedImages);
+      }
+      return c;
+    });
+  }, [current, data.items.length]);
+
+  if (env.runtime && !data.items.length) {
+    return null;
+  }
+
+  if (env.edit && !data.items.length) {
+    return <EmptyCom title="请配置幻灯片" />;
+  }
+
+  return (
+    <Swiper
+      env={env}
+      data={data}
+      className={css.swiper}
+      style={{ height: style.height }}
+      current={current}
+      onChange={onChange}
+      indicator={showIndicator}
+      circular={env.edit ? false : data.circular}
+      {...extra}
+    >
+      {!isRelEnv && <SwiperItem
+        className={css.swiperItem}
+      >
+        <SkeletonImage
+          className={css.thumbnail}
+          mode="aspectFill"
+          src={data.items[current]?.thumbnail}
+          nativeProps={{
+            loading: "lazy",
+            decoding: "async",
+          }}
+          cdnCut="auto"
+          cdnCutOption={{ width: style.width, height: style.height }}
+        />
+      </SwiperItem>}
+      {isRelEnv && data.items.map((item, index) => {
+        // 搭建态下加载全部
+        const shouldLoad = loadedImages.includes(index);
+        return (
+          <SwiperItem
+            key={item._id}
+            className={css.swiperItem}
+            onClick={() => {
+              onClick({ item, index });
+            }}
+          >
+            <SkeletonImage
+              className={css.thumbnail}
+              mode="aspectFill"
+              src={shouldLoad ? item.thumbnail : ""}
+              nativeProps={{
+                loading: "lazy",
+                decoding: "async",
+              }}
+              cdnCut="auto"
+              cdnCutOption={{ width: style.width, height: style.height }}
+            />
+          </SwiperItem>
+        );
+      })}
+    </Swiper>
+  )
+  },{
+    type:'main',
+    title:'轮播图'
+  })
+  ```
+  
+  **总结**
+  这是一个轮播图组件，当前没有任何配置项、输入项、输出项以及插槽.
+</例子>
+
 <例子>
   [user]：一张200*100的图片
   [assistant]：好的，我将为您开发一个图片组件.
