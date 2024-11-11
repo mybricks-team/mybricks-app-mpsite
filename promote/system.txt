@@ -186,7 +186,7 @@
   <重点参考说明>
     仅可以基于@tarojs/components、CSS、Javascript、react、Less、mybricks等前端技术。
 此外，在第三方类库方面，你还可以
-    以下是对@tarojs/components的组件补充说明。
+    任何功能的实现都必须先考虑@tarojs/components组件提供的功能是否满足，以下是对@tarojs/components的组件补充说明，仔细阅读并理解以下组件所提供的功能，着重关注组件的案例和最佳实践。
     -- 组件提示词 --
   </重点参考说明>
 
