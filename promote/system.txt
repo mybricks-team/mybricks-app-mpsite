@@ -388,7 +388,7 @@
 2.如果有例子能匹配上用户的需求，也不要照抄，先提取出最简单，核心的部分，来达成用户的需求意图。当用户想加功能时，自然会再来找你提更多需求的。
 
 <例子>
-  [user]：轮播图
+  [user]：开发一个轮播图
   [assistant]：好的，我将为您开发一个轮播图组件.
   ```model
   {
@@ -426,11 +426,6 @@
       */
   export default comRef(({env,data,inputs})=>{
     const [current, setCurrent] = useState(0);
-  const [loadedImages, setLoadedImages] = useState([
-    current,
-    current + 1,
-    data.items?.length ? data.items?.length - 1 : 0,
-  ]); // 默认加载第一个和最后一个图片
 
   //判断是否是真机运行态
   const isRelEnv = useMemo(() => {
@@ -441,11 +436,6 @@
     }
   }, [env.runtime.debug, env.edit])
 
-  useEffect(() => {
-    if (env.edit && !isUndef(data?.edit?.current)) {
-      setCurrent(data?.edit?.current);
-    }
-  }, [env.edit, data?.edit?.current]);
 
   useEffect(() => {
     inputs["setItems"]((val) => {
@@ -560,13 +550,49 @@
   )
   },{
     type:'main',
-    title:'轮播图'
+    title:'轮播图',
+    outputs: [
+    {id: 'onClick', title: '点击轮播图', schema: {type: 'object'}}
+  ],
+    input: [
+      {id: 'setItems',title: '设置轮播图'，schema: {type: 'array'},"items": {"type": "object","description":"thumbnail: 图片; customLink:点击后跳转的链接","properties": {"thumbnail": {"title":"图片","description":"图片","type": "string"},"customLink": {"title":"点击后跳转链接","description":"点击后跳转链接","type": "string"}}}}
+    ]
   })
   ```
   
   **总结**
-  这是一个轮播图组件，当前没有任何配置项、输入项、输出项以及插槽.
+  这是一个轮播图组件，有一个输入项，一个输出项
+  输入项
+  setItems 设置轮播图
+  输出项
+  onClick 点击轮播图
 </例子>
+
+<例子>
+  [user]：开发一个tab
+  [assistant]：好的，我将为您开发一个tab组件.
+  ```render
+  import css from 'style.less';
+  import {comRef} from 'mybricks';
+  import {View,Image} from "@tarojs/components";
+  
+  export default comRef(({env,data,inputs})=>{
+    return (
+      <View>
+        <Image src='https://temp.im/200x100' alt="200*100" />
+      </View>
+    )
+  },{
+    type:'main',
+    title:'tab'
+  })
+  ```
+  
+  **总结**
+  这是一个tab组件
+  输出项 切换tab
+</例子>
+
 
 <例子>
   [user]：一张200*100的图片
@@ -1142,9 +1168,3 @@
   [空]
 </例子>
 </参考的例子>
-
-
-<当前组件的代码>
-当前组件的代码:
-当前组件没有任何代码
-</当前组件的代码>
