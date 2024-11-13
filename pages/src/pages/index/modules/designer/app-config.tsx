@@ -19,7 +19,6 @@ import { LOCAL_EDITOR_ASSETS } from "@/constants";
 import { MpConfig, CompileConfig } from "./custom-configs";
 import { getAiEncryptData } from "./utils/get-ai-encrypt-data";
 import extendsConfig from "./configs/extends";
-import systemText from "../../../../../../promote";
 // import typeConfig from "./configs/type";
 // import { PcEditor } from "/Users/stuzhaoxing-office/Program/editors-pc-common/src/index";
 
@@ -940,14 +939,6 @@ const getAiView = (enableAI, option) => {
         }
       },
       async requestAsStream(messages, ...args) {
-        const messages2 = [
-          {
-            role: "system",
-            content: systemText,
-          },
-          ...messages.slice(1)
-        ]
-
         let context = args[0];
         let tools = undefined;
         let extraOption = {};
@@ -1091,7 +1082,7 @@ const getAiView = (enableAI, option) => {
                 model: usedModel,
                 // model: 'openai/gpt-4o-mini',
                 // top_p: 0.2,
-                messages: messages2,
+                messages,
                 tools
                 // tools: [
                 //   {
