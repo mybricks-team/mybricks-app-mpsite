@@ -1,5 +1,9 @@
-# 使用文档：SwiperItem
-> 仅可放置在 swiper 组件中，宽高自动设置为100%
+# SwiperItem - 仅可放置在 swiper 组件中。
+
+## 类型
+```tsx
+ComponentType<SwiperItemProps>
+```
 
 ## SwiperItemProps
 

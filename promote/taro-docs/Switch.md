@@ -34,10 +34,7 @@ export default () => {
 | type | "switch" or "checkbox" | `"switch"` | 否 | 样式，有效值：switch, checkbox |
 | color | `string` | `"#04BE02"` | 否 | switch 的颜色，同 css 的 color |
 | nativeProps | `Record<string, unknown>` |  | 否 | 用于透传 `WebComponents` 上的属性到内部 H5 标签上 |
-| name | `string` |  | 否 | 组件名字，用于表单提交获取数据。 |
-| controlled | `string` | `false` | 否 | 是否为受控组件，为 true 时，checked 会完全受 setData 控制。 |
-| ariaLabel | `string` |  | 否 | 无障碍访问，（属性）元素的额外描述 |
-| onChange | `CommonEventFunction<onChangeEventDetail>` |  | 否 | checked 改变时触发 change 事件 |
+| onChange | `EventFunction<onChangeEventDetail>` |  | 否 | checked 改变时触发 change 事件 |
 
 ### onChangeEventDetail
 

@@ -1,5 +1,9 @@
-# 使用文档：Text
-> 文本
+# Text - 文本
+
+## 类型
+```tsx
+ComponentType<TextProps>
+```
 
 ## TextProps
 
@@ -9,8 +13,6 @@
 | userSelect | `boolean` | `false` | 否 | 文本是否可选，该属性会使文本节点显示为 inline-block |
 | space | `keyof TSpace` |  | 否 | 显示连续空格 |
 | decode | `boolean` | `false` | 否 | 是否解码 |
-| numberOfLines | `number` |  | 否 | 多行省略，值须大于等于 1，表现同 css 的 -webkit-line-clamp 属性一致。 |
-| overflow | `keyof Overflow` | `'visible'` | 否 | 文本溢出处理 |
 | maxLines | `number` |  | 否 | 限制文本最大行数 |
 
 ### TSpace

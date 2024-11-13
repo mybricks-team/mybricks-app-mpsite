@@ -31,10 +31,10 @@ export default () => {
 | onTouchMove | `CanvasTouchEventFunction` |  | 否 | 手指触摸后移动 |
 | onTouchEnd | `CanvasTouchEventFunction` |  | 否 | 手指触摸动作结束 |
 | onTouchCancel | `CanvasTouchEventFunction` |  | 否 | 手指触摸动作被打断，如来电提醒，弹窗 |
-| onLongTap | `CommonEventFunction` |  | 否 | 手指长按 500ms 之后触发，触发了长按事件后进行移动不会触发屏幕的滚动 |
-| onError | `CommonEventFunction<onErrorEventDetail>` |  | 否 | 当发生错误时触发 error 事件，detail = {errMsg: 'something wrong'} |
-| onTap | `CommonEventFunction` |  | 否 | 点击。 |
-| onReady | `CommonEventFunction` |  | 否 | canvas 组件初始化成功触发。 |
+| onLongTap | `EventFunction` |  | 否 | 手指长按 500ms 之后触发，触发了长按事件后进行移动不会触发屏幕的滚动 |
+| onError | `EventFunction<onErrorEventDetail>` |  | 否 | 当发生错误时触发 error 事件，detail = {errMsg: 'something wrong'} |
+| onTap | `EventFunction` |  | 否 | 点击。 |
+| onReady | `EventFunction` |  | 否 | canvas 组件初始化成功触发。 |
 
 ### onErrorEventDetail
 

@@ -1,5 +1,9 @@
-# 使用文档：Checkbox
-> 多选项目
+# Checkbox - 多选项目。
+
+## 类型
+```tsx
+ComponentType<CheckboxProps>
+```
 
 ## CheckboxProps
 
@@ -11,5 +15,4 @@
 | color | `string` |  | 否 | checkbox的颜色，同 css 的 color |
 | name | `string` |  | 否 | Checkbox 的名字 |
 | nativeProps | `Record<string, unknown>` |  | 否 | 用于透传 `WebComponents` 上的属性到内部 H5 标签上 |
-| ariaLabel | `string` |  | 否 | 无障碍访问，（属性）元素的额外描述 |
-| onChange | `CommonEventFunction<{ value: string[]; }>` |  | 否 | 选中项发生变化时触发 change 事件，小程序无此 API |
+| onChange | `EventFunction<{ value: string[]; }>` |  | 否 | 选中项发生变化时触发 change 事件，小程序无此 API |

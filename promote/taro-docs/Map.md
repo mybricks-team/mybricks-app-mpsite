@@ -58,24 +58,24 @@ export default () => {
 | optimize | `boolean` | `false` | 否 | 保持缩放比例不变 |
 | enableAutoMaxOverlooking | `boolean` | `false` | 否 | 开启最大俯视角，俯视角度从 45 度拓展到 75 度 |
 | enable3D | `boolean` | `false` | 否 | 展示3D楼块 |
-| onTap | `CommonEventFunction` |  | 否 | 点击地图时触发 |
-| onMarkerTap | `CommonEventFunction<onMarkerTapEventDetail>` |  | 否 | 点击标记点时触发，e.detail = {markerId} |
-| onLabelTap | `CommonEventFunction<onLabelTapEventDetail>` |  | 否 | 点击label时触发，e.detail = {markerId} |
-| onControlTap | `CommonEventFunction<onControlTapEventDetail>` |  | 否 | 点击控件时触发，e.detail = {controlId} |
-| onCalloutTap | `CommonEventFunction<onCalloutTapEventDetail>` |  | 否 | 点击标记点对应的气泡时触发，e.detail = {markerId} |
-| onUpdated | `CommonEventFunction` |  | 否 | 在地图渲染更新完成时触发 |
-| onRegionChange | CommonEventFunction<onRegionEventDetail<"begin"> or onRegionEventDetail<"end">> |  | 否 | 视野发生变化时触发 |
-| onPoiTap | `CommonEventFunction<onPoiTapEventDetail>` |  | 否 | 点击地图poi点时触发，e.detail = {name, longitude, latitude} |
-| onPolylineTap | `CommonEventFunction<onPolylineTapEventDetail>` |  | 否 | 点击地图路线时触发，e.detail = {longitude, latitude} |
-| onAbilitySuccess | `CommonEventFunction<onAbilityEventDetail>` |  | 否 | 地图能力生效时触发，e.detail = {ability, errCode, errMsg} |
-| onAbilityFailed | `CommonEventFunction<onAbilityEventDetail>` |  | 否 | 地图能力失败时触发，e.detail = {ability, errCode, errMsg} |
-| onAuthSuccess | `CommonEventFunction<{ errCode: number; errMsg: string; }>` |  | 否 | 地图鉴权结果成功时触发，e.detail = {errCode, errMsg} |
-| onInterpolatePoint | `CommonEventFunction<onInterpolatePointEventDetail>` |  | 否 | MapContext.moveAlong 插值动画时触发。e.detail = {markerId, longitude, latitude, animationStatus: "interpolating" or "complete"} |
-| onError | `CommonEventFunction<point>` |  | 是 | 组件错误时触发，例如创建或鉴权失败，e.detail = {longitude, latitude} |
-| onCallOutTap | `CommonEventFunction<onCalloutTapEventDetail>` |  | 否 | 点击标记点对应的气泡时触发e.detail = {markerId} |
-| onAnchorPointTap | `CommonEventFunction<point>` |  | 否 | 点击定位标时触发，e.detail = {longitude, latitude} |
-| onPanelTap | `CommonEventFunction<{ panelId: any; layoutId: any; }>` |  | 否 | 点击 panel 时触发。 |
-| onInitComplete | `CommonEventFunction` |  | 否 | 地图初始化完成即将开始渲染第一帧时触发。 |
+| onTap | `EventFunction` |  | 否 | 点击地图时触发 |
+| onMarkerTap | `EventFunction<onMarkerTapEventDetail>` |  | 否 | 点击标记点时触发，e.detail = {markerId} |
+| onLabelTap | `EventFunction<onLabelTapEventDetail>` |  | 否 | 点击label时触发，e.detail = {markerId} |
+| onControlTap | `EventFunction<onControlTapEventDetail>` |  | 否 | 点击控件时触发，e.detail = {controlId} |
+| onCalloutTap | `EventFunction<onCalloutTapEventDetail>` |  | 否 | 点击标记点对应的气泡时触发，e.detail = {markerId} |
+| onUpdated | `EventFunction` |  | 否 | 在地图渲染更新完成时触发 |
+| onRegionChange | EventFunction<onRegionEventDetail<"begin"> or onRegionEventDetail<"end">> |  | 否 | 视野发生变化时触发 |
+| onPoiTap | `EventFunction<onPoiTapEventDetail>` |  | 否 | 点击地图poi点时触发，e.detail = {name, longitude, latitude} |
+| onPolylineTap | `EventFunction<onPolylineTapEventDetail>` |  | 否 | 点击地图路线时触发，e.detail = {longitude, latitude} |
+| onAbilitySuccess | `EventFunction<onAbilityEventDetail>` |  | 否 | 地图能力生效时触发，e.detail = {ability, errCode, errMsg} |
+| onAbilityFailed | `EventFunction<onAbilityEventDetail>` |  | 否 | 地图能力失败时触发，e.detail = {ability, errCode, errMsg} |
+| onAuthSuccess | `EventFunction<{ errCode: number; errMsg: string; }>` |  | 否 | 地图鉴权结果成功时触发，e.detail = {errCode, errMsg} |
+| onInterpolatePoint | `EventFunction<onInterpolatePointEventDetail>` |  | 否 | MapContext.moveAlong 插值动画时触发。e.detail = {markerId, longitude, latitude, animationStatus: "interpolating" or "complete"} |
+| onError | `EventFunction<point>` |  | 是 | 组件错误时触发，例如创建或鉴权失败，e.detail = {longitude, latitude} |
+| onCallOutTap | `EventFunction<onCalloutTapEventDetail>` |  | 否 | 点击标记点对应的气泡时触发e.detail = {markerId} |
+| onAnchorPointTap | `EventFunction<point>` |  | 否 | 点击定位标时触发，e.detail = {longitude, latitude} |
+| onPanelTap | `EventFunction<{ panelId: any; layoutId: any; }>` |  | 否 | 点击 panel 时触发。 |
+| onInitComplete | `EventFunction` |  | 否 | 地图初始化完成即将开始渲染第一帧时触发。 |
 
 ### marker
 

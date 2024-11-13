@@ -15,11 +15,11 @@ ComponentType<CameraProps>
 | flash | `keyof Flash` | `"auto"` | 否 | 闪光灯 |
 | frameSize | `keyof FrameSize` | `"medium"` | 否 | 指定期望的相机帧数据尺寸 |
 | outputDimension | "360P" or "540P" or "720P" or "1080P" or "max" | `"720P"` | 否 | 相机拍照，录制的分辨率。 |
-| onStop | `CommonEventFunction` |  | 否 | 摄像头在非正常终止时触发，<br />如退出后台等情况 |
-| onError | `CommonEventFunction` |  | 否 | 用户不允许使用摄像头时触发 |
-| onInitDone | `CommonEventFunction<onInitDoneEventDetail>` |  | 否 | 相机初始化完成时触发 |
-| onReady | `CommonEventFunction<onInitDoneEventDetail>` |  | 否 | 相机初始化成功时触发。 |
-| onScanCode | `CommonEventFunction<onScanCodeEventDetail>` |  | 否 | 在成功识别到一维码时触发，<br />仅在 mode="scanCode" 时生效 |
+| onStop | `EventFunction` |  | 否 | 摄像头在非正常终止时触发，<br />如退出后台等情况 |
+| onError | `EventFunction` |  | 否 | 用户不允许使用摄像头时触发 |
+| onInitDone | `EventFunction<onInitDoneEventDetail>` |  | 否 | 相机初始化完成时触发 |
+| onReady | `EventFunction<onInitDoneEventDetail>` |  | 否 | 相机初始化成功时触发。 |
+| onScanCode | `EventFunction<onScanCodeEventDetail>` |  | 否 | 在成功识别到一维码时触发，<br />仅在 mode="scanCode" 时生效 |
 
 ### Mode
 

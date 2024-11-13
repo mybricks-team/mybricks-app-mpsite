@@ -13,6 +13,6 @@
 | fixedLeft | `string` | 否 | 设置与容器左侧的固定距离，效果相当于在 CSS 中设置 position: fixed 和 left 值，该属性优先级高于 fixed-right，CSS 设置的 position、left、right 值 |
 | ariaRole | `string` | 否 | 无障碍访问，（角色）标识元素的作用 |
 | ariaLabel | `string` | 否 | 无障碍访问，（属性）元素的额外描述 |
-| onLoad | `CommonEventFunction` | 否 | 图片加载成功时触发 |
-| onError | `CommonEventFunction` | 否 | 图片加载失败时触发 |
-| onTap | `CommonEventFunction` | 否 | 点击事件回调。 |
+| onLoad | `EventFunction` | 否 | 图片加载成功时触发 |
+| onError | `EventFunction` | 否 | 图片加载失败时触发 |
+| onTap | `EventFunction` | 否 | 点击事件回调。 |

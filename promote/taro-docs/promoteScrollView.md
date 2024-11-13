@@ -1,4 +1,9 @@
-# 使用文档：ScrollView
+# ScrollView - 可滚动视图区域。
+
+## 类型
+```tsx
+ComponentType<ScrollViewProps>
+```
 
 ## ScrollViewProps
 
@@ -26,11 +31,6 @@
 | showScrollbar | `boolean` | `true` | 否 | 滚动条显隐控制 (同时开启 enhanced 属性后生效) |
 | pagingEnabled | `boolean` | `false` | 否 | 分页滑动效果 (同时开启 enhanced 属性后生效) |
 | fastDeceleration | `boolean` | `false` | 否 | boolean	false	滑动减速速率控制 (同时开启 enhanced 属性后生效) |
-| scrollAnimationDuration | `string` |  | 否 | 当 scroll-with-animation设置为 true 时，可以设置 scroll-animation-duration 来控制动画的执行时间，单位 ms。 |
-| trapScroll | `string` | `false` | 否 | 纵向滚动时，当滚动到顶部或底部时，强制禁止触发页面滚动，仍然只触发 scroll-view 自身的滚动。 |
-| disableLowerScroll | `string` |  | 否 | 发生滚动前，对滚动方向进行判断，当方向是顶部/左边时，如果值为 always 将始终禁止滚动，如果值为 out-of-bounds 且当前已经滚动到顶部/左边，禁止滚动。 |
-| disableUpperScroll | `string` |  | 否 | 发生滚动前，对滚动方向进行判断，当方向是底部/右边时，如果值为 always 将始终禁止滚动，如果值为 out-of-bounds 且当前已经滚动到底部/右边，禁止滚动。 |
-| ariaLabel | `string` |  | 否 | 无障碍访问，（属性）元素的额外描述 |
 | enablePassive | `boolean` | `false` | 否 | 开启 passive 特性，能优化一定的滚动性能 |
 | type | "list" or "custom" or "nested" | `'list'` | 否 | 渲染模式<br />list - 列表模式。只会渲染在屏节点，会根据直接子节点是否在屏来按需渲染，若只有一个直接子节点则性能会退化<br />custom - 自定义模式。只会渲染在屏节点，子节点可以是 sticky-section list-view grid-view 等组件<br />nested - 嵌套模式。用于处理父子 scroll-view 间的嵌套滚动，子节点可以是 nested-scroll-header nested-scroll-body 组件或自定义 refresher |
 | reverse | `boolean` | `false` | 否 | 是否反向滚动。一般初始滚动位置是在顶部，反向滚动则是在底部。 |
@@ -47,24 +47,20 @@
 | refresherTwoLevelScrollEnabled | `boolean` | `false` | 否 | 处于二级状态时是否可滑动 |
 | refresherBallisticRefreshEnabled | `boolean` | `false` | 否 | 惯性滚动是否触发下拉刷新 |
 | refresherTwoLevelPinned | `boolean` | `false` | 否 | 即将打开二级时否定住 |
-| onScrollToUpper | `CommonEventFunction` |  | 否 | 滚动到顶部/左边，会触发 scrolltoupper 事件 |
-| onScrollToLower | `CommonEventFunction` |  | 否 | 滚动到底部/右边，会触发 scrolltolower 事件 |
+| onScrollToUpper | `EventFunction` |  | 否 | 滚动到顶部/左边，会触发 scrolltoupper 事件 |
+| onScrollToLower | `EventFunction` |  | 否 | 滚动到底部/右边，会触发 scrolltolower 事件 |
 | onScroll | `BaseEventOrigFunction<onScrollDetail>` |  | 否 | 滚动时触发 |
 | onScrollStart | `BaseEventOrigFunction<onScrollDetail>` |  | 否 | 滚动开始事件 |
 | onScrollEnd | `BaseEventOrigFunction<onScrollDetail>` |  | 否 | 滚动结束事件 |
-| onRefresherPulling | `CommonEventFunction` |  | 否 | 自定义下拉刷新控件被下拉 |
-| onRefresherRefresh | `CommonEventFunction` |  | 否 | 自定义下拉刷新被触发 |
-| onRefresherRestore | `CommonEventFunction` |  | 否 | 自定义下拉刷新被复位 |
-| onRefresherAbort | `CommonEventFunction` |  | 否 | 自定义下拉刷新被中止 |
-| onRefresherWillRefresh | `CommonEventFunction` |  | 否 | 自定义下拉刷新即将触发刷新（拖动超过 refresher-threshold 时）的事件 |
-| onRefresherStatusChange | `CommonEventFunction<RefresherStatusChange>` |  | 否 | 下拉刷新状态回调 |
-| onDragStart | `CommonEventFunction<onDragDetail>` |  | 否 | 滑动开始事件 (同时开启 enhanced 属性后生效) |
-| onDragging | `CommonEventFunction<onDragDetail>` |  | 否 | 滑动事件 (同时开启 enhanced 属性后生效) |
-| onDragEnd | `CommonEventFunction<onDragDetail>` |  | 否 | 滑动结束事件 (同时开启 enhanced 属性后生效) |
-| onTouchStart | `CommonEventFunction` |  | 否 | 触摸动作开始。 |
-| onTouchMove | `CommonEventFunction` |  | 否 | 触摸后移动。 |
-| onTouchEnd | `CommonEventFunction` |  | 否 | 触摸动作结束。 |
-| onTouchCancel | `CommonEventFunction` |  | 否 | 触摸动作被打断，如来电提醒、弹窗。 |
+| onRefresherPulling | `EventFunction` |  | 否 | 自定义下拉刷新控件被下拉 |
+| onRefresherRefresh | `EventFunction` |  | 否 | 自定义下拉刷新被触发 |
+| onRefresherRestore | `EventFunction` |  | 否 | 自定义下拉刷新被复位 |
+| onRefresherAbort | `EventFunction` |  | 否 | 自定义下拉刷新被中止 |
+| onRefresherWillRefresh | `EventFunction` |  | 否 | 自定义下拉刷新即将触发刷新（拖动超过 refresher-threshold 时）的事件 |
+| onRefresherStatusChange | `EventFunction<RefresherStatusChange>` |  | 否 | 下拉刷新状态回调 |
+| onDragStart | `EventFunction<onDragDetail>` |  | 否 | 滑动开始事件 (同时开启 enhanced 属性后生效) |
+| onDragging | `EventFunction<onDragDetail>` |  | 否 | 滑动事件 (同时开启 enhanced 属性后生效) |
+| onDragEnd | `EventFunction<onDragDetail>` |  | 否 | 滑动结束事件 (同时开启 enhanced 属性后生效) |
 
 ### onScrollDetail
 

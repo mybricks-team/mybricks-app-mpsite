@@ -24,10 +24,10 @@
 | trapScroll | `boolean` | `false` | 否 | 纵向滚动时，当滚动到顶部或底部时，强制禁止触发页面滚动，仍然只触发 scroll-view 自身的滚动。 |
 | disableLowerScroll | `string` |  | 否 | 发生滚动前，对滚动方向进行判断，当方向是顶部/左边时，如果值为 always 将始终禁止滚动，如果值为 out-of-bounds 且当前已经滚动到顶部/左边，禁止滚动。 |
 | disableUpperScroll | `string` |  | 否 | 发生滚动前，对滚动方向进行判断，当方向是底部/右边时，如果值为 always 将始终禁止滚动，如果值为 out-of-bounds 且当前已经滚动到底部/右边，禁止滚动。 |
-| onScrollToUpper | `CommonEventFunction` |  | 否 | 滚动到顶部/左边，会触发 scrolltoupper 事件。 |
-| onScrollToLower | `CommonEventFunction` |  | 否 | 滚动到底部/右边，会触发 scrolltolower事件。 |
-| onScroll | `CommonEventFunction` |  | 否 | 滚动时触发，event.detail = {scrollLeft, scrollTop, scrollHeight, scrollWidth}。 |
-| onTouchStart | `CommonEventFunction` |  | 否 | 触摸动作开始。 |
-| onTouchMove | `CommonEventFunction` |  | 否 | 触摸后移动。 |
-| onTouchEnd | `CommonEventFunction` |  | 否 | 触摸动作结束。 |
-| onTouchCancel | `CommonEventFunction` |  | 否 | 触摸动作被打断，如来电提醒、弹窗。 |
+| onScrollToUpper | `EventFunction` |  | 否 | 滚动到顶部/左边，会触发 scrolltoupper 事件。 |
+| onScrollToLower | `EventFunction` |  | 否 | 滚动到底部/右边，会触发 scrolltolower事件。 |
+| onScroll | `EventFunction` |  | 否 | 滚动时触发，event.detail = {scrollLeft, scrollTop, scrollHeight, scrollWidth}。 |
+| onTouchStart | `EventFunction` |  | 否 | 触摸动作开始。 |
+| onTouchMove | `EventFunction` |  | 否 | 触摸后移动。 |
+| onTouchEnd | `EventFunction` |  | 否 | 触摸动作结束。 |
+| onTouchCancel | `EventFunction` |  | 否 | 触摸动作被打断，如来电提醒、弹窗。 |

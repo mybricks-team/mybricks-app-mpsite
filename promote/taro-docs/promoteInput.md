@@ -1,5 +1,9 @@
-# 使用文档：Input
-> 输入框。该组件是原生组件，使用时请注意相关限制
+# Input - 输入框。该组件是原生组件，使用时请注意相关限制。
+
+## 类型
+```tsx
+ComponentType<InputProps>
+```
 
 ## InputProps
 
@@ -12,7 +16,6 @@
 | placeholder | `string` |  | 否 | 输入框为空时占位符 |
 | placeholderStyle | `string` |  | 否 | 指定 placeholder 的样式 |
 | placeholderClass | `string` | `"input-placeholder"` | 否 | 指定 placeholder 的样式类 |
-| placeholderTextColor | `string` |  | 否 | 指定 placeholder 的文本颜色 |
 | disabled | `boolean` | `false` | 否 | 是否禁用 |
 | maxlength | `number` | `140` | 否 | 最大输入长度，设置为 -1 的时候不限制最大长度 |
 | cursorSpacing | `number` | `0` | 否 | 指定光标与键盘的距离，单位 px 。取 input 距离底部的距离和 cursor-spacing 指定的距离的最小值作为光标与键盘的距离 |
@@ -32,19 +35,13 @@
 | safePasswordNonce | `string` |  | 否 | 安全键盘加密盐值 |
 | safePasswordSalt | `string` |  | 否 | 安全键盘计算hash盐值，若指定custom-hash 则无效 |
 | safePasswordCustomHash | `string` |  | 否 | 安全键盘计算hash的算法表达式，如 `md5(sha1('foo' + sha256(sm3(password + 'bar'))))` |
-| randomNumber | `boolean` | `false` | 否 | 当 type 为 number, digit, idcard 数字键盘是否随机排列 |
-| controlled | `boolean` | `false` | 否 | 是否为受控组件。为 true 时，value 内容会完全受 setData 控制。<br /><br />建议当 type 值为 text 时不要将 controlled 设置为 true,详见 [Bugs & Tips](https://opendocs.alipay.com/mini/component/input#Bug%20%26%20Tip) |
 | nativeProps | `Record<string, unknown>` |  | 否 | 用于透传 `WebComponents` 上的属性到内部 H5 标签上 |
-| name | `string` |  | 否 | 组件名字，用于表单提交获取数据。 |
-| alwaysSystem | `boolean` | `false` | 否 | 是否强制使用系统键盘和 Web-view 创建的 input 元素。为 true 时，confirm-type、confirm-hold 可能失效。 |
-| ariaLabel | `string` |  | 否 | 无障碍访问，（属性）元素的额外描述 |
-| clueType | `number` | `0` | 否 | 用于分发目的。取值：0 和 1，其中 0 表示默认，1 表示手机号，需要和留资分发配置一起使用，详情见留资分发配置。 |
-| onInput | `CommonEventFunction<inputEventDetail>` |  | 否 | 当键盘输入时，触发input事件，event.detail = {value, cursor, keyCode}，处理函数可以直接 return 一个字符串，将替换输入框的内容。 |
-| onFocus | `CommonEventFunction<inputForceEventDetail>` |  | 否 | 输入框聚焦时触发，event.detail = { value, height }，height 为键盘高度 |
-| onBlur | `CommonEventFunction<inputValueEventDetail>` |  | 否 | 输入框失去焦点时触发 |
-| onConfirm | `CommonEventFunction<inputValueEventDetail>` |  | 否 | 点击完成按钮时触发 |
-| onKeyboardHeightChange | `CommonEventFunction<onKeyboardHeightChangeEventDetail>` |  | 否 | 键盘高度发生变化的时候触发此事件 |
-| onNickNameReview | `CommonEventFunction` |  | 否 | 用户昵称审核完毕后触发，仅在 type 为 "nickname" 时有效，event.detail = { pass, timeout } |
+| onInput | `EventFunction<inputEventDetail>` |  | 否 | 当键盘输入时，触发input事件，event.detail = {value, cursor, keyCode}，处理函数可以直接 return 一个字符串，将替换输入框的内容。 |
+| onFocus | `EventFunction<inputForceEventDetail>` |  | 否 | 输入框聚焦时触发，event.detail = { value, height }，height 为键盘高度 |
+| onBlur | `EventFunction<inputValueEventDetail>` |  | 否 | 输入框失去焦点时触发 |
+| onConfirm | `EventFunction<inputValueEventDetail>` |  | 否 | 点击完成按钮时触发 |
+| onKeyboardHeightChange | `EventFunction<onKeyboardHeightChangeEventDetail>` |  | 否 | 键盘高度发生变化的时候触发此事件 |
+| onNickNameReview | `EventFunction` |  | 否 | 用户昵称审核完毕后触发，仅在 type 为 "nickname" 时有效，event.detail = { pass, timeout } |
 
 
 ### Type
@@ -57,7 +54,7 @@ Input 类型
 | number | 数字输入键盘 |
 | idcard | 身份证输入键盘 |
 | digit | 带小数点的数字键盘 |
-| safe-password | 密码安全输入键盘[指引](https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/safe-password.html) |
+| safe-password | 密码安全输入键盘 |
 | nickname | 昵称输入键盘 |
 | numberpad | 数字输入键盘 |
 | digitpad | 带小数点的数字键盘 |
@@ -76,8 +73,6 @@ Confirm 类型
 | done | 右下角按钮为“完成” |
 
 ### inputEventDetail
-
-> 注意：React-Native 端 `inputEventDetail` 仅实现参数 `value`，若需实时获取光标位置则可通过 [`onSelectionChange`](https://reactnative.dev/docs/textinput#onselectionchange) 实现。
 
 | 参数 | 类型 | 说明 |
 | --- | --- | --- |

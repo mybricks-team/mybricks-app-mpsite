@@ -1,5 +1,4 @@
 # Radio - 单选项目。
-场景：仅可放置于 `<PickerView />` 中，其孩子节点的高度会自动设置成与 picker-view 的选中框的高度一致
 
 ## 类型
 ```tsx
@@ -87,5 +86,4 @@ export default () => {
 | color | `string` | `"#09BB07"` | 否 | Radio 的颜色，同 css 的 color |
 | name | `string` |  | 否 | Radio 的名字 |
 | nativeProps | `Record<string, unknown>` |  | 否 | 用于透传 `WebComponents` 上的属性到内部 H5 标签上 |
-| ariaLabel | `string` |  | 否 | 无障碍访问，（属性）元素的额外描述 |
-| onChange | `CommonEventFunction<{ value?: string; }>` |  | 否 | <radio-group/> 中的选中项发生变化时触发 change 事件 |
+| onChange | `EventFunction<{ value?: string; }>` |  | 否 | <radio-group/> 中的选中项发生变化时触发 change 事件 |

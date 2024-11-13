@@ -59,7 +59,7 @@ export default () => {
 | autoPauseIfOpenNative | `boolean` | `true` | 否 | 当跳转到其它微信原生页面时，是否自动暂停本页面的视频 |
 | vslideGesture | `boolean` | `false` | 否 | 在非全屏模式下，是否开启亮度与音量调节手势（同 `page-gesture`） |
 | vslideGestureInFullscreen | `boolean` | `true` | 否 | 在全屏模式下，是否开启亮度与音量调节手势 |
-| adUnitId | `string` |  | 否 | 视频前贴广告单元ID，更多详情可参考开放能力[视频前贴广告](https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/ad/video-patch-ad.html) |
+| adUnitId | `string` |  | 否 | 视频前贴广告单元ID，更多详情可参考开放能力 |
 | posterForCrawler | `string` |  | 否 | 用于给搜索等场景作为视频封面展示，建议使用无播放 icon 的视频封面图，只支持网络地址 |
 | showCastingButton | `boolean` |  | 否 | 显示投屏按钮。只安卓且同层渲染下生效，支持 DLNA 协议 |
 | pictureInPictureMode | "" or "push" or "pop" or ("push" or "pop")[] |  | 否 | 设置小窗模式： push, pop，空字符串或通过数组形式设置多种模式（如： ["push", "pop"]） |
@@ -76,70 +76,25 @@ export default () => {
 | provisionUrl | `string` |  | 否 | DRM 设备身份认证 url，仅 is-drm 为 true 时生效 (Android) |
 | certificateUrl | `string` |  | 否 | DRM 设备身份认证 url，仅 is-drm 为 true 时生效 (iOS) |
 | licenseUrl | `string` |  | 否 | DRM 获取加密信息 url，仅 is-drm 为 true 时生效 |
-| posterSize | `string` |  | 否 | 当 poster 高宽比跟视频高宽不匹配时，如何显示 poster，设置规则同 background-size 一致。 |
-| showThinProgressBar | `string` |  | 否 | 当底部工具条隐藏时，是否显示细进度条（controls=false 时设置无效）。 |
-| mobilenetHintType | `number` |  | 否 | 移动网络提醒样式。<br /><br />0 - 不提醒<br />1 - tip 提醒<br />2 - 阻塞提醒(无消耗流量大小)<br />3 - 阻塞提醒(有消耗流量大小提醒) |
-| floatingMode | `string` |  | 否 | 浮窗设置。暂时不支持全局浮窗。<br />可选值：<br /><br />none：无浮窗。<br />page：页面内浮窗。 |
-| showNoWifiTip | `string` |  | 否 | 非 wifi 环境下是否显示继续播放浮层 |
-| showLockBtn | `string` |  | 否 | 全屏模式下，是否显示锁屏按钮 |
-| showRateBtn | `string` |  | 否 | 是否显示倍速播放按钮 |
-| showVslideBtnInFullscreen | `string` |  | 否 | 全屏模式下，是否显示侧边栏控制按钮 |
-| silentPlay | `string` |  | 否 | 是否进入无声视频模式，进入无声视频模式后，视频将静音播放且不响应系统物理音量变化，点击播放器提示无声视频，手势调节失效 |
-| preRollUnitId | `string` |  | 否 | 前贴广告的 unit id |
-| postRollUnitId | `string` |  | 否 | 后贴广告的 unit id |
-| showPlaybackRateBtn | `string` |  | 否 | 是否显示倍速控件，点击倍速控件后可选择倍速，可选值： 0.75/1.0/1.25/1.5/2 |
-| enablePlayInBackground | `string` |  | 否 | video 播放时宿主退出后台后开启小窗播放，iOS 14 及以上版本支持。开启时首次退出后台后给予弹窗提示用户授权，授权完成后可以到小程序「设置」中重设。支持场景见后台小窗播放 |
-| signature | `string` |  | 否 | 设置署名水印 |
 | preferredPeakBitRate | `number` |  | 否 | 指定码率上界，单位为比特每秒 |
 | isLive | `boolean` |  | 否 | 是否为直播源 |
-| definition | `string` |  | 否 | 清晰度，设置清晰度列表和默认播放的清晰度。切换清晰度按钮仅在全屏时展示，属性说明详见 Definition 类型说明。需要保证 src 和 definition 中有一个为必填，若同时设置了 src 和 definition，definition 优先级高于 src |
-| onPlay | `CommonEventFunction` |  | 否 | 当开始/继续播放时触发 play 事件 |
-| onPause | `CommonEventFunction` |  | 否 | 当暂停播放时触发 pause 事件 |
-| onEnded | `CommonEventFunction` |  | 否 | 当播放到末尾时触发 ended 事件 |
-| onTimeUpdate | `CommonEventFunction<onTimeUpdateEventDetail>` |  | 否 | 播放进度变化时触发, 触发频率 250ms 一次 |
-| onFullscreenChange | `CommonEventFunction<onFullscreenChangeEventDetail>` |  | 否 | 当视频进入和退出全屏时触发 |
-| onWaiting | `CommonEventFunction<onWaitingEventDetail>` |  | 否 | 视频出现缓冲时触发 |
-| onError | `CommonEventFunction` |  | 否 | 视频播放出错时触发 |
-| onProgress | `CommonEventFunction<onProgressEventDetail>` |  | 否 | 加载进度变化时触发，只支持一段加载 |
-| onLoadedMetaData | `CommonEventFunction<onLoadedMetaDataEventDetail>` |  | 否 | 视频元数据加载完成时触发 |
-| onEnterPictureInPicture | `CommonEventFunction` |  | 否 | 播放器进入小窗 |
-| onLeavePictureInPicture | `CommonEventFunction` |  | 否 | 播放器退出小窗 |
-| onSeekComplete | `CommonEventFunction` |  | 否 | seek 完成时触发 |
-| onFullScreenChange | `CommonEventFunction<onFullscreenChangeEventDetail>` |  | 否 | 视频进入和退出全屏时触发 |
-| onControlsToggle | `CommonEventFunction<onControlsToggleEventDetail>` |  | 否 | 切换 controls 显示隐藏时触发。 |
-| onLoading | `CommonEventFunction` |  | 否 | 视频出现缓冲时触发。 |
-| onTap | `CommonEventFunction<onTapEventDetail>` |  | 否 | 点击视频 view 时触发 |
-| onUserAction | `CommonEventFunction<onUserActionEventDetail>` |  | 否 | 用户操作事件 |
-| onStop | `CommonEventFunction` |  | 否 | 视频播放终止。 |
-| onRenderStart | `CommonEventFunction` |  | 否 | 当视频加载完真正开始播放时触发。 |
-| onAdStart | `CommonEventFunction<onAdTypeCommonEventDetail>` |  | 否 | 贴片广告开始播放时触发 |
-| onAdEnded | `CommonEventFunction<onAdTypeCommonEventDetail>` |  | 否 | 贴片广告播放结束时触发 |
-| onAdClose | `CommonEventFunction<onAdTypeCommonEventDetail>` |  | 否 | 贴片广告非自然结束时触发，如：用户关闭广告或广告播放过程中 video 组件被销毁 |
-| onAdError | `CommonEventFunction<onAdTypeCommonEventDetail>` |  | 否 | 贴片广告加载失败时触发 |
-| onPlayBackRateChange | `CommonEventFunction<{ playbackRate: string; }>` |  | 否 | 视频倍速改变完成时触发。返回改变后的倍速值 |
-| onMuteChange | `CommonEventFunction<{ isMuted: boolean; }>` |  | 否 | 静音状态改变完成时触发。返回当前是否静音 |
-| onControlTap | `CommonEventFunction<{ controlType: any; }>` |  | 否 | 点击控件时触发。返回当前点击的控件类型 |
-| onEnterBackground | `CommonEventFunction` |  | 否 | 进入小窗播放时触发 |
-| onCloseBackground | `CommonEventFunction` |  | 否 | 关闭小窗播放时触发 |
-| onLeaveBackground | `CommonEventFunction` |  | 否 | 离开小窗进入 app 事件时触发 |
-| onLoadedData | `CommonEventFunction` |  | 否 | 否 |
-| onLoadStart | `CommonEventFunction` |  | 否 | 否 |
-| onSeeked | `CommonEventFunction` |  | 否 | 否 |
-| onSeeking | `CommonEventFunction` |  | 否 | 否 |
-| onAdLoad | `CommonEventFunction` |  | 否 | 贴片广告加载成功时触发，event.detail = { adType: 'preRollAd' or 'postRollAd' } |
-| onCastingUserSelect | `CommonEventFunction` |  | 否 | 用户选择投屏设备时触发 detail = { state: "success"/"fail" } |
-| onCastingStateChange | `CommonEventFunction` |  | 否 | 投屏成功/失败时触发 detail = { type, state: "success"/"fail" } |
-| onCastingInterrupt | `CommonEventFunction` |  | 否 | 投屏被中断时触发 |
-
-### direction
-
-direction 的合法值
-
-| 参数 | 说明 |
-| --- | --- |
-| 0 | 正常竖向 |
-| 90 | 屏幕逆时针90度 |
-| -90 | 屏幕顺时针90度 |
+| onPlay | `EventFunction` |  | 否 | 当开始/继续播放时触发 play 事件 |
+| onPause | `EventFunction` |  | 否 | 当暂停播放时触发 pause 事件 |
+| onEnded | `EventFunction` |  | 否 | 当播放到末尾时触发 ended 事件 |
+| onTimeUpdate | `EventFunction<onTimeUpdateEventDetail>` |  | 否 | 播放进度变化时触发, 触发频率 250ms 一次 |
+| onFullscreenChange | `EventFunction<onFullscreenChangeEventDetail>` |  | 否 | 当视频进入和退出全屏时触发 |
+| onWaiting | `EventFunction<onWaitingEventDetail>` |  | 否 | 视频出现缓冲时触发 |
+| onError | `EventFunction` |  | 否 | 视频播放出错时触发 |
+| onProgress | `EventFunction<onProgressEventDetail>` |  | 否 | 加载进度变化时触发，只支持一段加载 |
+| onLoadedMetaData | `EventFunction<onLoadedMetaDataEventDetail>` |  | 否 | 视频元数据加载完成时触发 |
+| onEnterPictureInPicture | `EventFunction` |  | 否 | 播放器进入小窗 |
+| onLeavePictureInPicture | `EventFunction` |  | 否 | 播放器退出小窗 |
+| onSeekComplete | `EventFunction` |  | 否 | seek 完成时触发 |
+| onFullScreenChange | `EventFunction<onFullscreenChangeEventDetail>` |  | 否 | 视频进入和退出全屏时触发 |
+| onControlsToggle | `EventFunction<onControlsToggleEventDetail>` |  | 否 | 切换 controls 显示隐藏时触发。 |
+| onCastingUserSelect | `EventFunction` |  | 否 | 用户选择投屏设备时触发 detail = { state: "success"/"fail" } |
+| onCastingStateChange | `EventFunction` |  | 否 | 投屏成功/失败时触发 detail = { type, state: "success"/"fail" } |
+| onCastingInterrupt | `EventFunction` |  | 否 | 投屏被中断时触发 |
 
 ### ObjectFit
 
@@ -202,33 +157,3 @@ playBtnPosition 的合法值
 | 参数 | 类型 | 说明 |
 | --- | --- | --- |
 | show | `boolean` | 是否显示 |
-
-### onTapEventDetail
-
-| 参数 | 类型 |
-| --- | --- |
-| ptInView | `{ x: number; y: number; }` |
-
-### onUserActionEventDetail
-
-| 参数 | 类型 | 说明 |
-| --- | --- | --- |
-| tag | `string` | 用户操作的元素 |
-| value | `number` |  |
-
-### UserActionTag
-
-| 参数 | 说明 |
-| --- | --- |
-| play | 底部播放按钮 |
-| centerplay | 中心播放按钮 |
-| mute | 静音按钮 |
-| fullscreen | 全屏按钮 |
-| retry | 重试按钮 |
-| mobilenetplay | 网络提醒的播放按钮 |
-
-### onAdTypeCommonEventDetail
-
-| 参数 | 类型 | 说明 |
-| --- | --- | --- |
-| adType | "preRollAd" or "postRollAd" | 广告类型 |

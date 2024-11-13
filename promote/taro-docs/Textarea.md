@@ -48,17 +48,13 @@ export default () => {
 | nativeProps | `Record<string, unknown>` |  | 否 | 用于透传 `WebComponents` 上的属性到内部 H5 标签上 |
 | confirmType | "send" or "search" or "next" or "go" or "done" or "return" |  | 否 | 设置键盘右下角按钮的文字 |
 | confirmHold | `boolean` |  | 否 | 点击键盘右下角按钮时是否保持键盘不收起 |
-| name | `string` |  | 否 | 组件名字，用于表单提交获取数据。 |
-| showCount | `boolean` | `true` | 否 | 是否渲染字数统计功能（是否删除默认计数器/是否显示字数统计）。 |
-| controlled | `boolean` | `false` | 否 | 是否为受控组件。为 true 时，value 内容会完全受 setData 控制。 |
-| ariaLabel | `string` |  | 否 | 无障碍访问，（属性）元素的额外描述 |
 | adjustKeyboardTo | `boolean` | `false` | 否 | 键盘对齐位置 |
-| onFocus | `CommonEventFunction<onFocusEventDetail>` |  | 否 | 输入框聚焦时触发 |
-| onBlur | `CommonEventFunction<onBlurEventDetail>` |  | 否 | 输入框失去焦点时触发 |
-| onLineChange | `CommonEventFunction<onLineChangeEventDetail>` |  | 否 | 输入框行数变化时调用 |
-| onInput | `CommonEventFunction<onInputEventDetail>` |  | 否 | 当键盘输入时，触发 input 事件<br /><br />**onInput 处理函数的返回值并不会反映到 textarea 上** |
-| onConfirm | `CommonEventFunction<onConfirmEventDetail>` |  | 否 | 点击完成时， 触发 confirm 事件 |
-| onKeyboardHeightChange | `CommonEventFunction<onKeyboardHeightChangeEventDetail>` |  | 否 | 键盘高度发生变化的时候触发此事件 |
+| onFocus | `EventFunction<onFocusEventDetail>` |  | 否 | 输入框聚焦时触发 |
+| onBlur | `EventFunction<onBlurEventDetail>` |  | 否 | 输入框失去焦点时触发 |
+| onLineChange | `EventFunction<onLineChangeEventDetail>` |  | 否 | 输入框行数变化时调用 |
+| onInput | `EventFunction<onInputEventDetail>` |  | 否 | 当键盘输入时，触发 input 事件<br /><br />**onInput 处理函数的返回值并不会反映到 textarea 上** |
+| onConfirm | `EventFunction<onConfirmEventDetail>` |  | 否 | 点击完成时， 触发 confirm 事件 |
+| onKeyboardHeightChange | `EventFunction<onKeyboardHeightChangeEventDetail>` |  | 否 | 键盘高度发生变化的时候触发此事件 |
 
 ### onFocusEventDetail
 
