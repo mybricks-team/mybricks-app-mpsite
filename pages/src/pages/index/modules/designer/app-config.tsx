@@ -939,6 +939,8 @@ const getAiView = (enableAI, option) => {
         }
       },
       async requestAsStream(messages, ...args) {
+        console.log("requestAsStream",JSON.parse(JSON.stringify(messages)));
+
         let context = args[0];
         let tools = undefined;
         let extraOption = {};

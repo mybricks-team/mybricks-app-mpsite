@@ -590,7 +590,8 @@ function getDepModules(comlibs) {
     return [];
   }
 
-  if (comlibs.some((lib) => lib?.namespace === "mybricks.normal-chart.taro")) {
+  // 为了 AI 组件，先强制引入 F2 依赖，这会导致首包体积增大
+  if (comlibs.some((lib) => lib?.namespace === "mybricks.normal-chart.taro") || true) {
     return [
       {
         name: "F2",

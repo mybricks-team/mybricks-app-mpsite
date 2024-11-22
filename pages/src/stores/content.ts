@@ -116,9 +116,23 @@ class QueryFileContentsPool {
               } catch (error) {
                 console.warn(
                   `[${record.id}]page json 解析失败`,
-                  error,
-                  record?.content
+                  // error,
+                  record
                 );
+
+                // 进一步处理错误，例如记录错误位置
+                if (error instanceof SyntaxError) {
+                  const positionMatch = error.message.match(/position (\d+)/);
+                  if (positionMatch) {
+                    const position = parseInt(positionMatch[1], 10);
+                    console.warn(`Error at position: ${position}`);
+                    // 你可以在这里添加更多逻辑来处理错误，例如：
+                    // - 提取错误位置附近的字符串
+                    // - 尝试自动修复错误
+                    const errorContext = record?.content.slice(Math.max(0, position - 20), position + 20);
+                    console.warn(`Error context: ${errorContext}`);
+                  }
+                }
               }
               this.cachedResults[record.id] = item;
             });
