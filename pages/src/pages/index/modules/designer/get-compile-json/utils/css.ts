@@ -51,20 +51,50 @@ export const getPageCssMap = (pageToJson) => {
 
   Object.keys(jsonComs).forEach((key) => {
     let styleAry = jsonComs[key]?.model?.style?.styleAry || [];
-    pageCss[key] = styleAry;
+
+    pageCss[key] = styleAry.map((item) => {
+      let { selector, css } = item;
+      if(selector?.includes("_key")) {
+        return {
+          selector: `#${jsonComs[key]["id"]} ${selector.replace(/_key/g, "data-key")}`,
+          css: css
+        }
+      }else{
+        return item;
+      }
+    });
+
     if (jsonComs[key]?.def?.namespace === "mybricks.taro.ai") {
       const _styleCode = jsonComs[key]?.model?.data?._styleCode;
       if (_styleCode) {
         pageCss[key].push({
           selector: null,
-          css: decodeURIComponent(_styleCode).replaceAll('__id__', jsonComs[key]["id"])
-        })
+          css: decodeURIComponent(_styleCode).replaceAll(
+            "__id__",
+            jsonComs[key]["id"]
+          ),
+        });
         delete jsonComs[key]?.model?.data?._styleCode;
       }
+
+      // const styleAry = jsonComs[key]?.model?.style?.styleAry || [];
+      // if(styleAry.length) {
+      //   styleAry.forEach((item) => {
+      //     if(item.selector) {
+      //       console.log("~~~~~~", item);
+
+      //       pageCss[key].push({
+      //         selector: null,
+      //         css: `#${jsonComs[key]["id"]} ${item.selector.replace(/_key/g, "data-key")}` + `{${item.css}}`
+      //       });
+      //     }
+      //   });
+      //   delete jsonComs[key]?.model?.style?.styleAry
+      // }
     }
-    // delete jsonComs[key]?.model?.style?.styleAry
   });
 
+  console.log("pageCss", pageCss);
   return pageCss;
 };
 

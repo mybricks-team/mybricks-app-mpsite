@@ -172,7 +172,7 @@ export class BaseJson {
         // 生成并删除每个页面的css
         pageCssMap[item.id] = Css.getPageCssMap(pageToJson);
 
-        console.log(pageCssMap, pageToJson);
+        console.log("pageCssMap", pageCssMap, "pageToJson", pageToJson);
 
         return {
           id: item.id,

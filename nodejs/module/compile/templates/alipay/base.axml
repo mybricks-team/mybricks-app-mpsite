@@ -6,7 +6,7 @@
 </template>
 
 <template name="tmpl_0_0">
-  <view hover-class="{{xs.b(i.p3,'none')}}" hover-stop-propagation="{{xs.b(i.p6,!1)}}" hover-start-time="{{xs.b(i.p4,50)}}" hover-stay-time="{{xs.b(i.p5,400)}}" onTouchStart="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh" animation="{{i.p0}}" onAnimationStart="eh" onAnimationIteration="eh" onAnimationEnd="eh" onTransitionEnd="eh" disable-scroll="{{xs.b(i.p1,false)}}" hidden="{{xs.b(i.p2,false)}}" onAppear="eh" onDisappear="eh" onFirstAppear="eh" style="{{i.st}}" class="{{i.cl}}" onTap="eh" catchTouchMove="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
+  <view hover-class="{{xs.b(i.p4,'none')}}" hover-stop-propagation="{{xs.b(i.p7,!1)}}" hover-start-time="{{xs.b(i.p5,50)}}" hover-stay-time="{{xs.b(i.p6,400)}}" onTouchStart="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh" animation="{{i.p0}}" onAnimationStart="eh" onAnimationIteration="eh" onAnimationEnd="eh" onTransitionEnd="eh" disable-scroll="{{xs.b(i.p2,false)}}" hidden="{{xs.b(i.p3,false)}}" onAppear="eh" onDisappear="eh" onFirstAppear="eh" data-key="{{xs.b(i.p1,i._key)}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh" catchTouchMove="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
     <block a:for="{{i.cn}}" a:key="sid">
       <template is="{{xs.a(0, item.nn)}}" data="{{i:item}}" />
     </block>
@@ -14,7 +14,7 @@
 </template>
 
 <template name="tmpl_0_5">
-  <view hover-class="{{xs.b(i.p3,'none')}}" hover-stop-propagation="{{xs.b(i.p6,!1)}}" hover-start-time="{{xs.b(i.p4,50)}}" hover-stay-time="{{xs.b(i.p5,400)}}" animation="{{i.p0}}" disable-scroll="{{xs.b(i.p1,false)}}" hidden="{{xs.b(i.p2,false)}}" style="{{i.st}}" class="{{i.cl}}"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
+  <view hover-class="{{xs.b(i.p4,'none')}}" hover-stop-propagation="{{xs.b(i.p7,!1)}}" hover-start-time="{{xs.b(i.p5,50)}}" hover-stay-time="{{xs.b(i.p6,400)}}" animation="{{i.p0}}" disable-scroll="{{xs.b(i.p2,false)}}" hidden="{{xs.b(i.p3,false)}}" data-key="{{xs.b(i.p1,i._key)}}" style="{{i.st}}" class="{{i.cl}}"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
     <block a:for="{{i.cn}}" a:key="sid">
       <template is="{{xs.a(0, item.nn)}}" data="{{i:item}}" />
     </block>
@@ -30,27 +30,27 @@
 </template>
 
 <template name="tmpl_0_7">
-  <view hover-class="{{xs.b(i.p3,'none')}}" hover-stop-propagation="{{xs.b(i.p6,!1)}}" hover-start-time="{{xs.b(i.p4,50)}}" hover-stay-time="{{xs.b(i.p5,400)}}" onTouchStart="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh" animation="{{i.p0}}" onAnimationStart="eh" onAnimationIteration="eh" onAnimationEnd="eh" onTransitionEnd="eh" disable-scroll="{{xs.b(i.p1,false)}}" hidden="{{xs.b(i.p2,false)}}" onAppear="eh" onDisappear="eh" onFirstAppear="eh" style="{{i.st}}" class="{{i.cl}}" onTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
+  <view hover-class="{{xs.b(i.p4,'none')}}" hover-stop-propagation="{{xs.b(i.p7,!1)}}" hover-start-time="{{xs.b(i.p5,50)}}" hover-stay-time="{{xs.b(i.p6,400)}}" onTouchStart="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh" animation="{{i.p0}}" onAnimationStart="eh" onAnimationIteration="eh" onAnimationEnd="eh" onTransitionEnd="eh" disable-scroll="{{xs.b(i.p2,false)}}" hidden="{{xs.b(i.p3,false)}}" onAppear="eh" onDisappear="eh" onFirstAppear="eh" data-key="{{xs.b(i.p1,i._key)}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
     <block a:for="{{i.cn}}" a:key="sid">
       <template is="{{xs.a(0, item.nn)}}" data="{{i:item}}" />
     </block>
   </view>
 </template>
 
-<template name="tmpl_0_22">
+<template name="tmpl_0_23">
   <icon type="{{i.p2}}" size="{{xs.b(i.p1,23)}}" color="{{i.p0}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}"></icon>
 </template>
 
-<template name="tmpl_0_39">
-  <progress percent="{{i.p5}}" stroke-width="{{xs.b(i.p7,6)}}" color="{{xs.b(i.p4,'#09BB07')}}" activeColor="{{xs.b(i.p2,'#09BB07')}}" backgroundColor="{{xs.b(i.p3,'#EBEBEB')}}" active="{{xs.b(i.p0,!1)}}" active-mode="{{xs.b(i.p1,'backwards')}}" show-info="{{xs.b(i.p6,!1)}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}"></progress>
+<template name="tmpl_0_40">
+  <progress percent="{{i.p6}}" stroke-width="{{xs.b(i.p8,6)}}" color="{{xs.b(i.p4,'#09BB07')}}" activeColor="{{xs.b(i.p2,'#09BB07')}}" backgroundColor="{{xs.b(i.p3,'#EBEBEB')}}" active="{{xs.b(i.p0,!1)}}" active-mode="{{xs.b(i.p1,'backwards')}}" show-info="{{xs.b(i.p7,!1)}}" data-key="{{xs.b(i.p5,i._key)}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}"></progress>
 </template>
 
-<template name="tmpl_0_42">
-  <rich-text nodes="{{xs.b(i.p0,[])}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}"></rich-text>
+<template name="tmpl_0_43">
+  <rich-text nodes="{{xs.b(i.p1,[])}}" data-key="{{xs.b(i.p0,i._key)}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}"></rich-text>
 </template>
 
 <template name="tmpl_0_4">
-  <text selectable="{{xs.b(i.p2,!1)}}" space="{{i.p3}}" decode="{{xs.b(i.p0,!1)}}" number-of-lines="{{i.p1}}" style="{{i.st}}" class="{{i.cl}}"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
+  <text selectable="{{xs.b(i.p3,!1)}}" space="{{i.p4}}" decode="{{xs.b(i.p1,!1)}}" number-of-lines="{{i.p2}}" data-key="{{xs.b(i.p0,i._key)}}" style="{{i.st}}" class="{{i.cl}}"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
     <block a:for="{{i.cn}}" a:key="sid">
       <template is="{{xs.a(0, item.nn)}}" data="{{i:item}}" />
     </block>
@@ -58,7 +58,7 @@
 </template>
 
 <template name="tmpl_0_6">
-  <text selectable="{{xs.b(i.p2,!1)}}" space="{{i.p3}}" decode="{{xs.b(i.p0,!1)}}" onTouchStart="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh" number-of-lines="{{i.p1}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
+  <text selectable="{{xs.b(i.p3,!1)}}" space="{{i.p4}}" decode="{{xs.b(i.p1,!1)}}" onTouchStart="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh" number-of-lines="{{i.p2}}" data-key="{{xs.b(i.p0,i._key)}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
     <block a:for="{{i.cn}}" a:key="sid">
       <template is="{{xs.a(0, item.nn)}}" data="{{i:item}}" />
     </block>
@@ -66,7 +66,7 @@
 </template>
 
 <template name="tmpl_0_13">
-  <button size="{{xs.b(i.p12,'default')}}" type="{{i.p13}}" plain="{{xs.b(i.p9,!1)}}" disabled="{{i.p0}}" loading="{{xs.b(i.p6,!1)}}" form-type="{{i.p1}}" open-type="{{i.p8}}" hover-class="{{xs.b(i.p2,'button-hover')}}" hover-stop-propagation="{{xs.b(i.p5,!1)}}" hover-start-time="{{xs.b(i.p3,20)}}" hover-stay-time="{{xs.b(i.p4,70)}}" name="{{i.p7}}" onagreeprivacyauthorization="eh" onTouchStart="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh" scope="{{i.p11}}" public-id="{{i.p10}}" onGetAuthorize="eh" onError="eh" onGetUserInfo="eh" onGetPhoneNumber="eh" onFollowLifestyle="eh" style="{{i.st}}" class="{{i.cl}}" onTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
+  <button size="{{xs.b(i.p13,'default')}}" type="{{i.p14}}" plain="{{xs.b(i.p10,!1)}}" disabled="{{i.p1}}" loading="{{xs.b(i.p7,!1)}}" form-type="{{i.p2}}" open-type="{{i.p9}}" hover-class="{{xs.b(i.p3,'button-hover')}}" hover-stop-propagation="{{xs.b(i.p6,!1)}}" hover-start-time="{{xs.b(i.p4,20)}}" hover-stay-time="{{xs.b(i.p5,70)}}" name="{{i.p8}}" onagreeprivacyauthorization="eh" onTouchStart="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh" scope="{{i.p12}}" public-id="{{i.p11}}" onGetAuthorize="eh" onError="eh" onGetUserInfo="eh" onGetPhoneNumber="eh" onFollowLifestyle="eh" data-key="{{xs.b(i.p0,i._key)}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
     <block a:for="{{i.cn}}" a:key="sid">
       <template is="{{xs.a(0, item.nn)}}" data="{{i:item}}" />
     </block>
@@ -74,7 +74,7 @@
 </template>
 
 <template name="tmpl_0_16">
-  <checkbox value="{{i.p4}}" disabled="{{i.p2}}" checked="{{xs.b(i.p0,!1)}}" color="{{xs.b(i.p1,'#09BB07')}}" name="{{i.p3}}" onChange="eh" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
+  <checkbox value="{{i.p5}}" disabled="{{i.p3}}" checked="{{xs.b(i.p0,!1)}}" color="{{xs.b(i.p1,'#09BB07')}}" name="{{i.p4}}" onChange="eh" data-key="{{xs.b(i.p2,i._key)}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
     <block a:for="{{i.cn}}" a:key="sid">
       <template is="{{xs.a(0, item.nn)}}" data="{{i:item}}" />
     </block>
@@ -82,43 +82,43 @@
 </template>
 
 <template name="tmpl_0_17">
-  <checkbox-group onChange="eh" name="{{i.p0}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
+  <checkbox-group onChange="eh" name="{{i.p1}}" data-key="{{xs.b(i.p0,i._key)}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
     <block a:for="{{i.cn}}" a:key="sid">
       <template is="{{xs.a(0, item.nn)}}" data="{{i:item}}" />
     </block>
   </checkbox-group>
 </template>
 
-<template name="tmpl_0_21">
-  <form report-submit="{{xs.b(i.p1,!1)}}" onSubmit="eh" onReset="eh" name="{{i.p0}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
+<template name="tmpl_0_22">
+  <form report-submit="{{xs.b(i.p2,!1)}}" onSubmit="eh" onReset="eh" name="{{i.p1}}" data-key="{{xs.b(i.p0,i._key)}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
     <block a:for="{{i.cn}}" a:key="sid">
       <template is="{{xs.a(0, item.nn)}}" data="{{i:item}}" />
     </block>
   </form>
 </template>
 
-<template name="tmpl_0_23">
+<template name="tmpl_0_24">
   <template is="{{xs.c(i, 'tmpl_0_')}}" data="{{i:i}}" />
 </template>
 
-<template name="tmpl_0_23_focus">
-  <input value="{{i.p18}}" type="{{xs.b(i.p17,'')}}" password="{{xs.b(i.p10,!1)}}" placeholder="{{i.p11}}" placeholder-style="{{i.p13}}" placeholder-class="{{xs.b(i.p12,'input-placeholder')}}" disabled="{{i.p6}}" maxlength="{{xs.b(i.p8,140)}}" cursor-spacing="{{xs.b(i.p5,0)}}" focus="{{xs.b(i.focus,!1)}}" confirm-type="{{xs.b(i.p2,'done')}}" confirm-hold="{{xs.b(i.p1,!1)}}" cursor="{{xs.b(i.p4,i.p18?i.p18.length:-1)}}" selection-start="{{xs.b(i.p16,-1)}}" selection-end="{{xs.b(i.p15,-1)}}" onInput="eh" onFocus="eh" onBlur="eh" onConfirm="eh" name="{{i.p9}}" always-system="{{xs.b(i.p0,false)}}" random-number="{{xs.b(i.p14,false)}}" controlled="{{xs.b(i.p3,false)}}" enableNative="{{xs.b(i.p7,true)}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}"></input>
+<template name="tmpl_0_24_focus">
+  <input value="{{i.p19}}" type="{{xs.b(i.p18,'')}}" password="{{xs.b(i.p11,!1)}}" placeholder="{{i.p12}}" placeholder-style="{{i.p14}}" placeholder-class="{{xs.b(i.p13,'input-placeholder')}}" disabled="{{i.p7}}" maxlength="{{xs.b(i.p9,140)}}" cursor-spacing="{{xs.b(i.p5,0)}}" focus="{{xs.b(i.focus,!1)}}" confirm-type="{{xs.b(i.p2,'done')}}" confirm-hold="{{xs.b(i.p1,!1)}}" cursor="{{xs.b(i.p4,i.p19?i.p19.length:-1)}}" selection-start="{{xs.b(i.p17,-1)}}" selection-end="{{xs.b(i.p16,-1)}}" onInput="eh" onFocus="eh" onBlur="eh" onConfirm="eh" name="{{i.p10}}" always-system="{{xs.b(i.p0,false)}}" random-number="{{xs.b(i.p15,false)}}" controlled="{{xs.b(i.p3,false)}}" enableNative="{{xs.b(i.p8,true)}}" data-key="{{xs.b(i.p6,i._key)}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}"></input>
 </template>
 
-<template name="tmpl_0_23_blur">
-  <input value="{{i.p18}}" type="{{xs.b(i.p17,'')}}" password="{{xs.b(i.p10,!1)}}" placeholder="{{i.p11}}" placeholder-style="{{i.p13}}" placeholder-class="{{xs.b(i.p12,'input-placeholder')}}" disabled="{{i.p6}}" maxlength="{{xs.b(i.p8,140)}}" cursor-spacing="{{xs.b(i.p5,0)}}" confirm-type="{{xs.b(i.p2,'done')}}" confirm-hold="{{xs.b(i.p1,!1)}}" cursor="{{xs.b(i.p4,i.p18?i.p18.length:-1)}}" selection-start="{{xs.b(i.p16,-1)}}" selection-end="{{xs.b(i.p15,-1)}}" onInput="eh" onFocus="eh" onBlur="eh" onConfirm="eh" name="{{i.p9}}" always-system="{{xs.b(i.p0,false)}}" random-number="{{xs.b(i.p14,false)}}" controlled="{{xs.b(i.p3,false)}}" enableNative="{{xs.b(i.p7,true)}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}"></input>
+<template name="tmpl_0_24_blur">
+  <input value="{{i.p19}}" type="{{xs.b(i.p18,'')}}" password="{{xs.b(i.p11,!1)}}" placeholder="{{i.p12}}" placeholder-style="{{i.p14}}" placeholder-class="{{xs.b(i.p13,'input-placeholder')}}" disabled="{{i.p7}}" maxlength="{{xs.b(i.p9,140)}}" cursor-spacing="{{xs.b(i.p5,0)}}" confirm-type="{{xs.b(i.p2,'done')}}" confirm-hold="{{xs.b(i.p1,!1)}}" cursor="{{xs.b(i.p4,i.p19?i.p19.length:-1)}}" selection-start="{{xs.b(i.p17,-1)}}" selection-end="{{xs.b(i.p16,-1)}}" onInput="eh" onFocus="eh" onBlur="eh" onConfirm="eh" name="{{i.p10}}" always-system="{{xs.b(i.p0,false)}}" random-number="{{xs.b(i.p15,false)}}" controlled="{{xs.b(i.p3,false)}}" enableNative="{{xs.b(i.p8,true)}}" data-key="{{xs.b(i.p6,i._key)}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}"></input>
 </template>
 
-<template name="tmpl_0_24">
-  <label for="{{i.p0}}" name="{{i.p1}}" onTouchStart="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh" style="{{i.st}}" class="{{i.cl}}" onTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
+<template name="tmpl_0_25">
+  <label for="{{i.p1}}" name="{{i.p2}}" onTouchStart="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh" data-key="{{xs.b(i.p0,i._key)}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
     <block a:for="{{i.cn}}" a:key="sid">
       <template is="{{xs.a(0, item.nn)}}" data="{{i:item}}" />
     </block>
   </label>
 </template>
 
-<template name="tmpl_0_36">
-  <picker mode="{{xs.b(i.p4,'selector')}}" disabled="{{i.p1}}" range="{{i.p6}}" range-key="{{i.p7}}" value="{{i.p9}}" start="{{i.p8}}" end="{{i.p2}}" fields="{{xs.b(i.p3,'day')}}" custom-item="{{i.p0}}" name="{{i.p5}}" onCancel="eh" onChange="eh" onColumnChange="eh" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
+<template name="tmpl_0_37">
+  <picker mode="{{xs.b(i.p5,'selector')}}" disabled="{{i.p2}}" range="{{i.p7}}" range-key="{{i.p8}}" value="{{i.p10}}" start="{{i.p9}}" end="{{i.p3}}" fields="{{xs.b(i.p4,'day')}}" custom-item="{{i.p0}}" name="{{i.p6}}" onCancel="eh" onChange="eh" onColumnChange="eh" data-key="{{xs.b(i.p1,i._key)}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
   <view>
     <block a:for="{{i.cn}}" a:key="sid">
       <template is="{{xs.a(0, item.nn)}}" data="{{i:item}}" />
@@ -127,7 +127,7 @@
   </picker>
 </template>
 
-<template name="tmpl_0_37">
+<template name="tmpl_0_38">
   <picker-view value="{{i.p5}}" indicator-style="{{i.p1}}" indicator-class="{{i.p0}}" mask-style="{{i.p3}}" mask-class="{{i.p2}}" onChange="eh" name="{{i.p4}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
     <block a:for="{{i.cn}}" a:key="sid">
       <picker-view-column class="{{item.cl}}" style="{{item.st}}">
@@ -139,28 +139,28 @@
   </picker-view>
 </template>
 
-<template name="tmpl_0_40">
-  <radio value="{{i.p4}}" checked="{{xs.b(i.p0,!1)}}" disabled="{{i.p2}}" color="{{xs.b(i.p1,'#09BB07')}}" name="{{i.p3}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
+<template name="tmpl_0_41">
+  <radio value="{{i.p5}}" checked="{{xs.b(i.p0,!1)}}" disabled="{{i.p3}}" color="{{xs.b(i.p1,'#09BB07')}}" name="{{i.p4}}" data-key="{{xs.b(i.p2,i._key)}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
     <block a:for="{{i.cn}}" a:key="sid">
       <template is="{{xs.a(0, item.nn)}}" data="{{i:item}}" />
     </block>
   </radio>
 </template>
 
-<template name="tmpl_0_41">
-  <radio-group onChange="eh" name="{{i.p0}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
+<template name="tmpl_0_42">
+  <radio-group onChange="eh" name="{{i.p1}}" data-key="{{xs.b(i.p0,i._key)}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
     <block a:for="{{i.cn}}" a:key="sid">
       <template is="{{xs.a(0, item.nn)}}" data="{{i:item}}" />
     </block>
   </radio-group>
 </template>
 
-<template name="tmpl_0_47">
-  <slider min="{{xs.b(i.p6,0)}}" max="{{xs.b(i.p5,100)}}" step="{{xs.b(i.p9,1)}}" disabled="{{i.p2}}" value="{{xs.b(i.p11,0)}}" activeColor="{{xs.b(i.p0,'#1aad19')}}" backgroundColor="{{xs.b(i.p1,'#e9e9e9')}}" show-value="{{xs.b(i.p8,!1)}}" onChange="eh" onChanging="eh" name="{{i.p7}}" track-size="{{xs.b(i.p10,4)}}" handle-size="{{xs.b(i.p4,22)}}" handle-color="{{xs.b(i.p3,'#ffffff')}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}"></slider>
+<template name="tmpl_0_48">
+  <slider min="{{xs.b(i.p7,0)}}" max="{{xs.b(i.p6,100)}}" step="{{xs.b(i.p10,1)}}" disabled="{{i.p3}}" value="{{xs.b(i.p12,0)}}" activeColor="{{xs.b(i.p0,'#1aad19')}}" backgroundColor="{{xs.b(i.p1,'#e9e9e9')}}" show-value="{{xs.b(i.p9,!1)}}" onChange="eh" onChanging="eh" name="{{i.p8}}" track-size="{{xs.b(i.p11,4)}}" handle-size="{{xs.b(i.p5,22)}}" handle-color="{{xs.b(i.p4,'#ffffff')}}" data-key="{{xs.b(i.p2,i._key)}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}"></slider>
 </template>
 
-<template name="tmpl_0_52">
-  <switch checked="{{xs.b(i.p0,!1)}}" disabled="{{i.p3}}" type="{{xs.b(i.p5,'switch')}}" color="{{xs.b(i.p1,'#04BE02')}}" onChange="eh" name="{{i.p4}}" controlled="{{xs.b(i.p2,false)}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}"></switch>
+<template name="tmpl_0_53">
+  <switch checked="{{xs.b(i.p0,!1)}}" disabled="{{i.p4}}" type="{{xs.b(i.p6,'switch')}}" color="{{xs.b(i.p1,'#04BE02')}}" onChange="eh" name="{{i.p5}}" controlled="{{xs.b(i.p2,false)}}" data-key="{{xs.b(i.p3,i._key)}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}"></switch>
 </template>
 
 <template name="tmpl_0_19">
@@ -171,16 +171,16 @@
   </cover-image>
 </template>
 
-<template name="tmpl_0_53">
+<template name="tmpl_0_54">
   <template is="{{xs.c(i, 'tmpl_0_')}}" data="{{i:i}}" />
 </template>
 
-<template name="tmpl_0_53_focus">
-  <textarea value="{{i.p16}}" placeholder="{{i.p10}}" placeholder-style="{{i.p12}}" placeholder-class="{{xs.b(i.p11,'textarea-placeholder')}}" disabled="{{i.p5}}" maxlength="{{xs.b(i.p8,140)}}" auto-focus="{{xs.b(i.p0,!1)}}" focus="{{xs.b(i.focus,!1)}}" auto-height="{{xs.b(i.p1,!1)}}" fixed="{{xs.b(i.p7,!1)}}" cursor-spacing="{{xs.b(i.p4,0)}}" cursor="{{xs.b(i.p3,i.p16?i.p16.length:-1)}}" selection-start="{{xs.b(i.p14,-1)}}" selection-end="{{xs.b(i.p13,-1)}}" onFocus="eh" onBlur="eh" onLineChange="eh" onInput="eh" onConfirm="eh" name="{{i.p9}}" show-count="{{xs.b(i.p15,true)}}" controlled="{{xs.b(i.p2,false)}}" enableNative="{{xs.b(i.p6,false)}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}"></textarea>
+<template name="tmpl_0_54_focus">
+  <textarea value="{{i.p17}}" placeholder="{{i.p11}}" placeholder-style="{{i.p13}}" placeholder-class="{{xs.b(i.p12,'textarea-placeholder')}}" disabled="{{i.p6}}" maxlength="{{xs.b(i.p9,140)}}" auto-focus="{{xs.b(i.p0,!1)}}" focus="{{xs.b(i.focus,!1)}}" auto-height="{{xs.b(i.p1,!1)}}" fixed="{{xs.b(i.p8,!1)}}" cursor-spacing="{{xs.b(i.p4,0)}}" cursor="{{xs.b(i.p3,i.p17?i.p17.length:-1)}}" selection-start="{{xs.b(i.p15,-1)}}" selection-end="{{xs.b(i.p14,-1)}}" onFocus="eh" onBlur="eh" onLineChange="eh" onInput="eh" onConfirm="eh" name="{{i.p10}}" show-count="{{xs.b(i.p16,true)}}" controlled="{{xs.b(i.p2,false)}}" enableNative="{{xs.b(i.p7,false)}}" data-key="{{xs.b(i.p5,i._key)}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}"></textarea>
 </template>
 
-<template name="tmpl_0_53_blur">
-  <textarea value="{{i.p16}}" placeholder="{{i.p10}}" placeholder-style="{{i.p12}}" placeholder-class="{{xs.b(i.p11,'textarea-placeholder')}}" disabled="{{i.p5}}" maxlength="{{xs.b(i.p8,140)}}" auto-focus="{{xs.b(i.p0,!1)}}" auto-height="{{xs.b(i.p1,!1)}}" fixed="{{xs.b(i.p7,!1)}}" cursor-spacing="{{xs.b(i.p4,0)}}" cursor="{{xs.b(i.p3,i.p16?i.p16.length:-1)}}" selection-start="{{xs.b(i.p14,-1)}}" selection-end="{{xs.b(i.p13,-1)}}" onFocus="eh" onBlur="eh" onLineChange="eh" onInput="eh" onConfirm="eh" name="{{i.p9}}" show-count="{{xs.b(i.p15,true)}}" controlled="{{xs.b(i.p2,false)}}" enableNative="{{xs.b(i.p6,false)}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}"></textarea>
+<template name="tmpl_0_54_blur">
+  <textarea value="{{i.p17}}" placeholder="{{i.p11}}" placeholder-style="{{i.p13}}" placeholder-class="{{xs.b(i.p12,'textarea-placeholder')}}" disabled="{{i.p6}}" maxlength="{{xs.b(i.p9,140)}}" auto-focus="{{xs.b(i.p0,!1)}}" auto-height="{{xs.b(i.p1,!1)}}" fixed="{{xs.b(i.p8,!1)}}" cursor-spacing="{{xs.b(i.p4,0)}}" cursor="{{xs.b(i.p3,i.p17?i.p17.length:-1)}}" selection-start="{{xs.b(i.p15,-1)}}" selection-end="{{xs.b(i.p14,-1)}}" onFocus="eh" onBlur="eh" onLineChange="eh" onInput="eh" onConfirm="eh" name="{{i.p10}}" show-count="{{xs.b(i.p16,true)}}" controlled="{{xs.b(i.p2,false)}}" enableNative="{{xs.b(i.p7,false)}}" data-key="{{xs.b(i.p5,i._key)}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}"></textarea>
 </template>
 
 <template name="tmpl_0_20">
@@ -191,7 +191,7 @@
   </cover-view>
 </template>
 
-<template name="tmpl_0_30">
+<template name="tmpl_0_31">
   <movable-area scale-area="{{xs.b(i.p0,!1)}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
     <block a:for="{{i.cn}}" a:key="sid">
       <template is="{{xs.a(0, item.nn)}}" data="{{i:item}}" />
@@ -199,7 +199,7 @@
   </movable-area>
 </template>
 
-<template name="tmpl_0_31">
+<template name="tmpl_0_32">
   <movable-view direction="{{xs.b(i.p2,none)}}" inertia="{{xs.b(i.p6,!1)}}" out-of-bounds="{{xs.b(i.p7,!1)}}" x="{{i.p13}}" y="{{i.p14}}" damping="{{xs.b(i.p1,20)}}" friction="{{xs.b(i.p4,2)}}" disabled="{{i.p3}}" scale="{{xs.b(i.p8,!1)}}" scale-min="{{xs.b(i.p10,0.5)}}" scale-max="{{xs.b(i.p9,10)}}" scale-value="{{xs.b(i.p11,1)}}" onChange="eh" onScale="eh" onHTouchMove="eh" onVTouchMove="eh" width="{{xs.b(i.p12,'10px')}}" height="{{xs.b(i.p5,'10px')}}" onTouchStart="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh" animation="{{i.p0}}" onAnimationStart="eh" onAnimationIteration="eh" onAnimationEnd="eh" onTransitionEnd="eh" onChangeEnd="eh" style="{{i.st}}" class="{{i.cl}}" onTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
     <block a:for="{{i.cn}}" a:key="sid">
       <template is="{{xs.a(0, item.nn)}}" data="{{i:item}}" />
@@ -207,16 +207,16 @@
   </movable-view>
 </template>
 
-<template name="tmpl_0_45">
-  <scroll-view scroll-x="{{xs.b(i.p8,!1)}}" scroll-y="{{xs.b(i.p9,!1)}}" upper-threshold="{{xs.b(i.p11,50)}}" lower-threshold="{{xs.b(i.p2,50)}}" scroll-top="{{i.p6}}" scroll-left="{{i.p5}}" scroll-into-view="{{i.p4}}" scroll-with-animation="{{xs.b(i.p7,!1)}}" enable-back-to-top="{{xs.b(i.p1,!1)}}" onScrollToUpper="eh" onScrollToLower="eh" onScroll="eh" onTouchStart="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh" animation="{{i.p0}}" onAnimationStart="eh" onAnimationIteration="eh" onAnimationEnd="eh" onTransitionEnd="eh" scroll-animation-duration="{{i.p3}}" trap-scroll="{{xs.b(i.p10,false)}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
+<template name="tmpl_0_46">
+  <scroll-view scroll-x="{{xs.b(i.p9,!1)}}" scroll-y="{{xs.b(i.p10,!1)}}" upper-threshold="{{xs.b(i.p12,50)}}" lower-threshold="{{xs.b(i.p3,50)}}" scroll-top="{{i.p7}}" scroll-left="{{i.p6}}" scroll-into-view="{{i.p5}}" scroll-with-animation="{{xs.b(i.p8,!1)}}" enable-back-to-top="{{xs.b(i.p2,!1)}}" onScrollToUpper="eh" onScrollToLower="eh" onScroll="eh" onTouchStart="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh" animation="{{i.p0}}" onAnimationStart="eh" onAnimationIteration="eh" onAnimationEnd="eh" onTransitionEnd="eh" scroll-animation-duration="{{i.p4}}" trap-scroll="{{xs.b(i.p11,false)}}" data-key="{{xs.b(i.p1,i._key)}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
     <block a:for="{{i.cn}}" a:key="sid">
       <template is="{{xs.a(0, item.nn)}}" data="{{i:item}}" />
     </block>
   </scroll-view>
 </template>
 
-<template name="tmpl_0_50">
-  <swiper indicator-dots="{{xs.b(i.p12,!1)}}" indicator-color="{{xs.b(i.p11,'rgba(0, 0, 0, .3)')}}" indicator-active-color="{{xs.b(i.p10,'#000000')}}" autoplay="{{xs.b(i.p2,!1)}}" current="{{xs.b(i.p5,0)}}" interval="{{xs.b(i.p13,5000)}}" duration="{{xs.b(i.p9,500)}}" circular="{{xs.b(i.p4,!1)}}" vertical="{{xs.b(i.p16,!1)}}" previous-margin="{{xs.b(i.p15,'0px')}}" next-margin="{{xs.b(i.p14,'0px')}}" display-multiple-items="{{xs.b(i.p8,1)}}" onChange="eh" onTransition="eh" onTouchStart="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh" active-class="{{i.p1}}" changing-class="{{i.p3}}" acceleration="{{xs.b(i.p0,false)}}" disable-programmatic-animation="{{xs.b(i.p6,false)}}" disable-touch="{{xs.b(i.p7,false)}}" onAnimationEnd="eh" style="{{i.st}}" class="{{i.cl}}" onTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
+<template name="tmpl_0_51">
+  <swiper indicator-dots="{{xs.b(i.p13,!1)}}" indicator-color="{{xs.b(i.p12,'rgba(0, 0, 0, .3)')}}" indicator-active-color="{{xs.b(i.p11,'#000000')}}" autoplay="{{xs.b(i.p2,!1)}}" current="{{xs.b(i.p5,0)}}" interval="{{xs.b(i.p14,5000)}}" duration="{{xs.b(i.p10,500)}}" circular="{{xs.b(i.p4,!1)}}" vertical="{{xs.b(i.p17,!1)}}" previous-margin="{{xs.b(i.p16,'0px')}}" next-margin="{{xs.b(i.p15,'0px')}}" display-multiple-items="{{xs.b(i.p9,1)}}" onChange="eh" onTransition="eh" onTouchStart="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh" active-class="{{i.p1}}" changing-class="{{i.p3}}" acceleration="{{xs.b(i.p0,false)}}" disable-programmatic-animation="{{xs.b(i.p7,false)}}" disable-touch="{{xs.b(i.p8,false)}}" onAnimationEnd="eh" data-key="{{xs.b(i.p6,i._key)}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
     <block a:for="{{xs.f(i.cn)}}" a:key="sid">
       <swiper-item class="{{item.cl}}" style="{{item.st}}" id="{{item.uid||item.sid}}" data-sid="{{item.sid}}">
         <block a:for="{{item.cn}}" a:key="sid">
@@ -227,7 +227,7 @@
   </swiper>
 </template>
 
-<template name="tmpl_0_33">
+<template name="tmpl_0_34">
   <navigator url="{{i.p6}}" open-type="{{xs.b(i.p5,'navigate')}}" delta="{{xs.b(i.p0,1)}}" hover-class="{{xs.b(i.p1,'navigator-hover')}}" hover-stop-propagation="{{xs.b(i.p4,!1)}}" hover-start-time="{{xs.b(i.p2,50)}}" hover-stay-time="{{xs.b(i.p3,600)}}" onSuccess="eh" onFail="eh" onComplete="eh" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
     <block a:for="{{i.cn}}" a:key="sid">
       <template is="{{xs.a(0, item.nn)}}" data="{{i:item}}" />
@@ -248,7 +248,7 @@
 </template>
 
 <template name="tmpl_0_3">
-  <image src="{{i.p3}}" mode="{{xs.b(i.p2,'scaleToFill')}}" lazy-load="{{xs.b(i.p1,!1)}}" default-source="{{i.p0}}" style="{{i.st}}" class="{{i.cl}}"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
+  <image src="{{i.p4}}" mode="{{xs.b(i.p3,'scaleToFill')}}" lazy-load="{{xs.b(i.p2,!1)}}" default-source="{{i.p1}}" data-key="{{xs.b(i.p0,i._key)}}" style="{{i.st}}" class="{{i.cl}}"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
     <block a:for="{{i.cn}}" a:key="sid">
       <template is="{{xs.a(0, item.nn)}}" data="{{i:item}}" />
     </block>
@@ -256,14 +256,14 @@
 </template>
 
 <template name="tmpl_0_1">
-  <image src="{{i.p3}}" mode="{{xs.b(i.p2,'scaleToFill')}}" lazy-load="{{xs.b(i.p1,!1)}}" onError="eh" onLoad="eh" onTouchStart="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh" default-source="{{i.p0}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
+  <image src="{{i.p4}}" mode="{{xs.b(i.p3,'scaleToFill')}}" lazy-load="{{xs.b(i.p2,!1)}}" onError="eh" onLoad="eh" onTouchStart="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh" default-source="{{i.p1}}" data-key="{{xs.b(i.p0,i._key)}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
     <block a:for="{{i.cn}}" a:key="sid">
       <template is="{{xs.a(0, item.nn)}}" data="{{i:item}}" />
     </block>
   </image>
 </template>
 
-<template name="tmpl_0_27">
+<template name="tmpl_0_28">
   <live-player src="{{i.p8}}" autoplay="{{xs.b(i.p1,!1)}}" muted="{{xs.b(i.p5,!1)}}" orientation="{{xs.b(i.p7,'vertical')}}" object-fit="{{xs.b(i.p6,'contain')}}" background-mute="{{xs.b(i.p2,!1)}}" min-cache="{{xs.b(i.p4,1)}}" max-cache="{{xs.b(i.p3,3)}}" onStateChange="eh" onFullScreenChange="eh" onNetStatus="eh" animation="{{i.p0}}" onAnimationStart="eh" onAnimationIteration="eh" onAnimationEnd="eh" onTransitionEnd="eh" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
     <block a:for="{{i.cn}}" a:key="sid">
       <template is="{{xs.a(0, item.nn)}}" data="{{i:item}}" />
@@ -271,8 +271,8 @@
   </live-player>
 </template>
 
-<template name="tmpl_0_54">
-  <video src="{{i.p25}}" duration="{{i.p6}}" controls="{{xs.b(i.p2,!0)}}" danmu-list="{{i.p4}}" danmu-btn="{{i.p3}}" enable-danmu="{{i.p7}}" autoplay="{{xs.b(i.p1,!1)}}" loop="{{xs.b(i.p12,!1)}}" muted="{{xs.b(i.p14,!1)}}" initial-time="{{xs.b(i.p11,0)}}" page-gesture="{{xs.b(i.p16,!1)}}" direction="{{i.p5}}" show-progress="{{xs.b(i.p23,!0)}}" show-fullscreen-btn="{{xs.b(i.p20,!0)}}" show-play-btn="{{xs.b(i.p22,!0)}}" show-center-play-btn="{{xs.b(i.p19,!0)}}" enable-progress-gesture="{{xs.b(i.p8,!0)}}" object-fit="{{xs.b(i.p15,'contain')}}" poster="{{i.p17}}" show-mute-btn="{{xs.b(i.p21,!1)}}" onPlay="eh" onPause="eh" onEnded="eh" onTimeUpdate="eh" onFullScreenChange="eh" onWaiting="eh" onError="eh" animation="{{i.p0}}" onAnimationStart="eh" onAnimationIteration="eh" onAnimationEnd="eh" onTransitionEnd="eh" poster-size="{{xs.b(i.p18,'contain')}}" show-thin-progress-bar="{{xs.b(i.p24,false)}}" mobilenet-hint-type="{{xs.b(i.p13,1)}}" floating-mode="{{xs.b(i.p10,'none')}}" enableNative="{{xs.b(i.p9,true)}}" onLoading="eh" onUserAction="eh" onStop="eh" onRenderStart="eh" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
+<template name="tmpl_0_55">
+  <video src="{{i.p26}}" duration="{{i.p7}}" controls="{{xs.b(i.p2,!0)}}" danmu-list="{{i.p4}}" danmu-btn="{{i.p3}}" enable-danmu="{{i.p8}}" autoplay="{{xs.b(i.p1,!1)}}" loop="{{xs.b(i.p13,!1)}}" muted="{{xs.b(i.p15,!1)}}" initial-time="{{xs.b(i.p12,0)}}" page-gesture="{{xs.b(i.p17,!1)}}" direction="{{i.p6}}" show-progress="{{xs.b(i.p24,!0)}}" show-fullscreen-btn="{{xs.b(i.p21,!0)}}" show-play-btn="{{xs.b(i.p23,!0)}}" show-center-play-btn="{{xs.b(i.p20,!0)}}" enable-progress-gesture="{{xs.b(i.p9,!0)}}" object-fit="{{xs.b(i.p16,'contain')}}" poster="{{i.p18}}" show-mute-btn="{{xs.b(i.p22,!1)}}" onPlay="eh" onPause="eh" onEnded="eh" onTimeUpdate="eh" onFullScreenChange="eh" onWaiting="eh" onError="eh" animation="{{i.p0}}" onAnimationStart="eh" onAnimationIteration="eh" onAnimationEnd="eh" onTransitionEnd="eh" poster-size="{{xs.b(i.p19,'contain')}}" show-thin-progress-bar="{{xs.b(i.p25,false)}}" mobilenet-hint-type="{{xs.b(i.p14,1)}}" floating-mode="{{xs.b(i.p11,'none')}}" enableNative="{{xs.b(i.p10,true)}}" onLoading="eh" onUserAction="eh" onStop="eh" onRenderStart="eh" data-key="{{xs.b(i.p5,i._key)}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
     <block a:for="{{i.cn}}" a:key="sid">
       <template is="{{xs.a(0, item.nn)}}" data="{{i:item}}" />
     </block>
@@ -291,8 +291,8 @@
   <ad unit-id="{{i.p1}}" ad-intervals="{{i.p0}}" onLoad="eh" onError="eh" onClose="eh" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}"></ad>
 </template>
 
-<template name="tmpl_0_55">
-  <web-view src="{{i.p0}}" onMessage="eh" onLoad="eh" onError="eh" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
+<template name="tmpl_0_56">
+  <web-view src="{{i.p1}}" onMessage="eh" onLoad="eh" onError="eh" data-key="{{xs.b(i.p0,i._key)}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
     <block a:for="{{i.cn}}" a:key="sid">
       <template is="{{xs.a(0, item.nn)}}" data="{{i:item}}" />
     </block>
@@ -307,7 +307,7 @@
   </block>
 </template>
 
-<template name="tmpl_0_29">
+<template name="tmpl_0_30">
   <map longitude="{{i.p17}}" latitude="{{i.p15}}" scale="{{xs.b(i.p24,16)}}" markers="{{xs.b(i.p18,[])}}" covers="{{i.p2}}" polyline="{{xs.b(i.p22,[])}}" circles="{{xs.b(i.p0,[])}}" controls="{{xs.b(i.p1,[])}}" include-points="{{xs.b(i.p14,[])}}" show-location="{{i.p27}}" layer-style="{{xs.b(i.p16,1)}}" onMarkerTap="eh" onControlTap="eh" onCalloutTap="eh" onUpdated="eh" onTouchStart="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh" skew="{{xs.b(i.p29,0)}}" rotate="{{xs.b(i.p23,0)}}" polygon="{{xs.b(i.p21,[])}}" include-padding="{{i.p13}}" ground-overlays="{{xs.b(i.p12,[])}}" tile-overlay="{{i.p30}}" custom-map-style="{{i.p3}}" panels="{{xs.b(i.p20,[])}}" setting="{{xs.b(i.p25,{})}}" optimize="{{xs.b(i.p19,false)}}" show-compass="{{xs.b(i.p26,false)}}" show-scale="{{xs.b(i.p28,false)}}" enable-overlooking="{{xs.b(i.p5,false)}}" enable-zoom="{{xs.b(i.p11,true)}}" enable-scroll="{{xs.b(i.p9,true)}}" enable-rotate="{{xs.b(i.p7,false)}}" enable-traffic="{{xs.b(i.p10,false)}}" enable-poi="{{xs.b(i.p6,true)}}" enable-building="{{xs.b(i.p4,true)}}" enable-satellite="{{xs.b(i.p8,false)}}" onRegionChange="eh" onPanelTap="eh" onInitComplete="eh" style="{{i.st}}" class="{{i.cl}}" onTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
     <block a:for="{{i.cn}}" a:key="sid">
       <template is="{{xs.a(0, item.nn)}}" data="{{i:item}}" />
@@ -315,7 +315,7 @@
   </map>
 </template>
 
-<template name="tmpl_0_44">
+<template name="tmpl_0_45">
   <script style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
     <block a:for="{{i.cn}}" a:key="sid">
       <template is="{{xs.a(0, item.nn)}}" data="{{i:item}}" />
@@ -323,7 +323,7 @@
   </script>
 </template>
 
-<template name="tmpl_0_28">
+<template name="tmpl_0_29">
   <lottie autoplay="{{xs.b(i.p2,false)}}" path="{{i.p6}}" speed="{{xs.b(i.p9,1.0)}}" repeat-count="{{xs.b(i.p8,0)}}" auto-reverse="{{xs.b(i.p1,false)}}" assets-path="{{i.p0}}" placeholder="{{i.p7}}" djangoId="{{i.p3}}" md5="{{i.p4}}" optimize="{{xs.b(i.p5,false)}}" onDataReady="eh" onDataFailed="eh" onAnimationStart="eh" onAnimationEnd="eh" onAnimationRepeat="eh" onAnimationCancel="eh" onDataLoadReady="eh" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
     <block a:for="{{i.cn}}" a:key="sid">
       <template is="{{xs.a(0, item.nn)}}" data="{{i:item}}" />
@@ -331,7 +331,7 @@
   </lottie>
 </template>
 
-<template name="tmpl_0_26">
+<template name="tmpl_0_27">
   <lifestyle public-id="{{i.p1}}" memo="{{i.p0}}" onFollow="eh" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
     <block a:for="{{i.cn}}" a:key="sid">
       <template is="{{xs.a(0, item.nn)}}" data="{{i:item}}" />
@@ -339,7 +339,7 @@
   </lifestyle>
 </template>
 
-<template name="tmpl_0_25">
+<template name="tmpl_0_26">
   <life-follow sceneId="{{i.p1}}" checkFollow="{{i.p0}}" onCheckFollow="eh" onClose="eh" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
     <block a:for="{{i.cn}}" a:key="sid">
       <template is="{{xs.a(0, item.nn)}}" data="{{i:item}}" />
@@ -363,7 +363,7 @@
   </ar-camera>
 </template>
 
-<template name="tmpl_0_34">
+<template name="tmpl_0_35">
   <page-container show="{{xs.b(i.p7,false)}}" duration="{{xs.b(i.p2,300)}}" z-index="{{xs.b(i.p8,100)}}" overlay="{{xs.b(i.p3,true)}}" position="{{xs.b(i.p5,'bottom')}}" round="{{xs.b(i.p6,false)}}" close-on-slide-down="{{xs.b(i.p0,false)}}" overlay-style="{{i.p4}}" custom-style="{{i.p1}}" onBeforeEnter="eh" onEnter="eh" onEnterCancelled="eh" onAfterEnter="eh" onBeforeLeave="eh" onLeave="eh" onLeaveCancelled="eh" onAfterLeave="eh" onClickOverlay="eh" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
     <block a:for="{{i.cn}}" a:key="sid">
       <template is="{{xs.a(0, item.nn)}}" data="{{i:item}}" />
@@ -371,7 +371,7 @@
   </page-container>
 </template>
 
-<template name="tmpl_0_46">
+<template name="tmpl_0_47">
   <share-element name="{{i.p2}}" transform="{{xs.b(i.p3,false)}}" duration="{{xs.b(i.p0,300)}}" easing-function="{{xs.b(i.p1,'ease-out')}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
     <block a:for="{{i.cn}}" a:key="sid">
       <template is="{{xs.a(0, item.nn)}}" data="{{i:item}}" />
@@ -379,12 +379,20 @@
   </share-element>
 </template>
 
-<template name="tmpl_0_43">
-  <root-portal enable="{{xs.b(i.p0,true)}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
+<template name="tmpl_0_44">
+  <root-portal enable="{{xs.b(i.p1,true)}}" data-key="{{xs.b(i.p0,i._key)}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
     <block a:for="{{i.cn}}" a:key="sid">
       <template is="{{xs.a(0, item.nn)}}" data="{{i:item}}" />
     </block>
   </root-portal>
+</template>
+
+<template name="tmpl_0_21">
+  <editor data-key="{{xs.b(i.p0,i._key)}}" style="{{i.st}}" class="{{i.cl}}" onTap="eh" onTouchMove="eh" onTouchEnd="eh" onTouchCancel="eh" onLongTap="eh"  id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
+    <block a:for="{{i.cn}}" a:key="sid">
+      <template is="{{xs.a(0, item.nn)}}" data="{{i:item}}" />
+    </block>
+  </editor>
 </template>
 
 <template name="tmpl_0_8">
