@@ -19,6 +19,7 @@ import { LOCAL_EDITOR_ASSETS } from "@/constants";
 import { MpConfig, CompileConfig } from "./custom-configs";
 import { getAiEncryptData } from "./utils/get-ai-encrypt-data";
 import extendsConfig from "./configs/extends";
+import systemContent from "./system.txt";
 // import typeConfig from "./configs/type";
 // import { PcEditor } from "/Users/stuzhaoxing-office/Program/editors-pc-common/src/index";
 
@@ -59,8 +60,15 @@ function getComs() {
   return comDefs;
 }
 
-export default function ({ ctx, pageModel, save, designerRef, FxService, appConfig }) {
-  console.log("应用设置: ", appConfig)
+export default function ({
+  ctx,
+  pageModel,
+  save,
+  designerRef,
+  FxService,
+  appConfig,
+}) {
+  console.log("应用设置: ", appConfig);
   return {
     type: window.__type__,
     shortcuts: {
@@ -101,8 +109,8 @@ export default function ({ ctx, pageModel, save, designerRef, FxService, appConf
     },
     ...(ctx.hasMaterialApp
       ? {
-        comLibAdder: comLibAdderFunc(ctx),
-      }
+          comLibAdder: comLibAdderFunc(ctx),
+        }
       : {}),
     comLibLoader: comlibLoaderFunc(ctx),
     pageContentLoader: async (sceneId) => {
@@ -119,7 +127,7 @@ export default function ({ ctx, pageModel, save, designerRef, FxService, appConf
         return editorAppenderFn(editConfig, pageModel);
       },
       // eslint-disable-next-line no-empty-pattern
-      items({ }, cate0, cate1, cate2) {
+      items({}, cate0, cate1, cate2) {
         cate0.title = "配置";
         cate0.items = [
           {
@@ -467,7 +475,7 @@ export default function ({ ctx, pageModel, save, designerRef, FxService, appConf
                     "_MYBRICKS_GLOBAL_HEADERS_",
                     JSON.stringify({ data })
                   );
-                } catch (e) { }
+                } catch (e) {}
               },
             },
           },
@@ -690,7 +698,7 @@ export default function ({ ctx, pageModel, save, designerRef, FxService, appConf
     //   model: appConfig?.publishLocalizeConfig?.selectAIModel
     // }), // TODO: 开发settings页面后再放开注释
     aiView: getAiView(true, {
-      model: "openai/gpt-4o-mini"
+      model: "openai/gpt-4o-mini",
     }),
     com: {
       env: {
@@ -913,15 +921,15 @@ const getAiView = (enableAI, option) => {
         // console.log(messages[0].content)
         // console.log(messages[messages.length - 1].content)
 
-        let content = '处理失败'
+        let content = "处理失败";
         try {
           let res = await axios({
-            method: 'POST',
-            url: '//ai.mybricks.world/code',
+            method: "POST",
+            url: "//ai.mybricks.world/code",
             withCredentials: false,
             data: getAiEncryptData({
               model: !!model ? model : undefined,
-              messages
+              messages,
             }),
             headers: {
               "Content-Type": "application/json",
@@ -933,18 +941,22 @@ const getAiView = (enableAI, option) => {
         } catch (e) {
           console.error(e);
         } finally {
-          //     console.log(`prompts: ${prompts},
+          // console.log(`prompts: ${prompts},
           // question: ${question},
           // 返回结果: ${content}`)
         }
       },
       async requestAsStream(messages, ...args) {
-        console.log("requestAsStream",JSON.parse(JSON.stringify(messages)));
+        if (messages[0] && false) {
+          messages[0].content = systemContent;
+        }
+
+        console.log("requestAsStream", JSON.parse(JSON.stringify(messages)));
 
         let context = args[0];
         let tools = undefined;
         let extraOption = {};
-        
+
         if (args.length === 2) {
           tools = args[0];
           context = args[1];
@@ -958,20 +970,20 @@ const getAiView = (enableAI, option) => {
 
         const { write, complete, error } = context ?? {};
 
-        let usedModel = 'openai/gpt-4o-mini'
+        let usedModel = "openai/gpt-4o-mini";
 
         switch (true) {
-          case extraOption?.expert === 'image': {
-            usedModel = 'anthropic/claude-3.5-sonnet';
+          case extraOption?.expert === "image": {
+            usedModel = "anthropic/claude-3.5-sonnet";
             break;
           }
-          case ['image'].includes(extraOption?.aiRole): {
-            usedModel = 'anthropic/claude-3.5-sonnet';
-            break
+          case ["image"].includes(extraOption?.aiRole): {
+            usedModel = "anthropic/claude-3.5-sonnet";
+            break;
           }
-          case ['architect'].includes(extraOption.aiRole): {
-            usedModel = 'openai/gpt-4o-2024-08-06';
-            break
+          case ["architect"].includes(extraOption.aiRole): {
+            usedModel = "openai/gpt-4o-2024-11-20";
+            break;
           }
           default: {
             usedModel = !!model ? model : undefined;
@@ -1071,77 +1083,78 @@ const getAiView = (enableAI, option) => {
           //     "tool_call_id": "call_YvBMVXvb75bgsNwUCdazQFvf"
           //   }
           // ]
-          
 
-          
-          const response = await fetch('//ai.mybricks.world/stream-with-tools', {
-            method: 'POST',
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(
-              getAiEncryptData({
-                model: usedModel,
-                // model: 'openai/gpt-4o-mini',
-                // top_p: 0.2,
-                messages,
-                tools
-                // tools: [
-                //   {
-                //     "type": "function",
-                //     "function": {
-                //       "name": "select_icons",
-                //       "description": "选择图标",
-                //       "parameters": {
-                //         "type": "object",
-                //         "properties": {
-                        
-                //         }
-                //       }
-                //     }
-                //   },
-                //   // {
-                //   //   "type": "function",
-                //   //   "function": {
-                //   //     "name": "query_weather",
-                //   //     "description": "根据城市名称查询当前天气",
-                //   //     "parameters": {
-                //   //       "type": "object",
-                //   //       "properties": {
-                //   //         "city": {
-                //   //           "type": "string",
-                //   //           "description": "城市名称"
-                //   //         }
-                //   //       },
-                //   //       "required": [
-                //   //         "city"
-                //   //       ]
-                //   //     }
-                //   //   }
-                //   // },
-                //   // {
-                //   //   "type": "function",
-                //   //   "function": {
-                //   //     "name": "query_wet",
-                //   //     "description": "根据城市名称查询降雨概率",
-                //   //     "parameters": {
-                //   //       "type": "object",
-                //   //       "properties": {
-                //   //         "city": {
-                //   //           "type": "string",
-                //   //           "description": "城市名称"
-                //   //         }
-                //   //       },
-                //   //       "required": [
-                //   //         "city"
-                //   //       ]
-                //   //     }
-                //   //   }
-                //   // }
-                // ]
-              })
-            ),
-          });
+          const response = await fetch(
+            "//ai.mybricks.world/stream-with-tools",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(
+                getAiEncryptData({
+                  model: usedModel,
+                  // model: 'openai/gpt-4o-mini',
+                  // top_p: 0.2,
+                  messages,
+                  tools,
+                  // tools: [
+                  //   {
+                  //     "type": "function",
+                  //     "function": {
+                  //       "name": "select_icons",
+                  //       "description": "选择图标",
+                  //       "parameters": {
+                  //         "type": "object",
+                  //         "properties": {
+
+                  //         }
+                  //       }
+                  //     }
+                  //   },
+                  //   // {
+                  //   //   "type": "function",
+                  //   //   "function": {
+                  //   //     "name": "query_weather",
+                  //   //     "description": "根据城市名称查询当前天气",
+                  //   //     "parameters": {
+                  //   //       "type": "object",
+                  //   //       "properties": {
+                  //   //         "city": {
+                  //   //           "type": "string",
+                  //   //           "description": "城市名称"
+                  //   //         }
+                  //   //       },
+                  //   //       "required": [
+                  //   //         "city"
+                  //   //       ]
+                  //   //     }
+                  //   //   }
+                  //   // },
+                  //   // {
+                  //   //   "type": "function",
+                  //   //   "function": {
+                  //   //     "name": "query_wet",
+                  //   //     "description": "根据城市名称查询降雨概率",
+                  //   //     "parameters": {
+                  //   //       "type": "object",
+                  //   //       "properties": {
+                  //   //         "city": {
+                  //   //           "type": "string",
+                  //   //           "description": "城市名称"
+                  //   //         }
+                  //   //       },
+                  //   //       "required": [
+                  //   //         "city"
+                  //   //       ]
+                  //   //     }
+                  //   //   }
+                  //   // }
+                  // ]
+                })
+              ),
+            }
+          );
 
           const reader = response.body.getReader();
           const decoder = new TextDecoder();

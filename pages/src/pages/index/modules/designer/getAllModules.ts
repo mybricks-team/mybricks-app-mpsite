@@ -212,6 +212,9 @@ export const getAllModulesJsCode = async (pages, plugins, config = {}) => {
         if (jsonComs[key].def.namespace === "mybricks.taro.ai") {
           const com = jsonComs[key];
           const code = com.model.data._renderCode;
+
+          console.log(com.model);
+
           if (code) {
             // 有code才生成
             let moduleContent = `

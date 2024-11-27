@@ -21,13 +21,21 @@ export class GetMiniappJson extends BaseJson {
       const cssMap = pageCssMap[id];
       Css.forEachCssMap(cssMap, (key, selector, css) => {
         if (!selector && typeof css === "string") {
-          pageCssContent.push(transformStyleToCss(css))
+          pageCssContent.push(transformStyleToCss(css));
         } else {
-          pageCssContent.push(`
+          if (selector.includes(key)) {
+            pageCssContent.push(`
+              ${selector} {
+                ${transformStyleToCss(css)}
+              }
+              `);
+          } else {
+            pageCssContent.push(`
             .${key} ${selector} {
               ${transformStyleToCss(css)}
             }
             `);
+          }
         }
       });
       item.cssContent = pageCssContent.join("\n");
@@ -209,8 +217,7 @@ const genLazyloadComs = async (comlibs, toJSON) => {
           if (noThrowError) {
             return;
           } else {
-
-            console.log()
+            console.log();
 
             throw new Error(
               `找不到 ${component.namespace}@${component.version} 对应的组件资源`
@@ -247,11 +254,15 @@ const genLazyloadComs = async (comlibs, toJSON) => {
   return curComLibs;
 };
 
-const pxRegex = (units = ['px']) => new RegExp(`"[^"]+"|'[^']+'|url\\([^\\)]+\\)|(\\d*\\.?\\d+)(${units.join('|')})`, 'g')
+const pxRegex = (units = ["px"]) =>
+  new RegExp(
+    `"[^"]+"|'[^']+'|url\\([^\\)]+\\)|(\\d*\\.?\\d+)(${units.join("|")})`,
+    "g"
+  );
 const designWidth = (input) => 375;
 
 const pxToRpxConfigs = {
-  platform: 'weapp',
+  platform: "weapp",
   // designWidth: 750,
   designWidth: 375,
   deviceRatio: {
@@ -260,79 +271,82 @@ const pxToRpxConfigs = {
     750: 2 / 2,
     828: 1.81 / 2,
   },
-  targetUnit: 'rpx',
-  rootValue: (input) => 1 / pxToRpxConfigs.deviceRatio[designWidth(input)]
-}
-const targetUnit = 'rpx'
+  targetUnit: "rpx",
+  rootValue: (input) => 1 / pxToRpxConfigs.deviceRatio[designWidth(input)],
+};
+const targetUnit = "rpx";
 
 const legacyOptions = {
-  root_value: 'rootValue',
-  unit_precision: 'unitPrecision',
-  selector_black_list: 'selectorBlackList',
-  prop_white_list: 'propList',
-  media_query: 'mediaQuery',
-  propWhiteList: 'propList'
-}
+  root_value: "rootValue",
+  unit_precision: "unitPrecision",
+  selector_black_list: "selectorBlackList",
+  prop_white_list: "propList",
+  media_query: "mediaQuery",
+  propWhiteList: "propList",
+};
 
-function convertLegacyOptions (options) {
-  if (typeof options !== 'object') return
+function convertLegacyOptions(options) {
+  if (typeof options !== "object") return;
   if (
-    (
-      (typeof options.prop_white_list !== 'undefined' &&
-        options.prop_white_list.length === 0) ||
-      (typeof options.propWhiteList !== 'undefined' &&
-        options.propWhiteList.length === 0)
-    ) &&
-    typeof options.propList === 'undefined'
+    ((typeof options.prop_white_list !== "undefined" &&
+      options.prop_white_list.length === 0) ||
+      (typeof options.propWhiteList !== "undefined" &&
+        options.propWhiteList.length === 0)) &&
+    typeof options.propList === "undefined"
   ) {
-    options.propList = ['*']
-    delete options.prop_white_list
-    delete options.propWhiteList
+    options.propList = ["*"];
+    delete options.prop_white_list;
+    delete options.propWhiteList;
   }
   Object.keys(legacyOptions).forEach(function (key) {
     if (options.hasOwnProperty(key)) {
-      options[legacyOptions[key]] = options[key]
-      delete options[key]
+      options[legacyOptions[key]] = options[key];
+      delete options[key];
     }
-  })
+  });
 }
 
-convertLegacyOptions(pxToRpxConfigs)
+convertLegacyOptions(pxToRpxConfigs);
 
 const defaults = {
-  methods: ['platform', 'size'],
+  methods: ["platform", "size"],
   rootValue: 16,
   unitPrecision: 5,
   selectorBlackList: [],
-  propList: ['*'],
+  propList: ["*"],
   replace: true,
   mediaQuery: false,
-  minPixelValue: 0
-}
+  minPixelValue: 0,
+};
 
-const opts = Object.assign({}, defaults, pxToRpxConfigs)
+const opts = Object.assign({}, defaults, pxToRpxConfigs);
 const onePxTransform = true;
-const transUnits = ['px']
-const pxRgx = pxRegex(transUnits)
+const transUnits = ["px"];
+const pxRgx = pxRegex(transUnits);
 
-function toFixed (number, precision) {
-  const multiplier = Math.pow(10, precision + 1)
-  const wholeNumber = Math.floor(number * multiplier)
-  return (Math.round(wholeNumber / 10) * 10) / multiplier
+function toFixed(number, precision) {
+  const multiplier = Math.pow(10, precision + 1);
+  const wholeNumber = Math.floor(number * multiplier);
+  return (Math.round(wholeNumber / 10) * 10) / multiplier;
 }
 
-function createPxReplace (rootValue, unitPrecision, minPixelValue, onePxTransform) {
+function createPxReplace(
+  rootValue,
+  unitPrecision,
+  minPixelValue,
+  onePxTransform
+) {
   return function (input) {
     return function (m, $1) {
-      if (!$1) return m
-      const pixels = parseFloat($1)
-      let val = pixels / rootValue(input, m, $1)
+      if (!$1) return m;
+      const pixels = parseFloat($1);
+      let val = pixels / rootValue(input, m, $1);
       if (unitPrecision >= 0 && unitPrecision <= 100) {
-        val = toFixed(val, unitPrecision)
+        val = toFixed(val, unitPrecision);
       }
-      return val + targetUnit
-    }
-  }
+      return val + targetUnit;
+    };
+  };
 }
 
 const pxReplace = createPxReplace(
@@ -340,7 +354,7 @@ const pxReplace = createPxReplace(
   opts.unitPrecision,
   opts.minPixelValue,
   onePxTransform
-)("?")
+)("?");
 
 function transformStyleToCss(obj) {
   if (typeof obj === "string") {

@@ -13,6 +13,6 @@ export default {
     return 'tmpl_' + n + '_container'
   },
   f: function (l) {
-    return l.filter(function (i) {return i.nn === '52'})
+    return l.filter(function (i) {return i.nn === '53'})
   }
 }
