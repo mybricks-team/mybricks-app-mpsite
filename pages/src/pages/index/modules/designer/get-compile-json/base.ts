@@ -523,13 +523,66 @@ function getPageDepsMap(toJson) {
 
   let depsMap = {};
 
-  pages.forEach((pageJson) => {
+  //从pages改成遍历全部场景，模块里也有可能嵌套模块
+  toJson.scenes.forEach((pageJson) => {
     const pagePopups = findOpenPopupIdsFromJson(pageJson);
     const pageModules = findUsedModuleIdFromJson(pageJson);
     depsMap[pageJson.id] = Array.from(new Set([...pagePopups, ...pageModules]));
   });
 
-  return depsMap;
+  /* 
+    输出递进依赖关系,例如：
+    输入: {
+    "u_T8OHm": ["u_Bl20k"],
+    "u_Bl20k": ["u_ktclH"]
+    } 
+    输出: {
+    u_T8OHm: ['u_Bl20k', 'u_ktclH'],
+    u_Bl20k: ['u_ktclH']
+    }
+  */
+  function buildPaths(input) {
+    const result = {};
+
+    function findPaths(key, path = []) {
+      path.push(key);
+      if (input[key].length === 0) {
+        return [path];
+      }
+      let paths = [];
+      for (const nextKey of input[key]) {
+        paths = paths.concat(findPaths(nextKey, [...path]));
+      }
+      return paths;
+    }
+
+    for (const key in input) {
+      const paths = findPaths(key);
+      result[key] = paths.map(p => p.slice(1));
+    }
+
+    return result;
+  }
+  //依赖树格式转为只有一层
+  function extractFirstLevel(data) {
+    const result = {};
+    for (const key in data) {
+        if (data.hasOwnProperty(key)) {
+            const value = data[key];
+            // 把递进关系打平导第一层列表
+            const firstLevelList = value.reduce((acc, sublist) => {
+                if (Array.isArray(sublist)) {
+                    return acc.concat(sublist);
+                }
+                return acc;
+            }, []);
+            result[key] = firstLevelList;
+        }
+    }
+    return result;
+  }
+
+  return extractFirstLevel(buildPaths(depsMap));
 }
 
 /**

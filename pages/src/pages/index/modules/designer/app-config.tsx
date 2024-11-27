@@ -21,6 +21,7 @@ import { getAiEncryptData } from "./utils/get-ai-encrypt-data";
 import extendsConfig from "./configs/extends";
 // import typeConfig from "./configs/type";
 // import { PcEditor } from "/Users/stuzhaoxing-office/Program/editors-pc-common/src/index";
+// import system from "../../../../../../system.txt"
 
 // 加密展示
 // 输入一个字符串，一行或者多行，需要把中间的内容隐藏，只显示前面几个字符和后面几个字符，中间用*号代替
@@ -970,7 +971,7 @@ const getAiView = (enableAI, option) => {
             break
           }
           case ['architect'].includes(extraOption.aiRole): {
-            usedModel = 'openai/gpt-4o-2024-08-06';
+            usedModel = 'openai/gpt-4o-2024-11-20';
             break
           }
           default: {
@@ -978,6 +979,15 @@ const getAiView = (enableAI, option) => {
             break;
           }
         }
+
+        // let messages2 = [
+        //   {
+        //     role: "system",
+        //     content: system,
+        //   },
+        //   ...messages.slice(1),
+        // ];
+        // console.log("messages2",messages2)
 
         // 用于debug用户当前使用的模型
         window._ai_use_model_ = usedModel;
