@@ -546,6 +546,9 @@ function getPageDepsMap(toJson) {
 
     function findPaths(key, path = []) {
       path.push(key);
+      if(input[key] === undefined) {
+        input[key] = []
+      }
       if (input[key].length === 0) {
         return [path];
       }
