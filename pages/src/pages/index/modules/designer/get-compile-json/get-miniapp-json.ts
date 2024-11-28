@@ -217,8 +217,6 @@ const genLazyloadComs = async (comlibs, toJSON) => {
           if (noThrowError) {
             return;
           } else {
-            console.log();
-
             throw new Error(
               `找不到 ${component.namespace}@${component.version} 对应的组件资源`
             );
