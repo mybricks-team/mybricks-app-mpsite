@@ -198,36 +198,38 @@ export const getAllModulesJsCode = async (pages, plugins, config = {}) => {
     }
   }
 
-  if (!isH5) {
-    // 小程序环境
-    // 生成ai组件代码
-    for (let i = 0; i < pages.length; i++) {
-      let page = pages[i];
+    
+  // 生成ai组件代码
+  for (let i = 0; i < pages.length; i++) {
+    let page = pages[i];
 
-      let json = page?.pageToJson ?? {};
+    let json = page?.pageToJson ?? {};
 
-      let jsonComs = getComsFromPageJson(json);
+    let jsonComs = getComsFromPageJson(json);
 
-      Object.keys(jsonComs ?? {}).forEach((key) => {
-        if (jsonComs[key].def.namespace === "mybricks.taro.ai") {
-          const com = jsonComs[key];
-          const code = com.model.data._renderCode;
+    Object.keys(jsonComs ?? {}).forEach((key) => {
+      if (jsonComs[key].def.namespace === "mybricks.taro.ai") {
+        const com = jsonComs[key];
+        const code = com.model.data._renderCode;
 
-          if (code) {
-            // 有code才生成
+        // 注意，这里要修改这个key，小程序为_key，web为data-key，运行时的AIRender也是两个环境不一样的，目前无法统一，试过了
+        if (code) { // 有code才生成
+          if (!isH5) {  // 小程序环境
             let moduleContent = `
             ;const ui_${key} = (exports, require) => {
-              ${decodeURIComponent(code)}
-            };comModules['${key}'] = ui_${key};`
-
-            // 设计器可能会经常修改这个key，还是在这replace不容易break change
-            allModules += moduleContent.replace(/data-com-key/g, '_key');
-
+              ${decodeURIComponent(com.model.data._renderCode).replace(/data-com-key/g, '_key')}
+            };comModules['${key}'] = ui_${key};` 
+            
+            allModules += moduleContent;
             delete com.model.data._renderCode;
+          } else { // H5 环境
+            com.model.data._renderCode = encodeURIComponent(
+              decodeURIComponent(com.model.data._renderCode).replace(/data-com-key/g, 'data-key')
+            );
           }
         }
-      });
-    }
+      }
+    });
   }
 
   const miniJScode = await Terser.minify(babelScript(allModules));

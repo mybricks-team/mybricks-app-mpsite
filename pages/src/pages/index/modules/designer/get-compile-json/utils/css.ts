@@ -66,7 +66,7 @@ export const getPageCssMap = (pageToJson) => {
         }
       } else if (selector === ':root') {
         return {
-          selector: `#${jsonComs[key]["id"]} view,text`,
+          selector: `#${jsonComs[key]["id"]} #${jsonComs[key]["id"]}_root`,
           css: css
         }
       } else{
@@ -76,6 +76,12 @@ export const getPageCssMap = (pageToJson) => {
 
     if (jsonComs[key]?.def?.namespace === "mybricks.taro.ai") {
       const _styleCode = jsonComs[key]?.model?.data?._styleCode;
+
+      // TODO: PC的toJson是默认带这个属性的，小程序这没有了，只能hack添加了
+      if (jsonComs[key]?.model && !jsonComs[key].model.isAICode) {
+        jsonComs[key].model.isAICode = true
+      }
+
       if (_styleCode) {
         pageCss[key].push({
           selector: null,
@@ -104,7 +110,6 @@ export const getPageCssMap = (pageToJson) => {
     }
   });
 
-  console.log("pageCss", pageCss);
   return pageCss;
 };
 

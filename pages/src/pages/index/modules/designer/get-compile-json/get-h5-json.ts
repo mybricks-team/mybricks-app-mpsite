@@ -32,11 +32,19 @@ export class GetH5Json extends BaseJson {
         if (!selector && typeof css === "string") {
           cssContent.push(transformStyleToCss(css))
         } else {
-          cssContent.push(`
+          if (selector.includes(key)) {
+            cssContent.push(`
+              ${selector} {
+                ${transformStyleToCss(css)}
+              }
+              `);
+          } else {
+            cssContent.push(`
             .${key} ${selector} {
-              ${transformStyleToCss(css)} 
+              ${transformStyleToCss(css)}
             }
             `);
+          }
         }
       });
     });
