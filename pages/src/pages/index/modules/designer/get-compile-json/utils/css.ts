@@ -59,7 +59,17 @@ export const getPageCssMap = (pageToJson) => {
           selector: `#${jsonComs[key]["id"]} ${selector.replace(/_key/g, "data-key")}`,
           css: css
         }
-      }else{
+      } else if (selector?.includes("data-com-key")) {
+        return {
+          selector: `#${jsonComs[key]["id"]} ${selector.replace(/data-com-key/g, "data-key")}`,
+          css: css
+        }
+      } else if (selector === ':root') {
+        return {
+          selector: `#${jsonComs[key]["id"]} view,text`,
+          css: css
+        }
+      } else{
         return item;
       }
     });

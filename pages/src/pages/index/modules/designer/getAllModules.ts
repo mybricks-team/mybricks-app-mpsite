@@ -213,8 +213,6 @@ export const getAllModulesJsCode = async (pages, plugins, config = {}) => {
           const com = jsonComs[key];
           const code = com.model.data._renderCode;
 
-          console.log(com.model);
-
           if (code) {
             // 有code才生成
             let moduleContent = `
@@ -222,7 +220,8 @@ export const getAllModulesJsCode = async (pages, plugins, config = {}) => {
               ${decodeURIComponent(code)}
             };comModules['${key}'] = ui_${key};`
 
-            allModules += moduleContent;
+            // 设计器可能会经常修改这个key，还是在这replace不容易break change
+            allModules += moduleContent.replace(/data-com-key/g, '_key');
 
             delete com.model.data._renderCode;
           }
