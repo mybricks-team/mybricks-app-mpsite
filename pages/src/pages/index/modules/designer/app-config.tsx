@@ -69,7 +69,7 @@ export default function ({
   FxService,
   appConfig,
 }) {
-  console.log("应用设置: ", appConfig);
+  // console.log("应用设置: ", appConfig);
   return {
     type: window.__type__,
     shortcuts: {
@@ -948,6 +948,7 @@ const getAiView = (enableAI, option) => {
         }
       },
       async requestAsStream(messages, ...args) {
+        // console.log("requestAsStream", JSON.parse(JSON.stringify(messages)));
         if (messages[0] && false) {
           messages[0].content = systemContent;
         }
