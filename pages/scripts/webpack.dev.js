@@ -75,6 +75,7 @@ module.exports = merge(common, {
         // target: 'https://admin.alialumni.com',
         // target: 'http://118.31.0.78',
         target: "https://my.mybricks.world",
+        // target:"https://build.zidayun.com",
         // target: "https://test.mybricks.world",
         // target: "http://work.manateeai.com",
         // target: 'https://www.hzao.com.cn',
