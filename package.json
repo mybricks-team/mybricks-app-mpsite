@@ -1,6 +1,6 @@
 {
   "name": "mybricks-app-mpsite",
-  "version": "0.4.70",
+  "version": "0.4.71",
   "description": "mybricks 小程序应用",
   "scripts": {
     "start:dev": "NODE_ENV=development node nodejs/index.ts",
@@ -57,7 +57,7 @@
     "name": "mybricks-app-mpsite",
     "extName": "mpsite",
     "icon": "https://ali-ec.static.yximgs.com/udata/pkg/eshop/fangzhou/temp/aaa.acdd544c01dde964.svg",
-    "title": "小程序、H5应用",
+    "title": "移动端应用",
     "setting": "setting.html"
   },
   "nodemonConfig": {
