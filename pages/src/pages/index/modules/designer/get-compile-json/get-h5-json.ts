@@ -242,7 +242,7 @@ function createPxReplace(opts, viewportUnit, viewportSize) {
 
 function transformStyleToCss(obj) {
   if (typeof obj === "string") {
-    return obj.replace(pxRegex, createPxReplace(pxToVwConfigs, pxToVwConfigs.landscapeUnit, pxToVwConfigs.landscapeWidth))
+    return obj.replace(pxRegex, createPxReplace(pxToVwConfigs, pxToVwConfigs.landscapeUnit, pxToVwConfigs.viewportWidth))
   }
   let result = [];
   Object.keys(obj).forEach((key) => {
