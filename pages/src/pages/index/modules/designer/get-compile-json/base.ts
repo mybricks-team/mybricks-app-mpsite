@@ -63,6 +63,9 @@ export class BaseJson {
     toJson = cloneDeep(toJson);
     log("before toJson", JSON.parse(JSON.stringify(toJson)));
 
+    const useF2ForTaro = JSON.stringify(toJson).includes("f2-for-taro");
+    console.log("AI 组件中使用了 f2-for-taro", useF2ForTaro);
+
     log("处理全局变量和FX中");
     events?.onBeforeTransformJson?.();
 
@@ -70,7 +73,7 @@ export class BaseJson {
       transformToJSON(toJson);
     }
     // log("处理全局变量和FX中完成");
-    log("toJson", toJson);
+    // log("toJson", toJson);
 
     this.json = {};
 
@@ -204,7 +207,7 @@ export class BaseJson {
       fxFrames: this.json.fxFrames,
       scenes: this.json.scenes,
       tabBarJson: this.json.tabBarJson,
-      depModules: getDepModules(comlibs),
+      depModules: getDepModules(comlibs, useF2ForTaro),
       pageCssMap,
     };
   };
@@ -639,13 +642,13 @@ function getTabbarJson(toJson) {
   }
 }
 
-function getDepModules(comlibs) {
+function getDepModules(comlibs, useF2ForTaro) {
   if (!Array.isArray(comlibs)) {
     return [];
   }
 
   // 为了 AI 组件，先强制引入 F2 依赖，这会导致首包体积增大
-  if (comlibs.some((lib) => lib?.namespace === "mybricks.normal-chart.taro") || true) {
+  if (comlibs.some((lib) => lib?.namespace === "mybricks.normal-chart.taro") || useF2ForTaro) {
     return [
       {
         name: "F2",
