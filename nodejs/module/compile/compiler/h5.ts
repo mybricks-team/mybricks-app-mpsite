@@ -35,7 +35,6 @@ class H5Compiler extends BaseCompiler {
     return scriptContent
   }
 
-
   handleTemplate = async (data,comlibsContent) => {
     let htmlContent = await fse.readFile(this.htmlFilePath, 'utf-8');
     const comlibsFileName = `comlib.${getContentHash(comlibsContent)}.js`;
@@ -101,6 +100,8 @@ export const compilerH5 = async ({ data, projectPath, depModules,injectComlibsSc
   const compiler = new H5Compiler({ projectPath });
   compiler.validateData(data);
   await compiler.handleTemplate(data,injectComlibsScriptContent);
+
+  replacePageAliasMap(projectPath, data.pageAliasMap);
 }
 
 function modifyFileContent(path, callback) {
@@ -112,4 +113,52 @@ function modifyFileContent(path, callback) {
 
 function getContentHash (fileContent, len = 8) {
   return crypto.createHash('md5').update(fileContent).digest('hex').slice(0, len);
+}
+
+// 递归将该目录下的所有文件夹名称，文件名称或文件内容中的进行替换
+function replacePageAliasMap(projectPath, pageAliasMap) {
+  // 递归处理目录
+  function processDirectory(directory) {
+    const items = fs.readdirSync(directory);
+
+    items.forEach((item) => {
+      const itemPath = path.join(directory, item);
+      const stats = fs.statSync(itemPath);
+
+      if (stats.isDirectory()) {
+        // 处理目录名称
+        const newDirectoryName = replaceString(item, pageAliasMap);
+        const newDirectoryPath = path.join(directory, newDirectoryName);
+        if (newDirectoryPath !== itemPath) {
+          fs.renameSync(itemPath, newDirectoryPath);
+        }
+        // 递归处理子目录
+        processDirectory(newDirectoryPath);
+      } else if (stats.isFile()) {
+        // 处理文件名称
+        const newFileName = replaceString(item, pageAliasMap);
+        const newFilePath = path.join(directory, newFileName);
+        if (newFilePath !== itemPath) {
+          fs.renameSync(itemPath, newFilePath);
+        }
+        // 处理文件内容
+        const fileContent = fs.readFileSync(newFilePath, "utf8");
+        const newFileContent = replaceString(fileContent, pageAliasMap);
+        fs.writeFileSync(newFilePath, newFileContent, "utf8");
+      }
+    });
+  }
+
+  // 字符串替换函数
+  function replaceString(str, map) {
+    let result = str;
+    for (const [key, value] of Object.entries(map)) {
+      const regex = new RegExp(key, "g");
+      result = result.replace(regex, value);
+    }
+    return result;
+  }
+
+  // 开始处理项目目录
+  processDirectory(projectPath);
 }

@@ -9,11 +9,12 @@ export class GetMiniappJson extends BaseJson {
   }
 
   getJson = async ({ toJson, ci, status, comlibs, events = {} }) => {
-    const { pages, fxFrames, depModules, pageCssMap } = await this.initJson({
-      toJson,
-      events,
-      comlibs,
-    });
+    const { pages, fxFrames, depModules, pageCssMap, pageAliasMap } =
+      await this.initJson({
+        toJson,
+        events,
+        comlibs,
+      });
 
     pages.forEach((item) => {
       const { id } = item;
@@ -68,6 +69,7 @@ export class GetMiniappJson extends BaseJson {
         css: allComponentsCss,
       },
       depModules,
+      pageAliasMap,
     };
 
     console.warn("toJson2Json", params);

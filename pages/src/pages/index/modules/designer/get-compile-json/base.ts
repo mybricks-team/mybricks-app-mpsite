@@ -64,7 +64,6 @@ export class BaseJson {
     log("before toJson", JSON.parse(JSON.stringify(toJson)));
 
     const useF2ForTaro = JSON.stringify(toJson).includes("f2-for-taro");
-    console.log("AI 组件中使用了 f2-for-taro", useF2ForTaro);
 
     log("处理全局变量和FX中");
     events?.onBeforeTransformJson?.();
@@ -85,9 +84,27 @@ export class BaseJson {
     this.json.appConfig = appConfig;
 
     const pageDepsMap = getPageDepsMap(toJson);
-    console.log("pageDepsMap", JSON.parse(JSON.stringify(pageDepsMap)));
 
     const pageCssMap = {};
+
+    const pageAliasMap = {};
+
+    toJson.scenes
+      .filter((item) => {
+        return isPageScene(item);
+      })
+      .forEach((item) => {
+        const systemPageComData = findCom(item, "mybricks.taro.systemPage")
+          ?.model?.data;
+
+        if (!systemPageComData) {
+          return;
+        }
+
+        if (systemPageComData.alias) {
+          pageAliasMap[item.id] = systemPageComData.alias;
+        }
+      });
 
     // 获取页面信息，其中包含依赖的 popups 和 modules
     let pages = toJson.scenes
@@ -113,6 +130,13 @@ export class BaseJson {
             if (!config) {
               config = findCom(item, "mybricks.taro.systemWebview")?.model
                 ?.data;
+            }
+
+            if (!config) {
+              // 因为 login 等页面导入的时候，id 也发生了变化
+              config = {
+                useNavigationStyle: "none",
+              };
             }
 
             switch (config.useNavigationStyle) {
@@ -209,6 +233,7 @@ export class BaseJson {
       tabBarJson: this.json.tabBarJson,
       depModules: getDepModules(comlibs, useF2ForTaro),
       pageCssMap,
+      pageAliasMap,
     };
   };
 
@@ -471,8 +496,6 @@ function deleteUnuseDataFromPage(pageToJson) {
  * @description 生成一个依赖Map，Map包含一个页面关联的所有 popup、module 的 toJson
  */
 function getPageDepsMap(toJson) {
-  console.log("getPageDepsMap", JSON.parse(JSON.stringify(toJson)));
-
   let pages = toJson.scenes.filter((item) => {
     return isPageScene(item);
   });
@@ -499,7 +522,7 @@ function getPageDepsMap(toJson) {
       // 模块里面的 popup
       if (com.def?.namespace === "mybricks.core-comlib.module") {
         let moduleSceneJson = toJson.scenes.find((scene) => {
-          console.log("scene.id", scene);
+          // console.log("scene.id", scene);
           return scene.id === com?.model?.data?.definedId;
         });
         findOpenPopupIdsFromJson(moduleSceneJson, popupIds);
@@ -547,8 +570,8 @@ function getPageDepsMap(toJson) {
 
     function findPaths(key, path = []) {
       path.push(key);
-      if(input[key] === undefined) {
-        input[key] = []
+      if (input[key] === undefined) {
+        input[key] = [];
       }
       if (input[key].length === 0) {
         return [path];
@@ -562,7 +585,7 @@ function getPageDepsMap(toJson) {
 
     for (const key in input) {
       const paths = findPaths(key);
-      result[key] = paths.map(p => p.slice(1));
+      result[key] = paths.map((p) => p.slice(1));
     }
 
     return result;
@@ -571,17 +594,17 @@ function getPageDepsMap(toJson) {
   function extractFirstLevel(data) {
     const result = {};
     for (const key in data) {
-        if (data.hasOwnProperty(key)) {
-            const value = data[key];
-            // 把递进关系打平导第一层列表
-            const firstLevelList = value.reduce((acc, sublist) => {
-                if (Array.isArray(sublist)) {
-                    return acc.concat(sublist);
-                }
-                return acc;
-            }, []);
-            result[key] = firstLevelList;
-        }
+      if (data.hasOwnProperty(key)) {
+        const value = data[key];
+        // 把递进关系打平导第一层列表
+        const firstLevelList = value.reduce((acc, sublist) => {
+          if (Array.isArray(sublist)) {
+            return acc.concat(sublist);
+          }
+          return acc;
+        }, []);
+        result[key] = firstLevelList;
+      }
     }
     return result;
   }
@@ -648,7 +671,10 @@ function getDepModules(comlibs, useF2ForTaro) {
   }
 
   // 为了 AI 组件，先强制引入 F2 依赖，这会导致首包体积增大
-  if (comlibs.some((lib) => lib?.namespace === "mybricks.normal-chart.taro") || useF2ForTaro) {
+  if (
+    comlibs.some((lib) => lib?.namespace === "mybricks.normal-chart.taro") ||
+    useF2ForTaro
+  ) {
     return [
       {
         name: "F2",
@@ -660,6 +686,17 @@ function getDepModules(comlibs, useF2ForTaro) {
 }
 
 function isPageScene(sceneToJson) {
+  // 为了兼容 spa 导为 mpa 时，引擎把 popup 类型转为了 normal 类型
+  // 需要额外判断，如果包含了 mybricks.taro.popup 组件，则过滤
+  if (
+    sceneToJson.deps.some((dep) => {
+      return dep.namespace === "mybricks.taro.popup";
+    })
+  ) {
+    // console.log("包含了 mybricks.taro.popup 组件", sceneToJson);
+    return false;
+  }
+
   return (
     !isPopupScene(sceneToJson) &&
     !isModuleScene(sceneToJson) &&

@@ -232,7 +232,8 @@ export const compilerMiniapp = async (
       pageId,
       JSON.stringify({
         toJson: page.pageToJson,
-      })
+      }),
+      data.pageAliasMap
     );
 
     // 写入特殊的 fxFrame
@@ -544,6 +545,9 @@ export const compilerMiniapp = async (
       encoding: "utf-8",
     });
   }
+
+  // 替换页面别名
+  replacePageAliasMap(projectPath, data.pageAliasMap);
 };
 
 /** 写入依赖 */
@@ -593,9 +597,14 @@ function writeRootConfig(dir, str) {
 }
 
 /** 写page级，config文件 */
-function writePageConfig(dir, pageId, str) {
+function writePageConfig(dir, pageId, str, pageAliasMap) {
   const filePath = path.resolve(dir, `./mybricks/${pageId}-config.js`);
   fse.ensureDirSync(path.resolve(dir, "./mybricks"));
+
+  //str 压缩之前，需要先进行字符串替换
+  Object.keys(pageAliasMap).forEach((key) => {
+    str = str.replace(new RegExp(key, "g"), pageAliasMap[key]);
+  });
 
   //str 压缩
   const compressed = pako.deflate(str, { to: "string" });
@@ -727,4 +736,52 @@ class Adapter {
 
     return {};
   };
+}
+
+// 递归将该目录下的所有文件夹名称，文件名称或文件内容中的进行替换
+function replacePageAliasMap(projectPath, pageAliasMap) {
+  // 递归处理目录
+  function processDirectory(directory) {
+    const items = fs.readdirSync(directory);
+
+    items.forEach((item) => {
+      const itemPath = path.join(directory, item);
+      const stats = fs.statSync(itemPath);
+
+      if (stats.isDirectory()) {
+        // 处理目录名称
+        const newDirectoryName = replaceString(item, pageAliasMap);
+        const newDirectoryPath = path.join(directory, newDirectoryName);
+        if (newDirectoryPath !== itemPath) {
+          fs.renameSync(itemPath, newDirectoryPath);
+        }
+        // 递归处理子目录
+        processDirectory(newDirectoryPath);
+      } else if (stats.isFile()) {
+        // 处理文件名称
+        const newFileName = replaceString(item, pageAliasMap);
+        const newFilePath = path.join(directory, newFileName);
+        if (newFilePath !== itemPath) {
+          fs.renameSync(itemPath, newFilePath);
+        }
+        // 处理文件内容
+        const fileContent = fs.readFileSync(newFilePath, "utf8");
+        const newFileContent = replaceString(fileContent, pageAliasMap);
+        fs.writeFileSync(newFilePath, newFileContent, "utf8");
+      }
+    });
+  }
+
+  // 字符串替换函数
+  function replaceString(str, map) {
+    let result = str;
+    for (const [key, value] of Object.entries(map)) {
+      const regex = new RegExp(key, "g");
+      result = result.replace(regex, value);
+    }
+    return result;
+  }
+
+  // 开始处理项目目录
+  processDirectory(projectPath);
 }

@@ -16,6 +16,7 @@ export class GetH5Json extends BaseJson {
       scenes,
       depModules,
       pageCssMap,
+      pageAliasMap,
       appConfig,
     } = await this.initJson({ toJson, events, comlibs, status });
 
@@ -88,6 +89,7 @@ export class GetH5Json extends BaseJson {
       allModules,
       cssContent,
       depModules,
+      pageAliasMap,
     };
 
     console.warn("toJson2Json", params);

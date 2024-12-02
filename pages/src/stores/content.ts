@@ -665,6 +665,22 @@ class Content {
     const { toJsonPages } = this.getMergedPages();
     // console.warn("toJsonPages", toJsonPages);
 
+    // console.warn(
+    //   toJsonPages
+    //     .filter((item) => {
+    //       let containPopup = item.deps.some((dep) => {
+    //         return dep.namespace === "mybricks.taro.popup";
+    //       });
+    //       return containPopup;
+    //     })
+    //     .map((item) => {
+    //       return {
+    //         ...item,
+    //         type: "popup",
+    //       };
+    //     })
+    // );
+
     if (window.__type__ === "spa") {
       toJson.scenes = toJsonPages;
     } else {
@@ -675,6 +691,26 @@ class Content {
         }),
       ];
     }
+
+    // 兼容对话框 type 问题，如果有对话框，就设置为popup
+    toJson.scenes = toJson.scenes.map((scene) => {
+      let containPopup = scene.deps.some((dep) => {
+        return dep.namespace === "mybricks.taro.popup";
+      });
+
+      if (containPopup) {
+        return {
+          ...scene,
+          type: "popup",
+        };
+      } else {
+        return {
+          ...scene,
+        };
+      }
+    });
+
+    console.warn("toJson", JSON.parse(JSON.stringify(toJson.scenes)));
 
     (toJson?.scenes ?? []).forEach((scene) => {
       Object.keys(scene?.coms ?? {}).forEach((comKey) => {
