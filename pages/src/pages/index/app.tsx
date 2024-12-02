@@ -34,8 +34,8 @@ const Application = () => {
     ) {
       window.__type__ = "mpa";
     } else {
-      // window.__type__ = "spa";
-      window.__type__ = "mpa";
+      window.__type__ = "spa";
+      // window.__type__ = "mpa";
     }
     
     console.log("type", window.__type__);
