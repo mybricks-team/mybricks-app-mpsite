@@ -14,6 +14,7 @@ import {
   ToJsonScene,
 } from "./../types";
 import axios from "axios";
+import { transformToJSON } from "@mybricks/render-utils";
 
 interface saveFilesResult {
   id: string;
@@ -665,35 +666,23 @@ class Content {
     const { toJsonPages } = this.getMergedPages();
     // console.warn("toJsonPages", toJsonPages);
 
-    // console.warn(
-    //   toJsonPages
-    //     .filter((item) => {
-    //       let containPopup = item.deps.some((dep) => {
-    //         return dep.namespace === "mybricks.taro.popup";
-    //       });
-    //       return containPopup;
-    //     })
-    //     .map((item) => {
-    //       return {
-    //         ...item,
-    //         type: "popup",
-    //       };
-    //     })
-    // );
-
     if (window.__type__ === "spa") {
       toJson.scenes = toJsonPages;
-      console.warn("spa", JSON.parse(JSON.stringify(toJson.scenes)));
     } else {
       toJson.scenes = [
         ...toJson.scenes,
-        ...toJsonPages.filter((item) => {
-          return item.type === "module";
-        }).map(item => {
-          let result = {...item};
-          delete result.slot.layoutTemplate; //迁移过来的模块，不需要layoutTemplate
-          return result;
-        }),
+        ...toJsonPages
+          .filter((item) => {
+            return item.type === "module";
+          })
+          .map((item) => {
+            let result = { ...item };
+            delete result.slot.layoutTemplate; //迁移过来的模块，不需要layoutTemplate
+            return result;
+          })
+          .map((item) => {
+            return transformToJSON(item);
+          })
       ];
     }
 
