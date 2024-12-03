@@ -683,11 +683,16 @@ class Content {
 
     if (window.__type__ === "spa") {
       toJson.scenes = toJsonPages;
+      console.warn("spa", JSON.parse(JSON.stringify(toJson.scenes)));
     } else {
       toJson.scenes = [
         ...toJson.scenes,
         ...toJsonPages.filter((item) => {
           return item.type === "module";
+        }).map(item => {
+          let result = {...item};
+          delete result.slot.layoutTemplate; //迁移过来的模块，不需要layoutTemplate
+          return result;
         }),
       ];
     }
@@ -710,8 +715,6 @@ class Content {
       }
     });
 
-    console.warn("toJson", JSON.parse(JSON.stringify(toJson.scenes)));
-
     (toJson?.scenes ?? []).forEach((scene) => {
       Object.keys(scene?.coms ?? {}).forEach((comKey) => {
         const com = scene?.coms[comKey];
@@ -721,6 +724,8 @@ class Content {
         }
       });
     });
+
+    console.warn("toJson", JSON.parse(JSON.stringify(toJson.scenes)));
 
     return toJson;
   };

@@ -164,7 +164,7 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
           />
           帮助文档
         </div>
-        <PopContact></PopContact>
+        {/* <PopContact></PopContact> */}
         <Locker statusChange={statusChange} compareVersion={true} />
         <Toolbar.Save disabled={!operable} onClick={onSave} dotTip={isModify} />
 

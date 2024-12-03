@@ -6,6 +6,34 @@ import MyDesigner from "./modules/designer";
 import logger from "@/utils/logger";
 import "./app.less";
 
+function mpa() {
+  // 弹出提示，二次确认是否切换到 MPA 模式
+  const confirm = window.confirm("是否切换到 MPA 模式？\n如果切换，将会导致三个问题：\n1、底部标签栏（Tabbar）会失效，需要重新设置；\n2、所有的页面跳转、打开对话框会失效，需要重新连线；\n3、所有的页面路径会发生变化，如果是已对外分享或设置的路径，可以先记录原ID，切换后通过页面别名进行重置。");
+  if (!confirm) {
+    return;
+  }
+
+  // 切换到 MPA 模式
+  window.__type__ = "mpa";
+
+  let tabbar = window.__tabbar__.get();
+
+  // 将 tabbar 信息复制到剪切板
+  const input = document.createElement("input");
+  input.value = JSON.stringify(tabbar);
+  document.body.appendChild(input);
+  input.select();
+  document.execCommand("copy");
+  document.body.removeChild(input);
+
+  window.__tabbar__.set([]);
+  // 提示已复制到剪切板
+  alert("已切换到 MPA 模式，并已复制底部标签栏数据复制剪切板。\n请点击保存后，刷新页面，手动修改scene.id 字段后，通过 window.__tabbar__.set() 将数据回填。");
+
+}
+
+window.mpa = mpa;
+
 const Application = () => {
   const handler = useCallback((data) => {
     /**
@@ -30,14 +58,14 @@ const Application = () => {
     // 老页面继续走 spa，新页面走 mpa，避免 spa 升级到 mpa 时出现问题
     if (
       data.fileContent.content.type?.toLowerCase() === "mpa" ||
-      (JSON.stringify(data.fileContent.content) === "{}" && !data.fileContent.content?.type?.toLowerCase())
+      (JSON.stringify(data.fileContent.content) === "{}" &&
+        !data.fileContent.content?.type?.toLowerCase())
     ) {
       window.__type__ = "mpa";
     } else {
       window.__type__ = "spa";
-      // window.__type__ = "mpa";
     }
-    
+
     console.log("type", window.__type__);
 
     //
