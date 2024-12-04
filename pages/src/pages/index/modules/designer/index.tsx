@@ -137,6 +137,7 @@ const Designer = ({ appData }) => {
         return appConfig.designer?.url || DESIGNER_STATIC_PATH;
       }
     }
+    return DESIGNER_STATIC_PATH
   }, [appConfig]);
 
   useMemo(() => {

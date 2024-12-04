@@ -14,6 +14,7 @@ const generateRandomKey = (length) => {
  * @description 获取加密传输的参数，支持调用 AI 的时候加密传输
  */
 export function getAiEncryptData(data) {
+  // return data
   const PUBLIC_KEY = `-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1ITWRl6ePMu7Fhusup2d
 FEz/hCRTE5mUIeGIjtezG5g8ewBdTaR2FRxtTFONYTaaSR6yFXm9k74tkS1/i0Z8
