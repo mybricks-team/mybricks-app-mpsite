@@ -565,51 +565,40 @@ function getPageDepsMap(toJson) {
     u_Bl20k: ['u_ktclH']
     }
   */
-  function buildPaths(input) {
+  function handleDeepDepsMap(input) {
     const result = {};
-
-    function findPaths(key, path = []) {
+  
+    function findDeepDepIds(key, path = [], visited = new Set()) {
+      if (visited.has(key)) {
+        // 检测到循环，返回当前路径
+        return [...path, key];
+      }
+      visited.add(key);
       path.push(key);
+  
       if (input[key] === undefined) {
         input[key] = [];
       }
       if (input[key].length === 0) {
-        return [path];
+        return path;
       }
       let paths = [];
       for (const nextKey of input[key]) {
-        paths = paths.concat(findPaths(nextKey, [...path]));
+        paths = paths.concat(findDeepDepIds(nextKey, [...path], new Set(visited)));
       }
       return paths;
     }
-
+  
     for (const key in input) {
-      const paths = findPaths(key);
-      result[key] = paths.map((p) => p.slice(1));
+      const paths = findDeepDepIds(key);
+      result[key] = paths.filter(t => t !== key); // 去除循环引用引用到自身的情况
+      result[key] = Array.from(new Set(result[key])); // 去除循环引用的重复项
     }
-
-    return result;
-  }
-  //依赖树格式转为只有一层
-  function extractFirstLevel(data) {
-    const result = {};
-    for (const key in data) {
-      if (data.hasOwnProperty(key)) {
-        const value = data[key];
-        // 把递进关系打平导第一层列表
-        const firstLevelList = value.reduce((acc, sublist) => {
-          if (Array.isArray(sublist)) {
-            return acc.concat(sublist);
-          }
-          return acc;
-        }, []);
-        result[key] = firstLevelList;
-      }
-    }
+  
     return result;
   }
 
-  return extractFirstLevel(buildPaths(depsMap));
+  return handleDeepDepsMap(depsMap);
 }
 
 /**
