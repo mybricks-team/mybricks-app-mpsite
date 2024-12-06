@@ -189,9 +189,9 @@ export class BaseJson {
           scenes: [
             item,
             ...(Array.isArray(pageDepsMap[item.id])
-              ? pageDepsMap[item.id].map((sid) =>
-                  toJson.scenes.find((p) => p.id === sid)
-                )
+              ? pageDepsMap[item.id]
+                  .map((sid) => toJson.scenes.find((p) => p.id === sid))
+                  .filter((p) => p)
               : []),
           ],
         };
@@ -567,7 +567,7 @@ function getPageDepsMap(toJson) {
   */
   function handleDeepDepsMap(input) {
     const result = {};
-  
+
     function findDeepDepIds(key, path = [], visited = new Set()) {
       if (visited.has(key)) {
         // 检测到循环，返回当前路径
@@ -575,7 +575,7 @@ function getPageDepsMap(toJson) {
       }
       visited.add(key);
       path.push(key);
-  
+
       if (input[key] === undefined) {
         input[key] = [];
       }
@@ -584,17 +584,19 @@ function getPageDepsMap(toJson) {
       }
       let paths = [];
       for (const nextKey of input[key]) {
-        paths = paths.concat(findDeepDepIds(nextKey, [...path], new Set(visited)));
+        paths = paths.concat(
+          findDeepDepIds(nextKey, [...path], new Set(visited))
+        );
       }
       return paths;
     }
-  
+
     for (const key in input) {
       const paths = findDeepDepIds(key);
-      result[key] = paths.filter(t => t !== key); // 去除循环引用引用到自身的情况
+      result[key] = paths.filter((t) => t !== key); // 去除循环引用引用到自身的情况
       result[key] = Array.from(new Set(result[key])); // 去除循环引用的重复项
     }
-  
+
     return result;
   }
 
