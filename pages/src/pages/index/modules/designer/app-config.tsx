@@ -504,7 +504,7 @@ export default function ({
       theme: {
         css: [
           "./public/brickd-mobile/0.0.46/index.css",
-          "./public/weui/1.1.3/weui.min.css",
+          // "./public/weui/1.1.3/weui.min.css",
           "./public/edit-reset.css",
         ],
       },
