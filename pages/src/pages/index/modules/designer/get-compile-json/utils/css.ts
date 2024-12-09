@@ -90,23 +90,8 @@ export const getPageCssMap = (pageToJson) => {
             jsonComs[key]["id"]
           ),
         });
-        delete jsonComs[key]?.model?.data?._styleCode;
+        // delete jsonComs[key]?.model?.data?._styleCode;
       }
-
-      // const styleAry = jsonComs[key]?.model?.style?.styleAry || [];
-      // if(styleAry.length) {
-      //   styleAry.forEach((item) => {
-      //     if(item.selector) {
-      //       console.log("~~~~~~", item);
-
-      //       pageCss[key].push({
-      //         selector: null,
-      //         css: `#${jsonComs[key]["id"]} ${item.selector.replace(/_key/g, "data-key")}` + `{${item.css}}`
-      //       });
-      //     }
-      //   });
-      //   delete jsonComs[key]?.model?.style?.styleAry
-      // }
     }
   });
 

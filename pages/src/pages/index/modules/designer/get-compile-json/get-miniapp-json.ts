@@ -18,6 +18,7 @@ export class GetMiniappJson extends BaseJson {
 
     pages.forEach((item) => {
       const { id } = item;
+
       let pageCssContent: any = [];
       const cssMap = pageCssMap[id];
       Css.forEachCssMap(cssMap, (key, selector, css) => {

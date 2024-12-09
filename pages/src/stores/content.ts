@@ -653,9 +653,6 @@ class Content {
   toJSON = async () => {
     console.log("[toJSON] start");
     const toJson = cloneDeep(this.designerRef.current?.toJSON());
-    console.log("[toJSON] !!!!!!!!", JSON.parse(JSON.stringify(toJson)));
-
-    // return;
 
     const { json: desnJson } = this.designerRef.current?.dump?.(true);
     const { updatedPageAry, deletedPageAry } = desnJson;
@@ -664,7 +661,6 @@ class Content {
     await this.loadPagesReady();
 
     const { toJsonPages } = this.getMergedPages();
-    // console.warn("toJsonPages", toJsonPages);
 
     if (window.__type__ === "spa") {
       toJson.scenes = toJsonPages;
@@ -713,8 +709,6 @@ class Content {
         }
       });
     });
-
-    console.warn("toJson", JSON.parse(JSON.stringify(toJson.scenes)));
 
     return toJson;
   };

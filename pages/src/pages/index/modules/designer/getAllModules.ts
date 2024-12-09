@@ -254,7 +254,7 @@ export const getPageCssCode = (pageToJson) => {
       `);
     });
 
-    delete jsonComs[key]?.model?.style?.styleAry;
+    // delete jsonComs[key]?.model?.style?.styleAry;
   });
 
   return targetStyleContent.join("\n");
