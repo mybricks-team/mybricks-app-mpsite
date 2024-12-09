@@ -259,20 +259,21 @@ const Designer = ({ appData }) => {
       });
 
     // 同时保存下图片
-    API.App.getPreviewImage({
-      element: designerRef.current?.geoView.canvasDom?.firstChild,
-    })
-      .then((res) => {
-        // @ts-ignore
-        return API.File.save({
-          userId: userModel.user?.id,
-          fileId: pageModel.fileId,
-          icon: res,
-        });
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    // 如果不保存图片呢？保存图片有点bug
+    // API.App.getPreviewImage({
+    //   element: designerRef.current?.geoView.canvasDom?.firstChild,
+    // })
+    //   .then((res) => {
+    //     // @ts-ignore
+    //     return API.File.save({
+    //       userId: userModel.user?.id,
+    //       fileId: pageModel.fileId,
+    //       icon: res,
+    //     });
+    //   })
+    //   .catch((err) => {
+    //     console.error(err);
+    //   });
   }, []);
 
   const onPreview = useCallback(async (compileLevel?) => {
