@@ -345,8 +345,8 @@ export const compilerMiniapp = async (
   console.log("==========================");
 
   // --- 分包逻辑 ---
-  const SPLIT_PACK_LIMIT = 500 * 1024;
-  const SINGLE_PACK_LIMIT = 400 * 1024;
+  const SPLIT_PACK_LIMIT = 400 * 1024;
+  const SINGLE_PACK_LIMIT = 300 * 1024;
   let whiteList = [
     "404",
     "index",
