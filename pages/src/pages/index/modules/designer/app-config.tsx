@@ -503,7 +503,7 @@ export default function ({
       height: 667,
       theme: {
         css: [
-          "./public/brickd-mobile/0.0.46/index.css",
+          "./public/brickd-mobile/0.0.49/index.css",
           // "./public/weui/1.1.3/weui.min.css",
           "./public/edit-reset.css",
         ],
