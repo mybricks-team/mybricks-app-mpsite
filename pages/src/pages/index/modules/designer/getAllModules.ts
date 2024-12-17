@@ -15,6 +15,33 @@ const babelScript = (code) => {
   }).code;
 };
 
+/** 将范围内的代码提取出来，用引用的方式使用，剔除重复代码 */
+const repeatFnCodeCollector = (() => {
+  const repeatIOFnMap = new Map();
+  let repeatIOFnCount = 0;
+
+  return {
+    /** 收集重复代码 */
+    collect: (functionCode) => {
+      if (!repeatIOFnMap.has(functionCode)) {
+        repeatIOFnMap.set(functionCode, ++repeatIOFnCount);
+      }
+      return `$n['${repeatIOFnMap.get(functionCode)}']`
+    },
+    /** 生成提取的代码 */
+    generate: () => {
+      let allCodes = 'var $n = {};';
+      repeatIOFnMap.forEach((id, fn) => {
+        repeatIOFnMap.forEach((id, fn) => {
+          allCodes += `$n['${id}'] = ${fn};`;
+        })
+        
+      })
+      return allCodes
+    }
+  }
+})();
+
 /** 根据Json生成所有页面的Js，并按引用删除数据 */
 export const getAllModulesJsCode = async (pages, plugins, config = {}) => {
   const { isH5 } = config;
@@ -70,25 +97,29 @@ export const getAllModulesJsCode = async (pages, plugins, config = {}) => {
   }
 `;
 
+  let connectorsCode = '';
+
   //解析「连接器」插件并生成到 modules
   plugins["@mybricks/plugins/service"].connectors.forEach((item) => {
     let content = `;comModules['${item.id}'] = {
       id: '${item.id}',
       excludeKeys: ${JSON.stringify(item.excludeKeys)},
       method: '${item.method}',
-      input: ${eval(`(${item.input})`)},
-      output: ${eval(`(${item.output})`)},
+      input: ${repeatFnCodeCollector.collect(item.input)},
+      output: ${repeatFnCodeCollector.collect(item.output)},
       outputKeys: ${JSON.stringify(item.outputKeys)},
       markList: ${JSON.stringify(item.markList)},
-      globalParamsFn: ${eval(`(${plugins["@mybricks/plugins/service"].config.paramsFn})`)},
-      globalResultFn: ${eval(`(${plugins["@mybricks/plugins/service"].config.resultFn})`)},
-      globalErrorResultFn: ${eval(`(${plugins["@mybricks/plugins/service"].config.errorResultFn})`)},
+      globalParamsFn: ${repeatFnCodeCollector.collect(plugins["@mybricks/plugins/service"].config.paramsFn)},
+      globalResultFn: ${repeatFnCodeCollector.collect(plugins["@mybricks/plugins/service"].config.resultFn)},
+      globalErrorResultFn: ${repeatFnCodeCollector.collect(plugins["@mybricks/plugins/service"].config.errorResultFn)},
       path: '${item.path}',
       type: '${item.type}',
     }`;
 
-    allModules += content;
+    connectorsCode += content;
   });
+
+  allModules += repeatFnCodeCollector.generate() + connectorsCode;
 
   for (let i = 0; i < pages.length; i++) {
     let page = pages[i];
@@ -121,7 +152,7 @@ export const getAllModulesJsCode = async (pages, plugins, config = {}) => {
           //   realJsCode = jsonComs[key].model.data?.fns;
           // }
 
-          let realJsCode = jsonComs[key].model.data?.fns?.transformCode || jsonComs[key].model.data?.fns?.code || jsonComs[key].model.data?.fns;
+          let realJsCode = jsonComs[key].model.data?.fns?.code || jsonComs[key].model.data?.fns?.transformCode || jsonComs[key].model.data?.fns;
 
           if (!realJsCode) {
             return;
