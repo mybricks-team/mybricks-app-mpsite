@@ -32,10 +32,7 @@ const repeatFnCodeCollector = (() => {
     generate: () => {
       let allCodes = 'var $n = {};';
       repeatIOFnMap.forEach((id, fn) => {
-        repeatIOFnMap.forEach((id, fn) => {
-          allCodes += `$n['${id}'] = ${fn};`;
-        })
-        
+        allCodes += `$n['${id}'] = ${fn};`;
       })
       return allCodes
     }

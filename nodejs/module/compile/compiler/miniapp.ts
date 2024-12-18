@@ -60,30 +60,61 @@ class MiniappCompiler extends BaseCompiler {
     return targetStyleContent.join("\n");
   };
 
-  genAllComponentsDefs = (allComponents) => {
-    const { map } = allComponents;
+  genSubComponentsDefs = async (pkgTarget: string, pkgId: string, depComponents: [{ namespace: string, version: string, runtimePath: string }]) => {
+    if (!Array.isArray(depComponents) || depComponents.length < 1) {
+      return false
+    }
 
+    // 添加分包级的comDef文件
+    const subPkgComponentsPath = path.join(pkgTarget, 'components');
+    await fse.ensureDir(subPkgComponentsPath);
+    
+    // 复制组件文件
+    depComponents.map(dep => fse.copyFile(dep.runtimePath, path.join(subPkgComponentsPath, path.basename(dep.runtimePath))));
+
+    let comDefBody: string[] = [];
+
+    depComponents.map((com) => {
+      comDefBody.push(`
+"${com.namespace}":{
+  "namespace": "${com.namespace}",
+  "version": "${com.version}",
+  "runtime": require("./${path.basename(com.runtimePath)}").default
+}`)
+    })
+
+    let content = "function polyfill(obj){for(var key in obj)obj[obj[key].namespace+'-'+obj[key].version]=obj[key];return obj}";
+    content += "\r";
+    content += `var pkgComDefs = polyfill({ ${comDefBody.join(",")} })`;
+    content += "\r";
+    content += `module.exports = Object.assign(pkgComDefs, require('./../../components/comDefs'));`
+    
+    await fse.writeFile(
+      path.resolve(subPkgComponentsPath, `./${pkgId}_comDefs.js`),
+      content,
+      "utf-8"
+    );
+
+    return true
+  }
+
+  genAllComponentsDefs = (componenstMap: any, blackList?: string[]) => {
     const componentsFolder = path.resolve(this.projectPath, "./components");
     fse.ensureDirSync(componentsFolder);
 
-    let comDefHeader: string[] = [];
     let comDefBody: string[] = [];
 
-    Object.keys(map).forEach((nameAndVer, index) => {
+    const componentsWithFileList = [];
+
+    Object.keys(componenstMap).forEach((nameAndVer, index) => {
       const [namespace, version] = nameAndVer.split("@");
-      const { runtime } = map[nameAndVer];
+      const { runtime } = componenstMap[nameAndVer];
       // JS计算特殊处理
       if (
         ["mybricks.taro._muilt-inputJs", "mybricks.taro.systemTabbar"].includes(
           namespace
         )
       ) {
-        comDefBody.push(`
-        "${namespace}-${version}":{
-          "namespace": "${namespace}",
-          "version": "${version}",
-        }
-      `);
         comDefBody.push(`
           "${namespace}":{
             "namespace": "${namespace}",
@@ -93,42 +124,53 @@ class MiniappCompiler extends BaseCompiler {
         return;
       }
 
-      let comFileName = namespace.replace(/\./g, "_");
-      comDefHeader.push(
-        `var com${index} = require("./${comFileName}").default;`
-      );
+      const comFileName = namespace.replace(/\./g, "_");
+      const runtimePath = path.resolve(componentsFolder, `./${comFileName}.js`);
 
-      comDefBody.push(`
-        "${namespace}-${version}":{
-          "namespace": "${namespace}",
-          "version": "${version}",
-          "runtime": com${index}
-        }
-      `);
+      // 跳过黑名单，如果路径里有，还需要删除
+      if (Array.isArray(blackList) && blackList.includes(namespace)) {
+        fse.removeSync(runtimePath)
+        return
+      }
+    
       comDefBody.push(`
         "${namespace}":{
           "namespace": "${namespace}",
           "version": "${version}",
-          "runtime": com${index}
+          "runtime": require("./${comFileName}").default
         }
       `);
 
+      const runtimeCode = decodeURIComponent(runtime);
+
       fse.writeFileSync(
-        path.resolve(componentsFolder, `./${comFileName}.js`),
-        decodeURIComponent(runtime),
+        runtimePath,
+        runtimeCode,
         "utf-8"
       );
+
+      fse.stat(runtimePath).then(({ size }) => {
+        componentsWithFileList.push({
+          namespace,
+          version,
+          runtimePath,
+          runtimeSize: size
+        })
+      })
     });
 
-    let content = "";
-    content += `${comDefHeader.join("\r")}`;
+    let content = "function polyfill(obj){for(var key in obj)obj[obj[key].namespace+'-'+obj[key].version]=obj[key];return obj}";
     content += "\r";
-    content += `module.exports = { ${comDefBody.join(",")} };`;
+    content += `module.exports = polyfill({ ${comDefBody.join(",")} });`;
     fs.writeFileSync(
       path.resolve(componentsFolder, "./comDefs.js"),
       content,
       "utf-8"
     );
+
+    return {
+      componentsWithFileList
+    }
   };
 }
 
@@ -211,6 +253,23 @@ export const compilerMiniapp = async (
     css
   );
 
+  /** 主包的页面列表 */
+  const mainPackagePageList = [
+    "404",
+    "index",
+    "login",
+    "main",
+    ...(tabBarJson || []).map((t) => t?.pagePath?.split("/")?.[1]),
+  ];
+
+  // 如果首页不在白名单内，添加首页
+  if (data.appConfig.entryPagePath) {
+    let sceneId = data.appConfig.entryPagePath.split("/")[1];
+    if (!mainPackagePageList.includes(sceneId)) {
+      mainPackagePageList.push(sceneId);
+    }
+  }
+
   // 定义路由跳转的map，分包后
   let routeMap = {};
 
@@ -276,9 +335,7 @@ export const compilerMiniapp = async (
   }
 
   // 写入所有组件
-  if (data.allComponents.map) {
-    await compiler.genAllComponentsDefs(data.allComponents);
-  }
+  const { componentsWithFileList } = await compiler.genAllComponentsDefs(data.allComponents.map);
 
   // 写入所有组件Css
   if (data.allComponents?.css) {
@@ -345,27 +402,28 @@ export const compilerMiniapp = async (
   console.log("==========================");
 
   // --- 分包逻辑 ---
+  /** 所有页面的大小阈值 */
   const SPLIT_PACK_LIMIT = 400 * 1024;
-  const SINGLE_PACK_LIMIT = 300 * 1024;
-  let whiteList = [
-    "404",
-    "index",
-    "login",
-    "main",
-    ...(tabBarJson || []).map((t) => t?.pagePath?.split("/")?.[1]),
-  ];
-
-  // 如果首页不在白名单内，添加首页
-  if (data.appConfig.entryPagePath) {
-    let sceneId = data.appConfig.entryPagePath.split("/")[1];
-    if (!whiteList.includes(sceneId)) {
-      whiteList.push(sceneId);
-    }
-  }
+  /** 单个分包大小阈值 */
+  const SINGLE_PACK_LIMIT = 1.7 * 1024 * 1024;
+  /** 单个组件大小合理值 */
+  const SINGLE_COMPONENT_LIMIT = 80 * 1024;
 
   const { total, pageSizes } = await getFolderSize(
     path.resolve(projectPath, "./pages")
   );
+
+  // 寻找不在主包，且超过单个组件大小阈值的组件，这类组件需要被处理
+  const shouldSplitComponents = componentsWithFileList.filter(c => {
+    let shouldSplited = c.runtimeSize > SINGLE_COMPONENT_LIMIT;
+    mainPackagePageList.forEach((pageId) => {
+      const { pageDeps } = data.pages.find(page => page.id === pageId) ?? {};
+      if (Array.isArray(pageDeps) && pageDeps.some(d => d === c.namespace)) {
+        shouldSplited = false
+      }
+    })
+    return shouldSplited
+  })
 
   // 大于 800KB pages开启分包
   // 开发模式下暂不分包，避免小程序 IDE 经常 GG
@@ -374,71 +432,42 @@ export const compilerMiniapp = async (
       `[miniapp-compiler] 小程序${projectName}大小为${total}，使用分包策略`
     );
 
-    let mainPackageSize = 0;
-    const subPages = pageSizes.filter((t) => {
-      return !whiteList.includes(t.name);
-      // if (!whiteList.includes(t.name)) {
-      //   return true;
-      // }
+    const subPages = data.pages.map(t => ({
+      id: t.id,
+      pageDeps: t.pageDeps,
+      pageAllSize: pageSizes.find(p => p.name === t.id)?.size
+    })).filter(t => !mainPackagePageList.includes(t.id));
 
-      // // 避免白名单内的包体积总和过大
-      // if (mainPackageSize + t.size < SINGLE_PACK_LIMIT) {
-      //   mainPackageSize += t.size;
-      // } else {
-      //   console.log(`主包过大，${t.name} 分包`);
-      //   return true;
-      // }
-    });
-
-    let subPackages: any[] = [];
-    let subIndex = 0;
-
-    // 规划分几个包
-    for (let index = 0; index < subPages.length; index++) {
-      const subPage = subPages[index];
-
-      if (!subPackages[subIndex]) {
-        subPackages.push({
-          root: `package${subIndex}`,
-          name: `package${subIndex}`,
-          pages: [],
-        });
-      }
-      subPackages[subIndex].pages.push(subPage);
-
-      if (
-        (subPackages[subIndex]?.pages || []).reduce((a, c) => a + c.size, 0) >
-        SINGLE_PACK_LIMIT
-      ) {
-        subIndex++;
-        continue;
-      }
-    }
+    let subPackages = groupPages(subPages, shouldSplitComponents, SINGLE_PACK_LIMIT);
 
     // 修改目录结构为分包结构
-    subPackages.forEach((pkg) => {
+    await Promise.all(subPackages.map(async (pkg) => {
       const pkgTarget = path.resolve(projectPath, `./${pkg.root}`);
-      fse.ensureDirSync(pkgTarget);
-      pkg.pages.forEach((page) => {
+      await fse.ensureDir(pkgTarget);
+
+      // 写入子包组件
+      const hasSubPackageComDef = await compiler.genSubComponentsDefs(pkgTarget, pkg.name, pkg.deps);
+
+      pkg.pages.forEach((pageId) => {
         fse.moveSync(
-          path.resolve(projectPath, `./pages/${page.name}`),
-          path.resolve(pkgTarget, `./pages/${page.name}`),
+          path.resolve(projectPath, `./pages/${pageId}`),
+          path.resolve(pkgTarget, `./pages/${pageId}`),
           { overwrite: true }
         );
 
-        const newPagePath = `${pkg.root}/pages/${page.name}/index`;
+        const newPagePath = `${pkg.root}/pages/${pageId}/index`;
         // 重新修改页面的index.js
         modifyFileContent(
-          path.resolve(pkgTarget, `./pages/${page.name}`, "./index.js"),
+          path.resolve(pkgTarget, `./pages/${pageId}`, "./index.js"),
           (str) => {
             return str.replace(
-              new RegExp(`pages/${page.name}/index`, "g"),
+              new RegExp(`pages/${pageId}/index`, "g"),
               newPagePath
             );
           }
         );
 
-        routeMap[page.name] = {
+        routeMap[pageId] = {
           path: `/${newPagePath}`,
           isTabbar: false, // 分包的都是非tabbar页面
         };
@@ -447,7 +476,7 @@ export const compilerMiniapp = async (
         modifyFileContent(
           path.resolve(
             pkgTarget,
-            `./pages/${page.name}`,
+            `./pages/${pageId}`,
             `./index${getExtName(FileType.html, type)}`
           ),
           (str) => {
@@ -457,30 +486,40 @@ export const compilerMiniapp = async (
 
         // 修改相对路径
         modifyFileContent(
-          path.resolve(pkgTarget, `./pages/${page.name}`, "./index.json"),
+          path.resolve(pkgTarget, `./pages/${pageId}`, "./index.json"),
           (str) => {
             return str.replace(/..\/..\//g, "../../../");
           }
         );
 
         // 修改 components/comDefs 相对路径
-        modifyFileContent(
-          path.resolve(pkgTarget, `./pages/${page.name}`, "./index.js"),
-          (str) => {
-            return str.replace(
-              /\.\/\.\.\/\.\.\/components\/comDefs/g,
-              "./../../../components/comDefs"
-            );
-          }
-        );
+        if (hasSubPackageComDef) {
+          modifyFileContent(
+            path.resolve(pkgTarget, `./pages/${pageId}`, "./index.js"),
+            (str) => {
+              return str.replace(
+                /\.\/\.\.\/\.\.\/components\/comDefs/g,
+                `./../../components/${pkg.name}_comDefs` // 注意每个包要单独的name，因为external名称一样的话都是一个引用
+              );
+            }
+          );
+        }
+
       });
-    });
+    }));
+
+    // 重新写入全局comDef，剔除被分包的组件
+    const movedToPackageComponents = subPackages.reduce((acc, pkg) => {
+      return [...(pkg.deps ?? []).map(c => c.namespace), ...acc]
+    }, []); // 获取实际被分包的组件
+    await compiler.genAllComponentsDefs(data.allComponents.map, movedToPackageComponents);
 
     // 格式化成小程序的subPackages
-    subPackages = subPackages.map((pkg) => {
+    const subPackagesJson = subPackages.map((pkg) => {
       return {
-        ...pkg,
-        pages: pkg.pages.map((p) => `pages/${p.name}/index`),
+        root: pkg.root,
+        name: pkg.name,
+        pages: pkg.pages.map((p) => `pages/${p}/index`),
       };
     });
 
@@ -488,9 +527,11 @@ export const compilerMiniapp = async (
     let appJson: any = fse.readJsonSync(
       path.resolve(projectPath, "./app.json")
     );
-    appJson.subPackages = subPackages;
+    appJson.subPackages = subPackagesJson;
+    
+    // 剔除在子包的页面
     appJson.pages = appJson.pages.filter((p) =>
-      whiteList.includes(p.split("/")[1])
+      !subPackages.some(pkg => pkg.pages.includes(p.split("/")[1]))
     );
     fse.writeJsonSync(path.resolve(projectPath, "./app.json"), appJson);
   } else {
@@ -784,4 +825,148 @@ function replacePageAliasMap(projectPath, pageAliasMap) {
 
   // 开始处理项目目录
   processDirectory(projectPath);
+}
+
+/**
+ * 
+ * @param {*} pages 页面，需要剔除主包页面
+ * @param {*} shouldSplitComponents 仅处理超过阈值大小且不在主包的组件
+ * @param {*} maxSize 单包最大尺寸，默认为1.5MB
+ * @description 分包逻辑，首先根据需要分包的组件列表，找到覆盖
+ * @returns 
+ */
+function groupPages(pages, shouldSplitComponents, maxSize = 1.5 * 1024 * 1024) {
+  // 构建组件依赖关系图和组件大小映射
+  const componentToPages = new Map();
+  const componentSizeMap = new Map(
+    shouldSplitComponents.map(comp => [comp.namespace, comp.runtimeSize])
+  );
+
+  pages.forEach(page => {
+    page.pageDeps.forEach(dep => {
+      if (!componentToPages.has(dep)) {
+        componentToPages.set(dep, new Set());
+      }
+      componentToPages.get(dep).add(page.id);
+    });
+  });
+
+  /** 计算剩下的页面中，对给定namespace的页面覆盖数量 */
+  function getComponentCoverage(namespace, unassignedPages) {
+    const pagesWithComponent = componentToPages.get(namespace) || new Set();
+    return new Set([...pagesWithComponent].filter(pageId => 
+      unassignedPages.has(pageId)
+    )).size;
+  }
+
+  /** 计算添加新页面后的分包总大小，包含页面和组件的大小 */
+  function calculatePackageSizeWhenAddPage({ currentPackage, newPage }) {
+    let totalSize = currentPackage.totalSize;
+    newPage.pageDeps.forEach(comp => {
+      if (!currentPackage.deps.has(comp) && componentSizeMap.has(comp)) {
+        totalSize += componentSizeMap.get(comp);
+      }
+    });
+    return totalSize + newPage.pageAllSize;
+  }
+
+  // 尝试将页面添加到分包中
+  function tryAddPageToPackage(page, currentPackage, assignedPages) {
+    if (assignedPages.has(page.id)) {
+      return false;
+    }
+
+    // 计算添加新页面和其组件后的总大小
+    const newSize = calculatePackageSizeWhenAddPage({
+      currentPackage,
+      newPage: page
+    });
+
+    if (newSize > maxSize) {
+      return false;
+    }
+
+    // 添加页面到包中
+    currentPackage.pages.push(page);
+    currentPackage.totalSize = newSize;
+    page.pageDeps.forEach(dep => currentPackage.deps.add(dep));
+    assignedPages.add(page.id);
+    return true;
+  }
+
+  const packages = [];
+  const assignedPages = new Set();
+  const pagesMap = new Map(pages.map(p => [p.id, p]));
+
+  // 开始遍历直到所有页面都被分配
+  while (assignedPages.size < pages.length) {
+    const startSize = assignedPages.size;
+
+    let currentPackage = {
+      pages: [],
+      totalSize: 0,
+      deps: new Set()
+    };
+    packages.push(currentPackage);
+
+    // ===== 寻找下一个页面的逻辑 ====
+    // 目前用的是找覆盖度最高的组件，其实不太合理，后面再改改
+
+    // 获取未分配的页面集合
+    const unassignedPages = new Set(
+      pages.filter(p => !assignedPages.has(p.id)).map(p => p.id)
+    );
+    
+    let bestComponent = null;
+    let maxCoverage = 0;
+
+    // 找到覆盖最多未分配页面的组件
+    shouldSplitComponents.forEach(component => {
+      const coverage = getComponentCoverage(component.namespace, unassignedPages);
+      if (coverage > maxCoverage) {
+        maxCoverage = coverage;
+        bestComponent = component.namespace;
+      }
+    });
+
+    // ===== 寻找下一个页面的逻辑 ====
+
+    if (!bestComponent) {
+      // 如果没有找到最佳组件，取第一个未分配的页面
+      const firstUnassigned = pages.find(p => !assignedPages.has(p.id));
+      tryAddPageToPackage(firstUnassigned, currentPackage, assignedPages);
+    }
+
+    // 将所有包含最佳组件的页面添加到当前包
+    Array.from(componentToPages.get(bestComponent) || [])
+      .map(pageId => pagesMap.get(pageId))
+      .forEach(page => {
+        tryAddPageToPackage(page, currentPackage, assignedPages)
+      });
+
+    // 尝试添加其他页面
+    let changed = true;
+    while (changed) {
+      changed = false;
+      for (const page of pages) {
+        const wasAdded = tryAddPageToPackage(page, currentPackage, assignedPages);
+        if (wasAdded) {
+          changed = true;
+        }
+      }
+    }
+
+    // 说明一个包都分不出来，肯定是一直溢出，结束吧，不然死循环了
+    if (assignedPages.size === startSize) {
+      break
+    }
+  }
+
+  return packages.map((pkg, index) => ({
+    name: `package_${index}`,
+    root: `package_${index}`,
+    pages: pkg.pages.map(p => p.id),
+    deps: Array.from(pkg.deps).map(t => shouldSplitComponents.find(c => c.namespace === t)).filter(c => !!c),
+    totalSize: pkg.totalSize
+  }));
 }
