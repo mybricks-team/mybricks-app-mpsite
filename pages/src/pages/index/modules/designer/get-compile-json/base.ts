@@ -199,11 +199,20 @@ export class BaseJson {
         // 生成并删除每个页面的css
         pageCssMap[item.id] = Css.getPageCssMap(pageToJson);
 
+        // 获取整个页面依赖的所有组件
+        const pageDeps = Array.from(new Set(pageToJson.scenes.reduce((acc, cur) => {
+          if (cur.deps) {
+            return acc.concat(cur.deps.map(dep => dep?.namespace));
+          }
+          return acc
+        }, [])))
+
         return {
           id: item.id,
           pagePath: `pages/${item.id}/index`,
           pageConfig: pageConfig,
           pageToJson,
+          pageDeps
         };
       });
 
