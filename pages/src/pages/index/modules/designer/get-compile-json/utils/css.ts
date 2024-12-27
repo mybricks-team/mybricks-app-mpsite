@@ -64,6 +64,11 @@ export const getPageCssMap = (pageToJson) => {
           selector: `#${jsonComs[key]["id"]} ${selector.replace(/data-com-key/g, "data-key")}`,
           css: css
         }
+      } else if (selector?.includes("data-com-id")) {
+        return {
+          selector: `#${jsonComs[key]["id"]} ${selector.replace(/data-com-id/g, "data-key")}`,
+          css: css
+        }
       } else if (selector === ':root') {
         return {
           selector: `#${jsonComs[key]["id"]} #${jsonComs[key]["id"]}_root`,

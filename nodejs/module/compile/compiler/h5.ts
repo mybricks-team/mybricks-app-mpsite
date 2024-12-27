@@ -46,7 +46,7 @@ class H5Compiler extends BaseCompiler {
     const configFileName = `config.${getContentHash(data.injectScriptContent)}.js`;
     await fse.writeFile(path.resolve(this.projectPath, `./js/${configFileName}`), data.injectScriptContent, 'utf-8')
 
-    const injectCodeContent = decodeURIComponent(data.allModules);
+    const injectCodeContent = decodeURIComponent(data.allModules?.all);
     const injectCodeFileName = `inject-code.${getContentHash(injectCodeContent)}.js`;
     await fse.writeFile(path.resolve(this.projectPath, `./js/${injectCodeFileName}`), `
 function _mybricks_inject_code_ () {
@@ -68,21 +68,6 @@ function _mybricks_inject_code_ () {
       projectCssFileName,
       comlibsFileName,
     })
-
-    // /** 注入所有动态JS */
-    // modifyFileContent(this.appJsFilePath, str => {
-    //   let allModules = decodeURIComponent(data.allModules)
-    //   allModules = `
-    //     function _mybricks_inject_code_ () {
-    //       return (function(comModules) {
-    //         ${allModules};
-    //         console.log('allComModules', comModules)
-    //         return comModules;
-    //       })({});
-    //     }
-    //   `;
-    //   return str.replace(/\'TEMPLATE\:COMMODULES\'/g, allModules).replace(/\"TEMPLATE\:COMMODULES\"/g, allModules)
-    // })
 
     let injectcustom = data?.appConfig?.h5Head ? decodeURIComponent(data?.appConfig?.h5Head) : "";
     htmlContent = htmlContent

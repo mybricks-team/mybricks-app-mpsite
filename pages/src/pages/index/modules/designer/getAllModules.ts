@@ -1,6 +1,11 @@
 const Babel = window.Babel as any;
 const Terser = window.Terser as any;
 
+const TerserMinify = async (code) => {
+  const result = await Terser.minify(code)
+  return result.code
+}
+
 /** 目前只编译有限的几个API */
 const babelScript = (code) => {
   return Babel.transform(code, {
@@ -39,64 +44,88 @@ const repeatFnCodeCollector = (() => {
   }
 })();
 
-/** 根据Json生成所有页面的Js，并按引用删除数据 */
-export const getAllModulesJsCode = async (pages, plugins, config = {}) => {
-  const { isH5 } = config;
-  let allModules = `
-  function convertObject2Array(input) {
-    let result = [];
-    Object.keys(input)
-      .sort((a, b) => {
-        let _a = extractNumbers(a) || 0;
-        let _b = extractNumbers(b) || 0;
-        return +_a - +_b;
-      })
-      .forEach((key) => {
-        result.push(input[key]);
-      });
-    return result;
-  }
-  function extractNumbers(str) {
-    let number = "";
-    for (let i = 0; i < str.length; i++) {
-      if (!isNaN(parseInt(str[i]))) {
-        number += str[i];
-      }
+const JS_HEADER = `
+function convertObject2Array(input) {
+  let result = [];
+  Object.keys(input)
+    .sort((a, b) => {
+      let _a = extractNumbers(a) || 0;
+      let _b = extractNumbers(b) || 0;
+      return +_a - +_b;
+    })
+    .forEach((key) => {
+      result.push(input[key]);
+    });
+  return result;
+}
+function extractNumbers(str) {
+  let number = "";
+  for (let i = 0; i < str.length; i++) {
+    if (!isNaN(parseInt(str[i]))) {
+      number += str[i];
     }
-    return number;
   }
-  function _execJs (script) {
-    return function ({ env, data, inputs, outputs, logger, onError }) {
-      const { fns, runImmediate } = data;
-      const runJSParams = {
-        outputs: convertObject2Array(outputs)
-      };
-      try {
-        if (runImmediate) {
-          if (env.runtime) {
-            script(runJSParams);
-          }
+  return number;
+}
+function _execJs (script) {
+  return function ({ env, data, inputs, outputs, logger, onError }) {
+    const { fns, runImmediate } = data;
+    const runJSParams = {
+      outputs: convertObject2Array(outputs)
+    };
+    try {
+      if (runImmediate) {
+        if (env.runtime) {
+          script(runJSParams);
         }
-        inputs['input']((val) => {
-          try {
-            script({
-              ...runJSParams,
-              inputs: convertObject2Array(val)
-            });
-          } catch (ex) {
-            console.error('js计算组件运行错误.', ex);
-          }
-        });
-      } catch (ex) {
-        console.error('js计算组件运行错误.', ex);
       }
+      inputs['input']((val) => {
+        try {
+          script({
+            ...runJSParams,
+            inputs: convertObject2Array(val)
+          });
+        } catch (ex) {
+          console.error('js计算组件运行错误.', ex);
+        }
+      });
+    } catch (ex) {
+      console.error('js计算组件运行错误.', ex);
     }
   }
-`;
+}`
 
-  let connectorsCode = '';
+const jsCodeCollector = () => {
+  const codeMap = new Map();
+  let codeKey = 0;
+  return {
+    /** 收集代码 */
+    collect: (functionCode) => {
+      if (!codeMap.has(functionCode)) {
+        codeMap.set(functionCode, ++codeKey);
+        return `$js['${codeMap.get(functionCode)}']`
+      }
+    },
+    /** 生成提取的代码 */
+    generate: () => {
+      let allCodes = `
+      ${JS_HEADER}
+      var $js = {};`;
+      codeMap.forEach((id, fn) => {
+        allCodes += `$js['${id}'] = ${fn};`;
+      })
+      return allCodes
+    }
+  }
+}
 
+/** 根据Json生成所有页面的Js，并按引用删除数据 */
+export const getAllModulesJsCode = async (pages, plugins, options = {}) => {
+  const { isH5 } = options;
+  let allModules = ``;
+  
   //解析「连接器」插件并生成到 modules
+  let connectorsCode = '';
   plugins["@mybricks/plugins/service"].connectors.forEach((item) => {
     let content = `;comModules['${item.id}'] = {
       id: '${item.id}',
@@ -111,93 +140,96 @@ export const getAllModulesJsCode = async (pages, plugins, config = {}) => {
       globalErrorResultFn: ${repeatFnCodeCollector.collect(plugins["@mybricks/plugins/service"].config.errorResultFn)},
       path: '${item.path}',
       type: '${item.type}',
-    }`;
+    };`;
 
     connectorsCode += content;
   });
 
   allModules += repeatFnCodeCollector.generate() + connectorsCode;
+  
 
+  //解析 JS计算 + AI组件
+  /** 全部代码 */
+  let jsCode = JS_HEADER;
+  /** 按页面分开的代码 */
+  let pagesJsCode = {};
   for (let i = 0; i < pages.length; i++) {
     let page = pages[i];
-
     let json = page?.pageToJson ?? {};
-
     let jsonComs = getComsFromPageJson(json);
 
-    //解析新版「JS计算」并生成到 modules
-    Object.keys(jsonComs ?? {})
-      .filter((key) => {
-        return (
-          ["mybricks.taro._muilt-inputJs"].indexOf(
-            jsonComs[key].def.namespace
-          ) !== -1
-        );
-      })
-      .forEach((key) => {
-        try {
-          /** JS计算的格式变来变去的，兼容一下 */
-          // let realJsCode = jsonComs[key].model.data?.fns?.code || jsonComs[key].model.data?.fns;
-          // let realJsCode;
+    Object.keys(jsonComs ?? {}).forEach((key) => {
 
-          // if (
-          //   typeof jsonComs[key].model.data?.fns === "object" &&
-          //   !!jsonComs[key].model.data?.fns?.transformCode
-          // ) {
-          //   realJsCode = jsonComs[key].model.data?.fns?.transformCode;
-          // } else {
-          //   realJsCode = jsonComs[key].model.data?.fns;
-          // }
+      const pageId = jsonComs[key].pageId;
 
+      try {
+        //解析新版「JS计算」并生成到 modules
+        if (jsonComs[key].def.namespace === "mybricks.taro._muilt-inputJs") {
           let realJsCode = jsonComs[key].model.data?.fns?.code || jsonComs[key].model.data?.fns?.transformCode || jsonComs[key].model.data?.fns;
 
           if (!realJsCode) {
             return;
           }
 
-          let moduleContent = `
+          let content = `
             ;const js_${key} = ${decodeURIComponent(realJsCode)};
             comModules['${key}'] = _execJs(js_${key});
             `;
 
-          //   let moduleContent = `
-          // ;comModules['${key}'] = function ({ env, data, inputs, outputs, logger, onError }) {
+          if (!isH5 && pageId) { // 小程序环境且属于某一个页面的话，需要将js文件分到每一个页面自己的文件下
+            if (!pagesJsCode[pageId]) {
+              pagesJsCode[pageId] = JS_HEADER
+            }
+            pagesJsCode[pageId] += content
+          } else {
+            jsCode += content;
+          }
 
-          //   const { fns, runImmediate } = data;
-          //   const script = ${decodeURIComponent(realJsCode)};
-          //   const runJSParams = {
-          //     outputs: convertObject2Array(outputs)
-          //   };
-          //   try {
-          //     if (runImmediate) {
-          //       if (env.runtime) {
-          //         script(runJSParams);
-          //       }
-          //     }
-          //     inputs['input']((val) => {
-          //       try {
-          //         script({
-          //           ...runJSParams,
-          //           inputs: convertObject2Array(val)
-          //         });
-          //       } catch (ex) {
-          //         console.error('js计算组件运行错误.', ex);
-          //       }
-          //     });
-          //   } catch (ex) {
-          //     console.error('js计算组件运行错误.', ex);
-          //   }
-          // }
-          // `;
-
-          allModules += moduleContent;
-
+          delete jsonComs[key].model.data.inputSchema
+          delete jsonComs[key].model.data.extraLib;
           delete jsonComs[key].model.data.fns;
-        } catch (e) {
-          console.log(e);
         }
-      });
+
+        // 解析 AI组件
+        if (jsonComs[key].def.namespace === "mybricks.taro.ai") {
+          const com = jsonComs[key];
+          const code = com.model.data._renderCode;
+
+          // 注意，这里要修改这个key，小程序为_key，web为data-key，运行时的AIRender也是两个环境不一样的，目前无法统一，试过了
+          if (code) { // 有code才生成
+            if (!isH5) {  // 小程序环境
+              let content = `
+              ;const ui_${key} = (exports, require) => {
+                ${decodeURIComponent(com.model.data._renderCode).replace(/data-com-key/g, '_key').replace(/data-com-id/g, '_key')}
+              };comModules['${key}'] = ui_${key};` 
+
+              if (pageId) {
+                if (!pagesJsCode[pageId]) {
+                  pagesJsCode[pageId] = JS_HEADER
+                }
+                pagesJsCode[pageId] += content
+              } else {
+                jsCode += content;
+              }
+              delete com.model.data._renderCode;
+            } else { // H5 环境
+              com.model.data._renderCode = encodeURIComponent(
+                decodeURIComponent(com.model.data._renderCode).replace(/data-com-key/g, 'data-key').replace(/data-com-id/g, 'data-key')
+              );
+            }
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    });
+
+
+    // 删除标记
+    deleteMarkForComs(jsonComs)
   }
+
+  allModules += jsCode;
 
   // 删除连接器代码
   for (let i = 0; i < pages.length; i++) {
@@ -226,43 +258,27 @@ export const getAllModulesJsCode = async (pages, plugins, config = {}) => {
     }
   }
 
-    
-  // 生成ai组件代码
-  for (let i = 0; i < pages.length; i++) {
-    let page = pages[i];
+  if (isH5) {
+    const all = encodeURIComponent(await TerserMinify(await babelScript(allModules)));
 
-    let json = page?.pageToJson ?? {};
+    let result = {
+      all
+    }
+    return result
+  } else {
+    const all = encodeURIComponent(await TerserMinify(await babelScript(allModules)));
+    const pages = {};
 
-    let jsonComs = getComsFromPageJson(json);
+    for (const pageId in pagesJsCode) {
+      pages[pageId] = encodeURIComponent(await TerserMinify(await babelScript(pagesJsCode[pageId])))
+    }
 
-    Object.keys(jsonComs ?? {}).forEach((key) => {
-      if (jsonComs[key].def.namespace === "mybricks.taro.ai") {
-        const com = jsonComs[key];
-        const code = com.model.data._renderCode;
-
-        // 注意，这里要修改这个key，小程序为_key，web为data-key，运行时的AIRender也是两个环境不一样的，目前无法统一，试过了
-        if (code) { // 有code才生成
-          if (!isH5) {  // 小程序环境
-            let moduleContent = `
-            ;const ui_${key} = (exports, require) => {
-              ${decodeURIComponent(com.model.data._renderCode).replace(/data-com-key/g, '_key')}
-            };comModules['${key}'] = ui_${key};` 
-            
-            allModules += moduleContent;
-            delete com.model.data._renderCode;
-          } else { // H5 环境
-            com.model.data._renderCode = encodeURIComponent(
-              decodeURIComponent(com.model.data._renderCode).replace(/data-com-key/g, 'data-key')
-            );
-          }
-        }
-      }
-    });
+    let result = {
+      all,
+      pages
+    }
+    return result
   }
-
-  const miniJScode = await Terser.minify(babelScript(allModules));
-  // 生成所有动态的js逻辑
-  return encodeURIComponent(miniJScode.code);
 };
 
 /** 根据页面Json生成每个页面的CSS，并按引用删除数据 */
@@ -294,12 +310,36 @@ function getComsFromPageJson(pageJson) {
     return pageJson?.scenes.reduce((acc, cur) => {
       return {
         ...acc,
-        ...(cur?.coms || {}),
+        ...addMarkForComsByScene(cur?.coms || {}, cur),
       };
     }, {});
   }
   /** 非多场景 */
-  return pageJson?.coms ?? {};
+  return addMarkForComsByScene(pageJson?.coms, pageJson) ?? {};
+}
+
+/** 给所有组件都加上标记，定义归属的页面 */
+function addMarkForComsByScene (coms, scene) {
+  if (isPageSceneJson(scene)) {
+    Object.keys(coms ?? {}).forEach(comKey => {
+      coms[comKey].pageId = scene.id
+    })
+  }
+  return coms
+}
+
+/** 删除组件的标记 */
+function deleteMarkForComs (coms) {
+  Object.keys(coms ?? {}).forEach(comKey => {
+    if (coms[comKey].pageId) {
+      delete coms[comKey].pageId
+    }
+  })
+}
+
+/** 判断是否是页面级Json */
+function isPageSceneJson(sceneJson) {
+  return sceneJson.type !== 'popup' && sceneJson.type !== 'module' && sceneJson.type !== 'fx'
 }
 
 function camelToKebab(str) {

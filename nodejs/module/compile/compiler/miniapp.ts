@@ -307,6 +307,9 @@ export const compilerMiniapp = async (
       })
     );
 
+    // 注入页面级JS
+    writePageJs(target, pageId, data.allModules?.pages?.[pageId])
+
     //注入页面级CSS，主要是Style声明的部分
     let targetStylePath = path.resolve(
       target,
@@ -351,17 +354,7 @@ export const compilerMiniapp = async (
   }
 
   /** 注入所有动态JS */
-  const injectCodePath = path.resolve(projectPath, "./mybricks/inject-code.js");
-  fse.ensureDirSync(path.resolve(projectPath, "./mybricks"));
-  fse.writeFileSync(
-    injectCodePath,
-    `module.exports = (function(comModules) {
-    ${decodeURIComponent(data.allModules)};
-    console.log('allComModules', comModules)
-    return comModules;
-  })({})`,
-    { encoding: "utf8" }
-  );
+  writeProjectJs(projectPath, data.allModules?.all)
   delete data.allModules;
 
   // 替换页面js文件
@@ -394,6 +387,11 @@ export const compilerMiniapp = async (
         /\/mybricks\/page-config/g,
         `/mybricks/${pageId}-config`
       );
+    });
+
+    // 修改index.js 中的引入的config名称，保证每次个config都是独立的，因为external名称一样的话都是一个引用
+    modifyFileContent(path.resolve(target, "./index.js"), (str) => {
+      return str.replace(/\/mybricks\/page-code/g, `/mybricks/${pageId}-code`);
     });
   }
 
@@ -634,7 +632,12 @@ function writeTabbarConfig(dir, str) {
 function writeRootConfig(dir, str) {
   const filePath = path.resolve(dir, "./mybricks/root-config.js");
   fse.ensureDirSync(path.resolve(dir, "./mybricks"));
-  fse.writeFileSync(filePath, `module.exports = ${str}`, { encoding: "utf8" });
+
+  //str 压缩
+  const compressed = pako.deflate(str, { to: "string" });
+  const compressedString = Buffer.from(compressed).toString("base64");
+
+  fse.writeFileSync(filePath, `module.exports = "${compressedString}"`, { encoding: "utf8" });
 }
 
 /** 写page级，config文件 */
@@ -663,6 +666,30 @@ function writePageFx(dir, pageId, str) {
   fse.writeFileSync(filePath, `module.exports = ${JSON.stringify(str)}`, {
     encoding: "utf8",
   });
+}
+
+function writePageJs(dir, pageId, str) {
+  const filePath = path.resolve(dir, `./mybricks/${pageId}-code.js`);
+  fse.ensureDirSync(path.resolve(dir, "./mybricks"));
+
+  fse.writeFileSync(filePath, `module.exports = (function(comModules) {
+    ${decodeURIComponent(str)};
+    return comModules;
+  })({})`, {
+    encoding: "utf8",
+  });
+}
+
+
+function writeProjectJs(dir, str) {
+  const injectCodePath = path.resolve(dir, "./mybricks/inject-code.js");
+  fse.ensureDirSync(path.resolve(dir, "./mybricks"));
+  fse.writeFileSync(injectCodePath, `module.exports = (function(comModules) {
+    ${decodeURIComponent(str)};
+    return comModules;
+  })({})`,
+    { encoding: "utf8" }
+  );
 }
 
 function modifyFileContent(path, callback) {
