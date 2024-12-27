@@ -91,7 +91,7 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
 
   useEffect(() => {
     if (publishLoading) {
-      message.loading({ content: "产物发布中，请稍等...", key: "loading" });
+      message.loading({ content: "产物发布中，请稍等...", key: "loading", duration: 0 });
     } else {
       message.destroy("loading");
     }

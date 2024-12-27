@@ -243,6 +243,12 @@ const Designer = ({ appData }) => {
     //   });
   }, []);
 
+  const showPublishLoading = useCallback(async () => {
+    pageModel.publishLoading = true;
+    // 有一些大项目后面会CPU 100%，先让loading展示出来
+    await sleep(300);
+  }, [])
+
   /**
    * 保存
    */
@@ -390,7 +396,7 @@ const Designer = ({ appData }) => {
       if (pageModel?.publishLoading) {
         return;
       }
-      pageModel.publishLoading = true;
+      await showPublishLoading();
 
       await onSave(false);
 
@@ -579,7 +585,7 @@ const Designer = ({ appData }) => {
     if (pageModel?.publishLoading) {
       return;
     }
-    pageModel.publishLoading = true;
+    await showPublishLoading();
 
     await onSave(false);
 
@@ -752,7 +758,7 @@ const Designer = ({ appData }) => {
       if (pageModel?.publishLoading) {
         return;
       }
-      pageModel.publishLoading = true;
+      await showPublishLoading();
 
       try {
         const toJson = await contentModel.toJSON();
