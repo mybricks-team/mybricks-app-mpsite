@@ -42,6 +42,9 @@ class Page {
 
   /** 打开高级模式，一般一些隐藏功能放在这里 */
   constructor() {}
+
+  // 保存权限控制
+  operable: boolean = false;
 }
 
 export const pageModel: Page = observable(new Page());

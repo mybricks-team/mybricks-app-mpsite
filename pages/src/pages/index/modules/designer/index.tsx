@@ -253,6 +253,12 @@ const Designer = ({ appData }) => {
    * 保存
    */
   const onSave = useCallback(async (tip = true) => {
+
+    if (!pageModel.operable) {
+      // 没有保存权限
+      return true
+    }
+
     await contentModel
       .save(ctx)
       .then((res) => {
@@ -889,6 +895,7 @@ const Designer = ({ appData }) => {
         operable={operable}
         statusChange={(status) => {
           setOperable(status === 1);
+          pageModel.operable = status === 1
         }}
         checkIsMiniCIReady={checkIsMiniCIReady}
         isModify={beforeunload}
