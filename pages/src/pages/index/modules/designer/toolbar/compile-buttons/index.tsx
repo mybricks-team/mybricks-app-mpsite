@@ -6,6 +6,7 @@ import { pageModel } from '@/stores'
 import { Button, Modal, Form, Input, Radio, Dropdown } from 'antd'
 import { DownOutlined, EyeOutlined } from '@ant-design/icons'
 import { CompileType } from '@/types'
+import classNames from 'classnames'
 
 import css from './index.less'
 
@@ -65,9 +66,11 @@ export const CompileButtonGroups = ({ children }) => {
   )
 }
 
-export const CompileButton = ({ children, onClick }) => {
+export const CompileButton = ({ children, onClick, disabled = false }) => {
   return (
-    <div className={css.btn} onClick={onClick}>
+    <div className={classNames(css.btn, {
+      [css.disabled]: disabled
+    })} onClick={onClick}>
       {children}
     </div>
   )
