@@ -561,7 +561,7 @@ class Content {
     updatedPageAry = updatedPageAry.filter((updatedPage) => {
       const { id, type } = updatedPage;
       if (!type) {
-        return this.editRecord.canvas.has(id)
+        return this.editRecord.canvas.has(id) || !pageModel.pages[id]
       }
       return true
     })
