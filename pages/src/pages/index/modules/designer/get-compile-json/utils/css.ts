@@ -95,6 +95,15 @@ export const getPageCssMap = (pageToJson) => {
             jsonComs[key]["id"]
           ),
         });
+
+        // 小程序无法兼容 #id #id 重复的写法，hack 一下再说
+        pageCss[key].push({
+          selector: null,
+          css: decodeURIComponent(_styleCode).replaceAll(
+            "#__id__",
+            `.${jsonComs[key]["id"]}`
+          ),
+        });
         // delete jsonComs[key]?.model?.data?._styleCode;
       }
     }
