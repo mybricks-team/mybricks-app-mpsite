@@ -5,8 +5,8 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { message, Modal } from "antd";
-import { pageModel, userModel, contentModel } from "@/stores";
+import { message, Modal, notification } from "antd";
+import { pageModel, userModel, contentModel, versionModel } from "@/stores";
 import axios from "axios";
 import dayjs from "dayjs";
 import API from "@mybricks/sdk-for-app/api";
@@ -28,6 +28,40 @@ import { getLibsFromConfig } from "@/utils/getComlibs";
 import { sleep } from "@/utils";
 import { CompileType } from "@/types";
 import { DESIGNER_STATIC_PATH } from "../../../../constants";
+import { ExclamationCircleFilled, CheckCircleFilled } from "@ant-design/icons"
+
+// message.success(
+//  "保存成功",
+//  null
+// )
+
+// notification.open({
+//   message: (
+//     <div>
+//       <CheckCircleFilled style={{color: "#52c41a", marginRight: 8}}/>
+//       <span>保存完成</span>
+//     </div>
+//   ),
+//   placement: "top",
+//   description: (
+//     <>
+//       {/* <div style={{ marginLeft: 24 }}>
+//         保存内容：应用配置，<b style={{ color: "#FA6400" }}>画布3</b>，<b style={{ color: "#FA6400" }}>画布4</b>
+//       </div> */}
+//       {/* <div style={{ display: 'flex' }}>
+//         <div><ExclamationCircleFilled style={{color: "#faad14", marginRight: 8, marginLeft: 2}}/>注意：</div>
+//         <div>
+//           <div>以下内容没有保存</div>
+//           <div>
+//             <b style={{ color: "#FA6400" }}>全局配置</b>，<b style={{ color: "#FA6400" }}>画布1</b>，<b style={{ color: "#FA6400" }}>画布2</b>
+//           </div>
+//         </div>
+//       </div> */}
+//       <div style={{ marginLeft: 24 }}>修改内容都已保存</div>
+//     </>
+//   ),
+//   duration: null
+// });
 
 function extractVersion(url = "") {
   // 使用正则表达式匹配版本号
@@ -95,9 +129,12 @@ const injectComlibsScriptContent = async (data) => {
   return scriptContent;
 };
 
+let lastCooperationAry;
+
 const Designer = ({ appData }) => {
   const [beforeunload, setBeforeunload] = useState(false);
   const [operable, setOperable] = useState(false);
+  const [globalOperable, setGlobalOperable] = useState(false);
   const designerRef = useRef<{ switchActivity; dump; toJSON }>();
   const [SPADesigner, setSPADesigner] = useState(null);
 
@@ -253,16 +290,108 @@ const Designer = ({ appData }) => {
    * 保存
    */
   const onSave = useCallback(async (tip = true) => {
+    const userId = userModel.user?.id;
+    if (!userId) {
+      return true
+    }
 
-    if (!pageModel.operable) {
-      // 没有保存权限
+    if (!pageModel.canSave) {
       return true
     }
 
     await contentModel
       .save(ctx)
       .then((res) => {
-        !!tip && message.success("保存完成");
+        if (pageModel.isNew) {
+          if (!!tip) {
+            if (!res) {
+              notification.open({
+                message: (
+                  <div>
+                    <ExclamationCircleFilled style={{color: "#faad14", marginRight: 8}}/>
+                    <span>上锁画布没有内容更新</span>
+                  </div>
+                ),
+                placement: 'top'
+              })
+            } else {
+              const { saves, notSaves } = res;
+              if (pageModel.globalOperable) {
+                // 还要判断下有没有全局的修改
+                notification.open({
+                  message: (
+                    <div>
+                      <CheckCircleFilled style={{color: "#52c41a", marginRight: 8}}/>
+                      <span>保存完成</span>
+                    </div>
+                  ),
+                  placement: "top",
+                  description: notSaves.length ? (
+                    <div style={{ display: 'flex' }}>
+                      <div><ExclamationCircleFilled style={{color: "#faad14", marginRight: 8, marginLeft: 2}}/>注意：</div>
+                      <div>
+                        <div>以下内容没有保存</div>
+                        <div>
+                          {notSaves.map(({ title }, index) => {
+                            return (
+                              <>
+                                <b style={{ color: "#FA6400" }}>{title}</b>{index === notSaves.length - 1 ? "" : "，"}
+                              </>
+                            )
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div style={{ marginLeft: 24 }}>修改内容都已保存</div>
+                  )
+                });
+              } else {
+                notification.open({
+                  message: (
+                    <div>
+                      <CheckCircleFilled style={{color: "#52c41a", marginRight: 8}}/>
+                      <span>保存完成</span>
+                    </div>
+                  ),
+                  placement: "top",
+                  description: notSaves.length ? (
+                    <div style={{ display: 'flex' }}>
+                      <div><ExclamationCircleFilled style={{color: "#faad14", marginRight: 8, marginLeft: 2}}/>注意：</div>
+                      <div>
+                        <div>以下内容没有保存</div>
+                        <div>
+                          {contentModel.editRecord.global ? <><b style={{ color: "#FA6400" }}>应用配置</b>，</> : null}
+                          {notSaves.map(({ title }, index) => {
+                            return (
+                              <>
+                                <b style={{ color: "#FA6400" }}>{title}</b>{index === notSaves.length - 1 ? "" : "，"}
+                              </>
+                            )
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  ) : (contentModel.editRecord.global ? (
+                    <div style={{ display: 'flex' }}>
+                      <div><ExclamationCircleFilled style={{color: "#faad14", marginRight: 8, marginLeft: 2}}/>注意：</div>
+                      <div>
+                        <div>以下内容没有保存</div>
+                        <div>
+                          <b style={{ color: "#FA6400" }}>应用配置</b>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div style={{ marginLeft: 24 }}>修改内容都已保存</div>
+                  ))
+                });
+              }
+            }
+          }
+        } else {
+          !!tip && message.success("保存完成");
+        }
         setBeforeunload(false);
       })
       .catch((e) => {
@@ -399,6 +528,10 @@ const Designer = ({ appData }) => {
       version: string;
       description: string;
     }) => {
+      if (!pageModel.operable) {
+        // 没有页面级权限
+        return true
+      }
       if (pageModel?.publishLoading) {
         return;
       }
@@ -588,6 +721,10 @@ const Designer = ({ appData }) => {
   }, []);
 
   const onH5Publish = useCallback(async ({ commitInfo }) => {
+    if (!pageModel.operable) {
+      // 没有页面级权限
+      return true
+    }
     if (pageModel?.publishLoading) {
       return;
     }
@@ -865,6 +1002,18 @@ const Designer = ({ appData }) => {
   );
 
   const onEdit = useCallback((info) => {
+    const { id, type } = info;
+    switch (type) {
+      case 'global':
+        contentModel.editRecord.global = true;
+        break;
+      case 'module':
+        contentModel.editRecord.module.add(id)
+        break;
+      case 'canvas':
+        contentModel.editRecord.canvas.add(id)
+        break;
+    }
     contentModel.operationList.current.push({
       ...info,
       detail: info.title,
@@ -893,9 +1042,116 @@ const Designer = ({ appData }) => {
     <div className={styles.show}>
       <AppToolbar
         operable={operable}
-        statusChange={(status) => {
-          setOperable(status === 1);
+        globalOperable={globalOperable}
+        statusChange={(status, file, extraFiles, isNew) => {
+          // setOperable(status === 1);
+          let operable = status === 1;
           pageModel.operable = status === 1
+          pageModel.globalOperable = status === 1
+          pageModel.extraFiles = extraFiles
+          pageModel.isNew = isNew;
+          versionModel.compare(file)
+
+          if (!isNew) {
+            pageModel.canSave = operable
+            setOperable(operable)
+            setGlobalOperable(operable)
+            return
+          }
+
+          const user = userModel.user;
+          const cooperationAry = [];
+          if (status === 1) {
+            cooperationAry.push({
+              type: "global",
+              users: [
+                {
+                  id: user.id,
+                  name: user.name,
+                  isMe: true,
+                  avatarUrl: user.avatar,
+                  readable: true,
+                  writeable: true
+                }
+              ]
+            })
+            setGlobalOperable(true)
+          } else {
+            cooperationAry.push({
+              type: "global",
+              users: []
+            })
+            setGlobalOperable(false)
+          }
+
+          Object.entries(pageModel.pages).forEach(([pageId, pageInfo]) => {
+            const extraFile = pageModel.extraFiles[pageInfo.fileId]
+            if (extraFile.id) {
+              if (user.id === extraFile.id) {
+                operable = true
+              }
+              cooperationAry.push({
+                type: 'canvas',
+                canvasId: pageId,
+                users: [
+                  {
+                    id: extraFile.id,
+                    name: extraFile.name,
+                    isMe: user.id === extraFile.id,
+                    avatarUrl: extraFile.avatar,
+                    readable: true,
+                    writeable: user.id === extraFile.id
+                  }
+                ]
+              })
+            } else {
+              cooperationAry.push({
+                type: 'canvas',
+                canvasId: pageId,
+                // users: []
+                users: [
+                  // {
+                  //   id: user.id,
+                  //   name: user.name,
+                  //   isMe: false,
+                  //   avatarUrl: user.avatar,
+                  //   readable: true,
+                  //   writeable: false
+                  // },
+                  // {
+                  //   id: user.id,
+                  //   name: "H",
+                  //   isMe: true,
+                  //   avatarUrl: user.avatar,
+                  //   readable: true,
+                  //   writeable: false
+                  // }
+                ]
+                // users: [
+                //   {
+                //     id: extraFile.id,
+                //     name: extraFile.name,
+                //     isMe: user.id === extraFile.id,
+                //     avatarUrl: extraFile.avatar,
+                //     // avatarUrl: 'https://resources-live.sketch.cloud/default_avatars/s/3.png',
+                //     readable: true,
+                //     writeable: user.id === extraFile.id
+                //   }
+                // ]
+              })
+            }
+          })
+
+          pageModel.canSave = operable
+          setOperable(operable)
+
+          // console.log("cooperationAry => ", cooperationAry)
+
+          if (!designerRef.current) {
+            lastCooperationAry = cooperationAry
+          } else {
+            designerRef.current?.setCooperationAry(cooperationAry)
+          }
         }}
         checkIsMiniCIReady={checkIsMiniCIReady}
         isModify={beforeunload}
@@ -920,10 +1176,17 @@ const Designer = ({ appData }) => {
               designerRef,
               FxService,
               appConfig,
+              setOperable
             })}
             ref={designerRef}
             onEdit={onEdit}
             onMessage={onMessage}
+            onLoad={() => {
+              if (pageModel.isNew && lastCooperationAry) {
+                designerRef.current.setCooperationAry(lastCooperationAry)
+                lastCooperationAry = null;
+              }
+            }}
           />
         )}
       </div>

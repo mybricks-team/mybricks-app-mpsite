@@ -43,8 +43,30 @@ class Page {
   /** 打开高级模式，一般一些隐藏功能放在这里 */
   constructor() {}
 
-  // 保存权限控制
+  // 是否有页面权限
   operable: boolean = false;
+
+  // 保存权限控制
+  canSave: boolean = false;
+
+  // 页面信息
+  pages: Record<string, {
+    id: string;
+    title: string;
+    fileId: number;
+    fileContentId: number;
+  }> = {};
+
+  // 页面协作信息
+  extraFiles: Record<number, null | {
+    id,
+    name,
+    email,
+    avatar
+  }> = null;
+
+  /** 平台是否更新，没更新的话都走老逻辑 */
+  isNew = false;
 }
 
 export const pageModel: Page = observable(new Page());
