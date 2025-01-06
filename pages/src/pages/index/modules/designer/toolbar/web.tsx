@@ -4,7 +4,9 @@ import { Locker, Toolbar } from "@mybricks/sdk-for-app/ui";
 import { pageModel } from "@/stores";
 import { showH5RequireModal, showWeappRequireModal } from "./../modals";
 import { PreviewPopOver } from "./../pop-overs";
-import { Dropdown, message } from "antd";
+import { Dropdown, message, Alert, Tooltip } from "antd";
+import { ExclamationCircleOutlined } from "@ant-design/icons"
+// import Marquee from 'react-fast-marquee';
 import {
   DownOutlined,
   EyeOutlined,
@@ -24,6 +26,7 @@ interface PublishParams {
 
 interface WebToolbarProps {
   operable: boolean;
+  globalOperable: boolean;
   statusChange: any;
   isModify?: boolean;
   designerRef: any;
@@ -60,6 +63,7 @@ const selectTypeStorage = new SelectTypeStorage();
 
 export const WebToolbar: React.FC<WebToolbarProps> = ({
   operable,
+  globalOperable,
   statusChange,
 
   isModify = false,
@@ -124,6 +128,9 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
   };
 
   const publishHandle = () => {
+    if (!globalOperable) {
+      return
+    }
     if ([CompileType.weapp].includes(selectType)) {
       showWeappRequireModal({
         onSubmit: ({ version, description }) => {
@@ -144,12 +151,27 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
     }
   };
 
+  const getExtraFileIds = () => {
+    return Object.entries(pageModel.pages).map(([,value]) => {
+      return value.fileId
+    })
+  }
+
   return (
     <>
       <Toolbar
         title={pageModel.file?.name}
         updateInfo={<Toolbar.LastUpdate onClick={handleSwitch2SaveVersion} />}
       >
+        {/* <Alert
+          style={{ maxWidth: 350 }}
+          banner
+          message={
+            <Marquee pauseOnHover gradient={false} speed={30}>
+              I can be a React component, multiple React components, or just some text.
+            </Marquee>
+          }
+        /> */}
         <div
           className={css.help_btn}
           onClick={() => {
@@ -165,8 +187,17 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
           帮助文档
         </div>
         {/* <PopContact></PopContact> */}
-        <Locker statusChange={statusChange} compareVersion={true} />
-        <Toolbar.Save disabled={!operable} onClick={onSave} dotTip={isModify} />
+        <Locker
+          statusChange={statusChange}
+          compareVersion={false}
+          getExtraFileIds={getExtraFileIds}
+          // pollable={false} // 测试
+        />
+        <Toolbar.Save disabled={!operable} onClick={onSave} dotTip={isModify}/>
+        {(pageModel.isNew && (globalOperable || operable)) ? <Tooltip placement="bottom" title={globalOperable ? "当前保存包含应用内容以及上锁画布" : "当前保存仅包含上锁画布"}>
+          <ExclamationCircleOutlined style={{color: isModify ? "#FA6400" : "inherit"}}/>
+        </Tooltip> : null}
+        
 
         <CompileButtonGroups>
           <Dropdown
@@ -203,7 +234,7 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
             </PreviewPopOver>
           )}
           {[CompileType.h5].includes(selectType) && (
-            <CompileButton onClick={publishHandle}>
+            <CompileButton disabled={!globalOperable} onClick={publishHandle}>
               发布
               <ToTopOutlined style={{ marginLeft: 3 }} />
             </CompileButton>
@@ -219,7 +250,7 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
             </PreviewPopOver>
           )}
           {[CompileType.weapp].includes(selectType) && (
-            <CompileButton onClick={publishHandle}>
+            <CompileButton disabled={!globalOperable} onClick={publishHandle}>
               发布体验版
               <ToTopOutlined style={{ marginLeft: 3 }} />
             </CompileButton>

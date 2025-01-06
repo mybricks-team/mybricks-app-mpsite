@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import qs from "qs";
 import { View as App } from "@mybricks/sdk-for-app/ui";
-import { pageModel, userModel, tabbarModel, EntryPagePath } from "@/stores";
+import { pageModel, userModel, tabbarModel, EntryPagePath, versionModel } from "@/stores";
 import MyDesigner from "./modules/designer";
 import logger from "@/utils/logger";
 import "./app.less";
@@ -71,8 +71,34 @@ const Application = () => {
     //
     userModel.setUser(data.user);
 
+    versionModel.file = { version: data.fileContent.version };
+
     pageModel.file = data.fileContent;
     pageModel.fileContent = data.fileContent.content || {};
+
+    if (data.fileContent.content.dumpJson) {
+      // 初始化页面没有content
+      const { pages, meta } = data.fileContent.content.dumpJson
+      const { pageAry } = meta;
+
+      const res = {};
+
+      pageAry.forEach(({ id, title, type }) => {
+        if (type !== "module") {
+          // 只记录页面信息
+          const pageInfo = pages.find((page) => id === page.id)
+          res[id] = {
+            id,
+            title,
+            type,
+            ...pageInfo
+          }
+        }
+      })
+
+      pageModel.pages = res;
+    }
+
     pageModel.pageConfig = data.fileContent.content?.pageConfig || {};
     pageModel.sdk = data;
     pageModel.fileId = data.fileId;

@@ -20,6 +20,7 @@ import { MpConfig, CompileConfig } from "./custom-configs";
 import { getAiEncryptData } from "./utils/get-ai-encrypt-data";
 import extendsConfig from "./configs/extends";
 import systemContent from "./system.txt";
+import { message } from "antd";
 // import typeConfig from "./configs/type";
 // import { PcEditor } from "/Users/stuzhaoxing-office/Program/editors-pc-common/src/index";
 // import system from "../../../../../../system.txt"
@@ -72,6 +73,7 @@ export default function ({
   designerRef,
   FxService,
   appConfig,
+  setOperable
 }) {
   // console.log("应用设置: ", appConfig);
   return {
@@ -94,6 +96,9 @@ export default function ({
         saveConfig: {
           limit: 0,
         },
+        saveRevertData: {
+          isMpa: true
+        }
       }),
       toolsPlugin({
         dump: contentModel.dump,
@@ -855,6 +860,121 @@ export default function ({
         },
       },
     },
+    permission: {
+      applyCanvas(props) {
+        const user = userModel.user
+        return new Promise((resolve, reject) => {
+          const page = pageModel.pages[props.id]
+          if (!page) {
+            return reject();
+          }
+          const extraFile = pageModel.extraFiles[page.fileId]
+          if (!extraFile || extraFile.id) {
+            // 找不到 或者有user.id了
+            if (extraFile) {
+              message.info(<span>当前画布已被 <b style={{ color: "#FA6400" }}>{extraFile.name || extraFile.email || extraFile.userId}</b> 上锁</span>)
+            }
+            return reject()
+          }
+
+          axios
+            .post("/paas/api/file/updateFileCooperationUser", {
+              userId: userModel.user?.id,
+              fileId: page.fileId,
+              status: 1,
+            })
+            .then(({ data }: any) => {
+              if (data?.code === 1) {
+                resolve({
+                  type: "canvas",
+                  canvasId: props.id,
+                  users: [
+                    {
+                      id: user.id,
+                      name: user.name,
+                      isMe: true,
+                      avatarUrl: user.avatar,
+                      readable: true,
+                      writeable: true
+                    }
+                  ]
+                })
+                message.success(`${page.title} 上锁成功`)
+                let operable = pageModel.operable
+                if (!operable) {
+                  pageModel.canSave = true
+                  setOperable(true)
+                }
+              } else {
+                console.error("更新协作关系失败 => ", data.message)
+                message.error(data.message)
+                reject(data.message)
+              }
+            })
+            .catch((e: any) => {
+              console.error("更新协作关系失败 => ", e)
+              reject(e)
+            });
+        })
+      },
+      cancelCanvas(props) {
+        return new Promise((resolve, reject) => {
+          const page = pageModel.pages[props.id]
+          if (!page) {
+            return reject();
+          }
+          axios
+            .post("/paas/api/file/updateFileCooperationUser", {
+              userId: userModel.user?.id,
+              fileId: page.fileId,
+              status: -1,
+            })
+            .then(({ data }: any) => {
+              if (data?.code === 1) {
+                resolve({
+                  type: "canvas",
+                  canvasId: props.id,
+                  users: []
+                })
+
+                let operable = pageModel.operable
+
+                if (!operable) {
+                  // 没有权限，判断下还有没有画布权限
+                  const user = userModel.user;
+                  Object.entries(pageModel.pages).find(([pageId, pageInfo]) => {
+                    const extraFile = pageModel.extraFiles[pageInfo.fileId]
+                    if (pageId === props.id) {
+                      delete extraFile.id
+                    }
+                    if (extraFile.id) {
+                      if (user.id === extraFile.id) {
+                        operable = true
+                        return true
+                      } 
+                    }
+                    return false
+                  })
+        
+                  pageModel.canSave = operable
+
+                  setOperable(operable)
+                }
+
+                message.success(`${page.title} 解锁成功`)
+              } else {
+                console.error("更新协作关系失败 => ", data.message)
+                message.error(data.message)
+                reject(data.message)
+              }
+            })
+            .catch((e: any) => {
+              console.error("更新协作关系失败 => ", e)
+              reject(e)
+            });
+        })
+      },
+    }
   };
 }
 

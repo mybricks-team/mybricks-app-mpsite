@@ -15,6 +15,8 @@ import {
 } from "./../types";
 import axios from "axios";
 import { transformToJSON } from "@mybricks/render-utils";
+import { versionModel } from "./version";
+import dayjs from "dayjs";
 
 interface saveFilesResult {
   id: string;
@@ -30,11 +32,13 @@ interface ExportProjectInfo {
 const SDK = {
   saveScenesToMutiFiles: async ({
     updatePages,
+    parentId
   }): Promise<{ updatePagesResult: Array<saveFilesResult> }> => {
     return axios
       .post("/paas/api/workspace/saveScenesToMutiFiles", {
         userId: userModel.user?.id,
         updatePages,
+        // parentId
       })
       .then(({ data }: any) => {
         if (data?.code === 1) {
@@ -229,6 +233,13 @@ class Content {
     current: [],
   };
 
+  /** 编辑记录 */
+  editRecord = {
+    global: false,
+    canvas: new Set(),
+    module: new Set(),
+  }
+
   /** 初始化数据，初始化和导入时使用 */
   private initData = ({
     meta,
@@ -348,10 +359,33 @@ class Content {
 
   /** 保存到不同文件，主要是更新最新的 fileContentId 到pagesMeta，然后再用于文件的保存 */
   private saveRemotePages = async (pagesMap) => {
-    const pages = Array.from(pagesMap.values());
+    // console.log("pagesMap.values() => ", pagesMap.values())
+    const pages = pageModel.isNew ? Array.from(pagesMap.values()).filter(({ id }) => {
+      const page = pageModel.pages[id]
+
+      if (!page) {
+        // 新建的
+        if (pageModel.operable) {
+          // 如果有页面级权限
+          return true
+        }
+      } else {
+        if (pageModel.extraFiles[page.fileId]?.id === userModel.user?.id) {
+          // 有画布权限
+          return true
+        }
+      }
+
+      return false;
+    }) : Array.from(pagesMap.values())
+
+    // console.log("pages => ", pages)
+
+    // console.log("pages => ", pages)
+    // console.log("pageModel.extraFiles => ", pageModel.extraFiles)
 
     if (!Array.isArray(pages) || pages.length === 0) {
-      return;
+      return []
     }
 
     const updatePages = pages.map((dumpJson) => {
@@ -368,6 +402,7 @@ class Content {
 
     const { updatePagesResult } = await SDK.saveScenesToMutiFiles({
       updatePages,
+      parentId: pageModel.operable ? null : pageModel.fileId
     });
 
     updatePagesResult.forEach((res) => {
@@ -383,6 +418,8 @@ class Content {
       this.changedPagesMap.needUpdate.delete(updateItem.id);
       this.changedPagesMap.updated.set(updateItem.id, updateItem);
     });
+
+    return updatePagesResult;
   };
 
   /**
@@ -513,7 +550,7 @@ class Content {
     ctx,
     extra = {}
   ) => {
-    const {
+    let {
       updatedPageAry,
       deletedPageAry,
       openedPageAry,
@@ -521,8 +558,146 @@ class Content {
       projectContent,
     } = projectJson;
 
+    updatedPageAry = updatedPageAry.filter((updatedPage) => {
+      const { id, type } = updatedPage;
+      if (!type) {
+        return this.editRecord.canvas.has(id)
+      }
+      return true
+    })
+
+
+
+    // console.log("updatedPageAry => ", updatedPageAry)
+    // console.log("this.editRecord => ", this.editRecord)
+
+    // console.log("pageModel.extraFiles => ", pageModel.extraFiles)
+    // console.log("projectJson => ", projectJson)
+
     await this.cacheDumpChanges({ updatedPageAry, deletedPageAry });
-    await this.saveRemotePages(this.changedPagesMap.needUpdate);
+    
+    // console.log("this.changedPagesMap.needUpdate => ", this.changedPagesMap.needUpdate)
+
+    const updatePagesResult = await this.saveRemotePages(this.changedPagesMap.needUpdate);
+
+    // console.log("updatePagesResult => ", updatePagesResult)
+    // console.log("pageModel.pages => ", pageModel.pages)
+
+    // 找出新增的画布，写入pages,extraFiles
+    updatePagesResult.forEach((updatePage) => {
+      const dumpPage = pageAry.find((page) => page.id === updatePage.id)
+      if (dumpPage && !dumpPage.type) {
+        // 没有type说明是画布
+        if (!pageModel.pages[dumpPage.id]) {
+          // 说明是新增的
+          pageModel.pages[dumpPage.id] = {
+            id: dumpPage.id,
+            title: dumpPage.title,
+            type: undefined,
+            fileId: updatePage.fileId,
+            fileContentId: updatePage.fileContentId
+          }
+          // 新增的默认上锁
+          axios
+            .post("/paas/api/file/updateFileCooperationUser", {
+              userId: userModel.user?.id,
+              fileId: updatePage.fileId,
+              status: 1,
+            })
+        }
+      }
+    })
+
+    // console.log("updatePagesResult => ", updatePagesResult)
+    // console.log("projectJson => ", projectJson)
+    // console.log("pageModel => ", pageModel)
+
+    let nextPages = this.pagesMeta;
+
+    const operationList = this.operationList.current.reverse()
+
+    // console.log("operationList => ", operationList)
+
+    if (pageModel.fileContent.dumpJson) {
+      // 非空页面，拉最新的数据做合并
+      // 没权限，能保存的一定是非空页面
+      if (!pageModel.operable) {
+
+        if (!updatePagesResult.length) {
+          // 没有任何更新内容
+          return
+        }
+
+        const fullFile = await API.File.getFullFile({ fileId: pageModel.fileId });
+
+        const nextContent = JSON.parse(fullFile.content);
+        const { dumpJson } = nextContent;
+        const { pages } = dumpJson;
+  
+        nextPages = pages;
+
+        const saves = [];
+        const notSaves = [];
+  
+        // 更新的
+        updatePagesResult.forEach((res) => {
+          const idx = pages.findIndex((f) => f.id === res.id);
+
+          const detail = updatedPageAry.find(({id}) => id === res.id)
+          if (detail) {
+            saves.push(detail)
+            const { id, type } = detail;
+            if (!type) {
+              this.editRecord.canvas.delete(id)
+            } else if (type === "module") {
+              this.editRecord.module.delete(id)
+            }
+          }
+
+          // console.log("detail => ", detail)
+          // console.log("res => ", res)
+
+          if (idx === -1) {
+            nextPages.push(res);
+          } else {
+            nextPages[idx] = res;
+          }
+        })
+
+        updatedPageAry.forEach((updatedPage) => {
+          if (!updatePagesResult.find((updatePageRes) => updatePageRes.id === updatedPage.id)) {
+            // 结果里找不到dump，有修改但是没保存
+            notSaves.push(updatedPage)
+          }
+        })
+
+        // 没有权限，又有画布更新，一定有内容
+        versionModel.allowCompare = false;
+
+        const operationListStr = JSON.stringify(operationList);
+
+
+        return ctx.sdk
+          .save({
+            userId: userModel.user?.id,
+            fileId: pageModel.fileId,
+            content: JSON.stringify(nextContent),
+            operationList: operationListStr,
+          })
+          .then((res) => {
+            this.operationList.current = [];
+            versionModel.file.version = res.version
+            setTimeout(() => {
+              versionModel.allowCompare = true
+            }, 6 * 1000)
+            return {
+              ...res,
+              saves,
+              notSaves
+            };
+          });
+      }
+    }
 
     const dumpJson = {
       meta: {
@@ -530,12 +705,44 @@ class Content {
         pageAry,
         projectContent,
       },
-      pages: this.pagesMeta,
+      // pages: this.pagesMeta,
+      pages: nextPages
     };
 
-    const operationListStr = JSON.stringify(
-      this.operationList.current.reverse()
-    );
+    const saves = [];
+    const notSaves = [];
+  
+    // 更新的
+    updatePagesResult.forEach((res) => {
+      const detail = updatedPageAry.find(({id}) => id === res.id)
+      if (detail) {
+        saves.push(detail)
+        const { id, type } = detail;
+        if (!type) {
+          this.editRecord.canvas.delete(id)
+        } else if (type === "module") {
+          this.editRecord.module.delete(id)
+        }
+      }
+    })
+
+    updatedPageAry.forEach((updatedPage) => {
+      if (!updatePagesResult.find((updatePageRes) => updatePageRes.id === updatedPage.id)) {
+        // 结果里找不到dump，有修改但是没保存
+        notSaves.push(updatedPage)
+      }
+    })
+
+    // console.log("updatePagesResult => ", updatePagesResult)
+    // console.log("updatedPageAry => ", updatedPageAry)
+    // console.log("saves => ", saves)
+    // console.log("notSaves => ", notSaves)
+   
+
+    // console.log("dumpJson => ", dumpJson)
+    // console.log("operationListStr => ", JSON.stringify(operationList))
+
+    versionModel.allowCompare = false;
 
     return ctx.sdk
       .save({
@@ -552,11 +759,27 @@ class Content {
           type: window.__type__,
           ...extra, // 额外的数据，或者强制覆盖上方的数据
         }),
-        operationList: operationListStr,
+        operationList: JSON.stringify([{
+          title: "应用保存",
+          detail: "应用保存",
+          updateTime: dayjs(),
+          saveType: "app"
+        }].concat(operationList)),
       })
       .then((res) => {
+        if (pageModel.globalOperable) {
+          this.editRecord.global = false;
+        }
         this.operationList.current = [];
-        return res;
+        versionModel.file.version = res.version
+        setTimeout(() => {
+          versionModel.allowCompare = true
+        }, 6 * 1000)
+        return {
+          ...res,
+          saves,
+          notSaves
+        };
       });
 
     // return API.File.save({
