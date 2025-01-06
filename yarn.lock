@@ -1448,10 +1448,10 @@
   resolved "https://npm.corp.kuaishou.com/@mybricks/rocker-commons/-/rocker-commons-0.0.2.tgz"
   integrity sha512-RSZeSy96PQTkfCBCTh4dHjIOVt/iF/tThbO+TUcCEbox+jgPe2ffiWfItnR6qR8+p2Mrn6YiKeAhTwWVjITZZQ==
 
-"@mybricks/sdk-for-app@^1.0.35":
-  version "1.0.36"
-  resolved "https://npm.corp.kuaishou.com/@mybricks/sdk-for-app/-/sdk-for-app-1.0.36.tgz"
-  integrity sha512-IdvNfZjK+p0/iIluEXfmZb4dn3gFUza0n+w4ZD7MlEDcZD/vhRUygsZV8O6hBuGHdcQtCgeN9UfFXt/CVjfNDg==
+"@mybricks/sdk-for-app@^1.0.55":
+  version "1.0.55"
+  resolved "https://registry.npmjs.org/@mybricks/sdk-for-app/-/sdk-for-app-1.0.55.tgz"
+  integrity sha512-9UaQd5Zxfh0S3t76LyawuYhivArkXZSb+siMewSJgjb9DMI7xSrNowIhP+iRsEoxd1bdiGVPKJtOh0euvBrnUQ==
   dependencies:
     dayjs "^1.11.7"
     dom-to-image "^2.6.0"
