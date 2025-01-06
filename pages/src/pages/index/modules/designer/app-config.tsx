@@ -937,6 +937,11 @@ export default function ({
                   users: []
                 })
 
+                const extraFile = pageModel.extraFiles[pageModel.pages[props.id].fileId]
+                if (extraFile && extraFile.id === userModel.user.id) {
+                  delete extraFile.id
+                }
+
                 let operable = pageModel.operable
 
                 if (!operable) {
