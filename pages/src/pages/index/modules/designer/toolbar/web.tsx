@@ -191,14 +191,14 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
           statusChange={statusChange}
           compareVersion={false}
           getExtraFileIds={window.__type__ === "mpa" ? getExtraFileIds : null}
-          autoLock={false}
-          beforeToggleLock={() => {
+          autoLock={window.__type__ === "mpa" ? false : true}
+          beforeToggleLock={window.__type__ === "mpa" ? () => {
             if (versionModel.file.updated) {
               message.info("当前应用版本落后，不允许上锁，请刷新后再试")
               return false
             }
             return true;
-          }}
+          } : null}
           // pollable={false} // 测试
         />
         <Toolbar.Save disabled={!operable} onClick={onSave} dotTip={isModify}/>
