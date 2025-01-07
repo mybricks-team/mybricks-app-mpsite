@@ -87,11 +87,13 @@ const Application = () => {
         if (type !== "module") {
           // 只记录页面信息
           const pageInfo = pages.find((page) => id === page.id)
-          res[id] = {
-            id,
-            title,
-            type,
-            ...pageInfo
+          if (pageInfo?.fileId) {
+            res[id] = {
+              id,
+              title,
+              type,
+              ...pageInfo
+            }
           }
         }
       })

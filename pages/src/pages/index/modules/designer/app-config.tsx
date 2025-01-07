@@ -877,6 +877,11 @@ export default function ({
             return reject()
           }
 
+          if (page.updated) {
+            message.info("当前画布版本落后，不允许上锁，请刷新后再试")
+            return reject()
+          }
+
           axios
             .post("/paas/api/file/updateFileCooperationUser", {
               userId: userModel.user?.id,

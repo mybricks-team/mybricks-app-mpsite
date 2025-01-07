@@ -608,6 +608,9 @@ class Content {
               })
           }
         }
+        if (pageModel.pages[updatePage.id]) {
+          pageModel.pages[updatePage.id].fileContentId = updatePage.fileContentId
+        }
       })
     }
 

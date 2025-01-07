@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useComputed } from "rxui-t";
 import { Locker, Toolbar } from "@mybricks/sdk-for-app/ui";
-import { pageModel } from "@/stores";
+import { pageModel, versionModel } from "@/stores";
 import { showH5RequireModal, showWeappRequireModal } from "./../modals";
 import { PreviewPopOver } from "./../pop-overs";
 import { Dropdown, message, Alert, Tooltip } from "antd";
@@ -154,7 +154,7 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
   const getExtraFileIds = () => {
     return Object.entries(pageModel.pages).map(([,value]) => {
       return value.fileId
-    })
+    }).filter((fileId) => fileId)
   }
 
   return (
@@ -191,6 +191,14 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
           statusChange={statusChange}
           compareVersion={false}
           getExtraFileIds={window.__type__ === "mpa" ? getExtraFileIds : null}
+          autoLock={false}
+          beforeToggleLock={() => {
+            if (versionModel.file.updated) {
+              message.info("当前应用版本落后，不允许上锁，请刷新后再试")
+              return false
+            }
+            return true;
+          }}
           // pollable={false} // 测试
         />
         <Toolbar.Save disabled={!operable} onClick={onSave} dotTip={isModify}/>
