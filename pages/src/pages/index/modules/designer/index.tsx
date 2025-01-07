@@ -1002,6 +1002,7 @@ const Designer = ({ appData }) => {
   );
 
   const onEdit = useCallback((info) => {
+    // console.log("info => ", info)
     const { id, type } = info;
     switch (type) {
       case 'global':

@@ -699,6 +699,24 @@ class Content {
               notSaves
             };
           });
+      } else {
+        const fullFile = await API.File.getFullFile({ fileId: pageModel.fileId });
+        const nextContent = JSON.parse(fullFile.content);
+        const { dumpJson } = nextContent;
+        const { pages } = dumpJson;
+        nextPages = pages
+
+        if (updatePagesResult.length) {
+        updatePagesResult.forEach((res) => {
+          const idx = pages.findIndex((f) => f.id === res.id);
+
+          if (idx === -1) {
+            nextPages.push(res);
+          } else {
+            nextPages[idx] = res;
+          }
+        })
+        }
       }
     }
 
