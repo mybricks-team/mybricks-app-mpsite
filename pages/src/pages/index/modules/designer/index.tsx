@@ -1100,7 +1100,7 @@ const Designer = ({ appData }) => {
                     isMe: user.id === extraFile.id,
                     avatarUrl: extraFile.avatar,
                     readable: true,
-                    writeable: user.id === extraFile.id
+                    writeable: true
                   }
                 ]
               })
