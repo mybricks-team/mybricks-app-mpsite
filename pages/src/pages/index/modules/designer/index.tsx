@@ -1070,7 +1070,7 @@ const Designer = ({ appData }) => {
                   id: user.id,
                   name: user.name,
                   isMe: true,
-                  avatarUrl: user.avatar,
+                  avatarUrl: user.avatar === '/default_avatar.png' ? null : user.avatar,
                   readable: true,
                   writeable: true
                 }
@@ -1099,7 +1099,7 @@ const Designer = ({ appData }) => {
                     id: extraFile.id,
                     name: extraFile.name,
                     isMe: user.id === extraFile.id,
-                    avatarUrl: extraFile.avatar,
+                    avatarUrl: extraFile.avatar === '/default_avatar.png' ? null : extraFile.avatar,
                     readable: true,
                     writeable: true
                   }
