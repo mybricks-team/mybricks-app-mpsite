@@ -624,7 +624,7 @@ class Content {
 
     // console.log("operationList => ", operationList)
 
-    if (pageModel.fileContent.dumpJson && window.__type__ === "mpa") {
+    if ((pageModel.fileContent.dumpJson || !pageModel.isInit) && window.__type__ === "mpa") {
       // 非空页面，拉最新的数据做合并
       // 没权限，能保存的一定是非空页面
       if (!pageModel.operable) {
@@ -716,6 +716,7 @@ class Content {
             operationList: operationListStr,
           })
           .then((res) => {
+            pageModel.isInit = false
             this.operationList.current = [];
             versionModel.file.version = res.version
             setTimeout(() => {
@@ -766,7 +767,6 @@ class Content {
       // 更新的
       updatePagesResult.forEach((res) => {
         const detail = updatedPageAry.find(({id}) => id === res.id)
-        console.log("detail => ", detail)
         if (detail) {
           saves.push(detail)
           const { id, type } = detail;
@@ -813,6 +813,7 @@ class Content {
         }].concat(operationList)),
       })
       .then((res) => {
+        pageModel.isInit = false
         if (pageModel.globalOperable) {
           this.editRecord.global = false;
         }

@@ -904,6 +904,11 @@ export default function ({
                     }
                   ]
                 })
+                extraFile.id = userModel.user.id
+                extraFile.name = userModel.user.name
+                extraFile.email = userModel.user.email
+                extraFile.userId = userModel.user.email
+
                 message.success(`${page.title} 上锁成功`)
                 let operable = pageModel.operable
                 if (!operable) {

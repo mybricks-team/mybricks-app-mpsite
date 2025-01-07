@@ -338,11 +338,11 @@ const Designer = ({ appData }) => {
                           {contentModel.editRecord.global ? <><b style={{ color: "#FA6400" }}>应用配置(全局、模块、插件)<span style={{fontWeight: 400, color: "black", fontSize: 12}}> - 没有应用锁</span></b></> : null}
                         </div>
                         <div>
-                          {notCanvasSaves.map(({ title }, index) => <><b style={{ color: "#FA6400" }}>{title}</b>{notCanvasSaves.length === index - 1 ? "，" : ""}</>)}
+                          {notCanvasSaves.map(({ title }, index) => <><b style={{ color: "#FA6400" }}>{title}</b>{notCanvasSaves.length - 1 === index ? "" : "，"}</>)}
                           {notCanvasSaves.length ? <span style={{fontWeight: 400, color: "black", fontSize: 12}}> - 没有画布锁</span> : null}
                         </div>
                         <div>
-                          {notModuleSaves.map(({ title }, index) => <><b style={{ color: "#FA6400" }}>{title}</b>{notModuleSaves.length === index - 1 ? "，" : ""}</>)}
+                          {notModuleSaves.map(({ title }, index) => <><b style={{ color: "#FA6400" }}>{title}</b>{notModuleSaves.length - 1 === index ? "" : "，"}</>)}
                           {notModuleSaves.length ? <span style={{fontWeight: 400, color: "black", fontSize: 12}}> - 没有应用锁</span> : null}
                         </div>
                       </div>
@@ -368,7 +368,7 @@ const Designer = ({ appData }) => {
                       <div style={{ flex: 1 }}>
                         <div>以下内容未保存</div>
                         <div>
-                          {notCanvasSaves.map(({ title }, index) => <><b style={{ color: "#FA6400" }}>{title}</b>{notCanvasSaves.length === index - 1 ? "，" : ""}</>)}
+                          {notCanvasSaves.map(({ title }, index) => <><b style={{ color: "#FA6400" }}>{title}</b>{notCanvasSaves.length - 1 === index ? "" : "，"}</>)}
                           {notCanvasSaves.length ? <span style={{fontWeight: 400, color: "black", fontSize: 12}}> - 没有画布锁</span> : null}
                         </div>
                       </div>
@@ -426,11 +426,11 @@ const Designer = ({ appData }) => {
                             {contentModel.editRecord.global ? <><b style={{ color: "#FA6400" }}>应用配置(全局、模块、插件)<span style={{fontWeight: 400, color: "black", fontSize: 12}}> - 没有应用锁</span></b></> : null}
                           </div>
                           <div>
-                            {notCanvasSaves.map(({ title }, index) => <><b style={{ color: "#FA6400" }}>{title}</b>{notCanvasSaves.length === index - 1 ? "，" : ""}</>)}
+                            {notCanvasSaves.map(({ title }, index) => <><b style={{ color: "#FA6400" }}>{title}</b>{notCanvasSaves.length - 1 === index ? "" : "，"}</>)}
                             {notCanvasSaves.length ? <span style={{fontWeight: 400, color: "black", fontSize: 12}}> - 没有画布锁</span> : null}
                           </div>
                           <div>
-                            {notModuleSaves.map(({ title }, index) => <><b style={{ color: "#FA6400" }}>{title}</b>{notModuleSaves.length === index - 1 ? "，" : ""}</>)}
+                            {notModuleSaves.map(({ title }, index) => <><b style={{ color: "#FA6400" }}>{title}</b>{notModuleSaves.length - 1 === index ? "" : "，"}</>)}
                             {notModuleSaves.length ? <span style={{fontWeight: 400, color: "black", fontSize: 12}}> - 没有应用锁</span> : null}
                           </div>
                         </div>

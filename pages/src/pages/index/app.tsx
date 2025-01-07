@@ -77,6 +77,7 @@ const Application = () => {
     pageModel.fileContent = data.fileContent.content || {};
 
     if (data.fileContent.content.dumpJson) {
+      pageModel.isInit = false
       // 初始化页面没有content
       const { pages, meta } = data.fileContent.content.dumpJson
       const { pageAry } = meta;
@@ -99,6 +100,8 @@ const Application = () => {
       })
 
       pageModel.pages = res;
+    } else {
+      pageModel.isInit = true
     }
 
     pageModel.pageConfig = data.fileContent.content?.pageConfig || {};
