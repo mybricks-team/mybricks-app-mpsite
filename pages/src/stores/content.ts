@@ -630,8 +630,25 @@ class Content {
       if (!pageModel.operable) {
 
         if (!updatePagesResult.length) {
+          const notModuleSaves = [];
+          const notCanvasSaves = []
           // 没有任何更新内容
-          return
+          updatedPageAry.forEach((updatedPage) => {
+            if (updatedPage.type === "module") {
+              if (this.editRecord.module.has(updatedPage.id)) {
+                notModuleSaves.push(updatedPage)
+              }
+            } else {
+              if (this.editRecord.canvas.has(updatedPage.id)) {
+                notCanvasSaves.push(updatedPage)
+              }
+            }
+          })
+
+          return {
+            notModuleSaves,
+            notCanvasSaves
+          }
         }
 
         const fullFile = await API.File.getFullFile({ fileId: pageModel.fileId });
@@ -643,7 +660,8 @@ class Content {
         nextPages = pages;
 
         const saves = [];
-        const notSaves = [];
+        const notCanvasSaves = [];
+        const notModuleSaves = [];
   
         // 更新的
         updatePagesResult.forEach((res) => {
@@ -672,8 +690,15 @@ class Content {
 
         updatedPageAry.forEach((updatedPage) => {
           if (!updatePagesResult.find((updatePageRes) => updatePageRes.id === updatedPage.id)) {
-            // 结果里找不到dump，有修改但是没保存
-            notSaves.push(updatedPage)
+            if (updatedPage.type === "module") {
+              if (this.editRecord.module.has(updatedPage.id)) {
+                notModuleSaves.push(updatedPage)
+              }
+            } else {
+              if (this.editRecord.canvas.has(updatedPage.id)) {
+                notCanvasSaves.push(updatedPage)
+              }
+            }
           }
         })
 
@@ -699,7 +724,8 @@ class Content {
             return {
               ...res,
               saves,
-              notSaves
+              notCanvasSaves,
+              notModuleSaves
             };
           });
       } else {
@@ -734,12 +760,13 @@ class Content {
     };
 
     const saves = [];
-    const notSaves = [];
+    const notCanvasSaves = [];
   
     if (window.__type__ === "mpa") {
       // 更新的
       updatePagesResult.forEach((res) => {
         const detail = updatedPageAry.find(({id}) => id === res.id)
+        console.log("detail => ", detail)
         if (detail) {
           saves.push(detail)
           const { id, type } = detail;
@@ -754,19 +781,12 @@ class Content {
       updatedPageAry.forEach((updatedPage) => {
         if (!updatePagesResult.find((updatePageRes) => updatePageRes.id === updatedPage.id)) {
           // 结果里找不到dump，有修改但是没保存
-          notSaves.push(updatedPage)
+          if (this.editRecord.canvas.has(updatedPage.id)) {
+            notCanvasSaves.push(updatedPage)
+          }
         }
       })
     }
-
-    // console.log("updatePagesResult => ", updatePagesResult)
-    // console.log("updatedPageAry => ", updatedPageAry)
-    // console.log("saves => ", saves)
-    // console.log("notSaves => ", notSaves)
-   
-
-    // console.log("dumpJson => ", dumpJson)
-    // console.log("operationListStr => ", JSON.stringify(operationList))
 
     versionModel.allowCompare = false;
 
@@ -804,7 +824,8 @@ class Content {
         return {
           ...res,
           saves,
-          notSaves
+          notCanvasSaves,
+          notModuleSaves: []
         };
       });
 

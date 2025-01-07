@@ -51,7 +51,7 @@ import { ExclamationCircleFilled, CheckCircleFilled } from "@ant-design/icons"
 //       {/* <div style={{ display: 'flex' }}>
 //         <div><ExclamationCircleFilled style={{color: "#faad14", marginRight: 8, marginLeft: 2}}/>注意：</div>
 //         <div>
-//           <div>以下内容没有保存</div>
+//           <div>以下内容未保存</div>
 //           <div>
 //             <b style={{ color: "#FA6400" }}>全局配置</b>，<b style={{ color: "#FA6400" }}>画布1</b>，<b style={{ color: "#FA6400" }}>画布2</b>
 //           </div>
@@ -304,18 +304,54 @@ const Designer = ({ appData }) => {
       .then((res) => {
         if (pageModel.isNew && window.__type__ === "mpa") {
           if (!!tip) {
-            if (!res) {
+            if (!res || !res.saves) {
+              // const { canvas } = contentModel.editRecord;
+              // const notSaves = []
+
+              // Array.from(canvas).forEach((id, index) => {
+              //   const page = pageModel.pages[id]
+              //   if (page) {
+              //     if (index === canvas.size - 1) {
+              //       notSaves.push(<b style={{ color: "#FA6400" }}>{page.title}</b>)
+              //     } else {
+              //       notSaves.push(<><b style={{ color: "#FA6400" }}>{page.title}</b>，</>)
+              //     }
+              //   }
+              // })
+              const { notCanvasSaves, notModuleSaves } = res;
+
               notification.open({
                 message: (
                   <div>
-                    <ExclamationCircleFilled style={{color: "#faad14", marginRight: 8}}/>
-                    <span>上锁画布没有内容更新</span>
+                    <CheckCircleFilled style={{color: "#52c41a", marginRight: 8}}/>
+                    <span>没有内容保存</span>
                   </div>
                 ),
-                placement: 'top'
+                placement: 'top',
+                description: (contentModel.editRecord.global || notCanvasSaves.length || notModuleSaves.length) ? (
+                  <div style={{ display: 'flex' }}>
+                    <div><ExclamationCircleFilled style={{color: "#faad14", marginRight: 8, marginLeft: 2}}/>注意：</div>
+                    <div style={{ flex: 1 }}>
+                      <div>以下内容未保存</div>
+                      <div>
+                        <div>
+                          {contentModel.editRecord.global ? <><b style={{ color: "#FA6400" }}>应用配置(全局、模块、插件)<span style={{fontWeight: 400, color: "black", fontSize: 12}}> - 没有应用锁</span></b></> : null}
+                        </div>
+                        <div>
+                          {notCanvasSaves.map(({ title }, index) => <><b style={{ color: "#FA6400" }}>{title}</b>{notCanvasSaves.length === index - 1 ? "，" : ""}</>)}
+                          {notCanvasSaves.length ? <span style={{fontWeight: 400, color: "black", fontSize: 12}}> - 没有画布锁</span> : null}
+                        </div>
+                        <div>
+                          {notModuleSaves.map(({ title }, index) => <><b style={{ color: "#FA6400" }}>{title}</b>{notModuleSaves.length === index - 1 ? "，" : ""}</>)}
+                          {notModuleSaves.length ? <span style={{fontWeight: 400, color: "black", fontSize: 12}}> - 没有应用锁</span> : null}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ): null,
               })
             } else {
-              const { saves, notSaves } = res;
+              const { notCanvasSaves, notModuleSaves } = res;
               if (pageModel.globalOperable) {
                 // 还要判断下有没有全局的修改
                 notification.open({
@@ -326,19 +362,14 @@ const Designer = ({ appData }) => {
                     </div>
                   ),
                   placement: "top",
-                  description: notSaves.length ? (
+                  description: notCanvasSaves.length ? (
                     <div style={{ display: 'flex' }}>
                       <div><ExclamationCircleFilled style={{color: "#faad14", marginRight: 8, marginLeft: 2}}/>注意：</div>
-                      <div>
-                        <div>以下内容没有保存</div>
+                      <div style={{ flex: 1 }}>
+                        <div>以下内容未保存</div>
                         <div>
-                          {notSaves.map(({ title }, index) => {
-                            return (
-                              <>
-                                <b style={{ color: "#FA6400" }}>{title}</b>{index === notSaves.length - 1 ? "" : "，"}
-                              </>
-                            )
-                          })}
+                          {notCanvasSaves.map(({ title }, index) => <><b style={{ color: "#FA6400" }}>{title}</b>{notCanvasSaves.length === index - 1 ? "，" : ""}</>)}
+                          {notCanvasSaves.length ? <span style={{fontWeight: 400, color: "black", fontSize: 12}}> - 没有画布锁</span> : null}
                         </div>
                       </div>
                     </div>
@@ -355,36 +386,57 @@ const Designer = ({ appData }) => {
                     </div>
                   ),
                   placement: "top",
-                  description: notSaves.length ? (
+                  // description: notSaves.length ? (
+                  //   <div style={{ display: 'flex' }}>
+                  //     <div><ExclamationCircleFilled style={{color: "#faad14", marginRight: 8, marginLeft: 2}}/>注意：</div>
+                  //     <div style={{ flex: 1 }}>
+                  //       <div>以下内容未保存</div>
+                  //       <div>
+                  //         {contentModel.editRecord.global ? <><b style={{ color: "#FA6400" }}>应用配置(全局、模块、插件) <span style={{fontWeight: 400, color: "black", fontSize: 12}}>- 没有应用锁</span></b>，</> : null}
+                  //         {notSaves.map(({ title }, index) => {
+                  //           return (
+                  //             <>
+                  //               <b style={{ color: "#FA6400" }}>{title}</b>{index === notSaves.length - 1 ? "" : "，"}
+                  //             </>
+                  //           )
+                  //         })}
+                  //       </div>
+                  //     </div>
+                  //   </div>
+                  // ) : (contentModel.editRecord.global ? (
+                  //   <div style={{ display: 'flex' }}>
+                  //     <div><ExclamationCircleFilled style={{color: "#faad14", marginRight: 8, marginLeft: 2}}/>注意：</div>
+                  //     <div style={{ flex: 1 }}>
+                  //       <div>以下内容未保存</div>
+                  //       <div>
+                  //         <b style={{ color: "#FA6400" }}>应用配置(包含全局、模块、插件) <span style={{fontWeight: 400, color: "black", fontSize: 12}}>- 没有应用锁</span></b>
+                  //       </div>
+                  //     </div>
+                  //   </div>
+                  // ) : (
+                  //   <div style={{ marginLeft: 24 }}>修改内容都已保存</div>
+                  // ))
+                  description: (contentModel.editRecord.global || notCanvasSaves.length || notModuleSaves.length) ? (
                     <div style={{ display: 'flex' }}>
                       <div><ExclamationCircleFilled style={{color: "#faad14", marginRight: 8, marginLeft: 2}}/>注意：</div>
-                      <div>
-                        <div>以下内容没有保存</div>
+                      <div style={{ flex: 1 }}>
+                        <div>以下内容未保存</div>
                         <div>
-                          {contentModel.editRecord.global ? <><b style={{ color: "#FA6400" }}>应用配置</b>，</> : null}
-                          {notSaves.map(({ title }, index) => {
-                            return (
-                              <>
-                                <b style={{ color: "#FA6400" }}>{title}</b>{index === notSaves.length - 1 ? "" : "，"}
-                              </>
-                            )
-                          })}
+                          <div>
+                            {contentModel.editRecord.global ? <><b style={{ color: "#FA6400" }}>应用配置(全局、模块、插件)<span style={{fontWeight: 400, color: "black", fontSize: 12}}> - 没有应用锁</span></b></> : null}
+                          </div>
+                          <div>
+                            {notCanvasSaves.map(({ title }, index) => <><b style={{ color: "#FA6400" }}>{title}</b>{notCanvasSaves.length === index - 1 ? "，" : ""}</>)}
+                            {notCanvasSaves.length ? <span style={{fontWeight: 400, color: "black", fontSize: 12}}> - 没有画布锁</span> : null}
+                          </div>
+                          <div>
+                            {notModuleSaves.map(({ title }, index) => <><b style={{ color: "#FA6400" }}>{title}</b>{notModuleSaves.length === index - 1 ? "，" : ""}</>)}
+                            {notModuleSaves.length ? <span style={{fontWeight: 400, color: "black", fontSize: 12}}> - 没有应用锁</span> : null}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  ) : (contentModel.editRecord.global ? (
-                    <div style={{ display: 'flex' }}>
-                      <div><ExclamationCircleFilled style={{color: "#faad14", marginRight: 8, marginLeft: 2}}/>注意：</div>
-                      <div>
-                        <div>以下内容没有保存</div>
-                        <div>
-                          <b style={{ color: "#FA6400" }}>应用配置</b>
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <div style={{ marginLeft: 24 }}>修改内容都已保存</div>
-                  ))
+                  ): <div style={{ marginLeft: 24 }}>修改内容都已保存</div>,
                 });
               }
             }
