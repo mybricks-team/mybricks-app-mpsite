@@ -302,7 +302,7 @@ const Designer = ({ appData }) => {
     await contentModel
       .save(ctx)
       .then((res) => {
-        if (pageModel.isNew) {
+        if (pageModel.isNew && window.__type__ === "mpa") {
           if (!!tip) {
             if (!res) {
               notification.open({
@@ -1052,7 +1052,7 @@ const Designer = ({ appData }) => {
           pageModel.isNew = isNew;
           versionModel.compare(file)
 
-          if (!isNew) {
+          if (!isNew || window.__type__ === "spa") {
             pageModel.canSave = operable
             setOperable(operable)
             setGlobalOperable(operable)
@@ -1182,7 +1182,7 @@ const Designer = ({ appData }) => {
             onEdit={onEdit}
             onMessage={onMessage}
             onLoad={() => {
-              if (pageModel.isNew && lastCooperationAry) {
+              if (pageModel.isNew && lastCooperationAry && window.__type__ === "mpa") {
                 designerRef.current.setCooperationAry(lastCooperationAry)
                 lastCooperationAry = null;
               }

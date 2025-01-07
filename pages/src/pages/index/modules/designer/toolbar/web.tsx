@@ -190,11 +190,11 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
         <Locker
           statusChange={statusChange}
           compareVersion={false}
-          getExtraFileIds={getExtraFileIds}
+          getExtraFileIds={window.__type__ === "mpa" ? getExtraFileIds : null}
           // pollable={false} // 测试
         />
         <Toolbar.Save disabled={!operable} onClick={onSave} dotTip={isModify}/>
-        {(pageModel.isNew && (globalOperable || operable)) ? <Tooltip placement="bottom" title={globalOperable ? "当前保存包含应用内容以及上锁画布" : "当前保存仅包含上锁画布"}>
+        {(pageModel.isNew && window.__type__ === "mpa" && (globalOperable || operable)) ? <Tooltip placement="bottom" title={globalOperable ? "当前保存包含应用内容以及上锁画布" : "当前保存仅包含上锁画布"}>
           <ExclamationCircleOutlined style={{color: isModify ? "#FA6400" : "inherit"}}/>
         </Tooltip> : null}
         

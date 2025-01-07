@@ -360,7 +360,7 @@ class Content {
   /** 保存到不同文件，主要是更新最新的 fileContentId 到pagesMeta，然后再用于文件的保存 */
   private saveRemotePages = async (pagesMap) => {
     // console.log("pagesMap.values() => ", pagesMap.values())
-    const pages = pageModel.isNew ? Array.from(pagesMap.values()).filter(({ id }) => {
+    const pages = (pageModel.isNew && window.__type__ === "mpa") ? Array.from(pagesMap.values()).filter(({ id }) => {
       const page = pageModel.pages[id]
 
       if (!page) {
@@ -558,14 +558,15 @@ class Content {
       projectContent,
     } = projectJson;
 
-    updatedPageAry = updatedPageAry.filter((updatedPage) => {
-      const { id, type } = updatedPage;
-      if (!type) {
-        return this.editRecord.canvas.has(id) || !pageModel.pages[id]
-      }
-      return true
-    })
-
+    if (window.__type__ === "mpa") {
+      updatedPageAry = updatedPageAry.filter((updatedPage) => {
+        const { id, type } = updatedPage;
+        if (!type) {
+          return this.editRecord.canvas.has(id) || !pageModel.pages[id]
+        }
+        return true
+      })
+    }
 
 
     // console.log("updatedPageAry => ", updatedPageAry)
@@ -584,29 +585,31 @@ class Content {
     // console.log("pageModel.pages => ", pageModel.pages)
 
     // 找出新增的画布，写入pages,extraFiles
-    updatePagesResult.forEach((updatePage) => {
-      const dumpPage = pageAry.find((page) => page.id === updatePage.id)
-      if (dumpPage && !dumpPage.type) {
-        // 没有type说明是画布
-        if (!pageModel.pages[dumpPage.id]) {
-          // 说明是新增的
-          pageModel.pages[dumpPage.id] = {
-            id: dumpPage.id,
-            title: dumpPage.title,
-            type: undefined,
-            fileId: updatePage.fileId,
-            fileContentId: updatePage.fileContentId
-          }
-          // 新增的默认上锁
-          axios
-            .post("/paas/api/file/updateFileCooperationUser", {
-              userId: userModel.user?.id,
+    if (window.__type__ === "mpa") {
+      updatePagesResult.forEach((updatePage) => {
+        const dumpPage = pageAry.find((page) => page.id === updatePage.id)
+        if (dumpPage && !dumpPage.type) {
+          // 没有type说明是画布
+          if (!pageModel.pages[dumpPage.id]) {
+            // 说明是新增的
+            pageModel.pages[dumpPage.id] = {
+              id: dumpPage.id,
+              title: dumpPage.title,
+              type: undefined,
               fileId: updatePage.fileId,
-              status: 1,
-            })
+              fileContentId: updatePage.fileContentId
+            }
+            // 新增的默认上锁
+            axios
+              .post("/paas/api/file/updateFileCooperationUser", {
+                userId: userModel.user?.id,
+                fileId: updatePage.fileId,
+                status: 1,
+              })
+          }
         }
-      }
-    })
+      })
+    }
 
     // console.log("updatePagesResult => ", updatePagesResult)
     // console.log("projectJson => ", projectJson)
@@ -618,7 +621,7 @@ class Content {
 
     // console.log("operationList => ", operationList)
 
-    if (pageModel.fileContent.dumpJson) {
+    if (pageModel.fileContent.dumpJson && window.__type__ === "mpa") {
       // 非空页面，拉最新的数据做合并
       // 没权限，能保存的一定是非空页面
       if (!pageModel.operable) {
@@ -712,26 +715,28 @@ class Content {
     const saves = [];
     const notSaves = [];
   
-    // 更新的
-    updatePagesResult.forEach((res) => {
-      const detail = updatedPageAry.find(({id}) => id === res.id)
-      if (detail) {
-        saves.push(detail)
-        const { id, type } = detail;
-        if (!type) {
-          this.editRecord.canvas.delete(id)
-        } else if (type === "module") {
-          this.editRecord.module.delete(id)
+    if (window.__type__ === "mpa") {
+      // 更新的
+      updatePagesResult.forEach((res) => {
+        const detail = updatedPageAry.find(({id}) => id === res.id)
+        if (detail) {
+          saves.push(detail)
+          const { id, type } = detail;
+          if (!type) {
+            this.editRecord.canvas.delete(id)
+          } else if (type === "module") {
+            this.editRecord.module.delete(id)
+          }
         }
-      }
-    })
+      })
 
-    updatedPageAry.forEach((updatedPage) => {
-      if (!updatePagesResult.find((updatePageRes) => updatePageRes.id === updatedPage.id)) {
-        // 结果里找不到dump，有修改但是没保存
-        notSaves.push(updatedPage)
-      }
-    })
+      updatedPageAry.forEach((updatedPage) => {
+        if (!updatePagesResult.find((updatePageRes) => updatePageRes.id === updatedPage.id)) {
+          // 结果里找不到dump，有修改但是没保存
+          notSaves.push(updatedPage)
+        }
+      })
+    }
 
     // console.log("updatePagesResult => ", updatePagesResult)
     // console.log("updatedPageAry => ", updatedPageAry)

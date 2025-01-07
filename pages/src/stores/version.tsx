@@ -43,7 +43,7 @@ class Version {
       // 版本号不同，需要弹出提示
       this.file.version = file.version
 
-      if (file.saveType === "app" || !pageModel.isNew) {// 新平台会返回saveType app，!isNew代表老平台
+      if (file.saveType === "app" || !pageModel.isNew || window.__type__ === "spa") {// 新平台会返回saveType app，!isNew代表老平台
         // 应用保存，包含画布保存
         this.showCompareNotification = true;
         notification.open({
