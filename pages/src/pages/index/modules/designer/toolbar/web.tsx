@@ -152,9 +152,10 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
   };
 
   const getExtraFileIds = () => {
-    return Object.entries(pageModel.pages).map(([,value]) => {
-      return value.fileId
-    }).filter((fileId) => fileId)
+    return true;
+    // return Object.entries(pageModel.pages).map(([,value]) => {
+    //   return value.fileId
+    // }).filter((fileId) => fileId)
   }
 
   return (

@@ -358,9 +358,9 @@ class Content {
   };
 
   /** 保存到不同文件，主要是更新最新的 fileContentId 到pagesMeta，然后再用于文件的保存 */
-  private saveRemotePages = async (pagesMap) => {
+  private saveRemotePages = async (pagesMap, type) => {
     // console.log("pagesMap.values() => ", pagesMap.values())
-    const pages = (pageModel.isNew && window.__type__ === "mpa") ? Array.from(pagesMap.values()).filter(({ id }) => {
+    const pages = (pageModel.isNew && window.__type__ === "mpa" && type !== 'import') ? Array.from(pagesMap.values()).filter(({ id }) => {
       const page = pageModel.pages[id]
 
       if (!page) {
@@ -548,7 +548,8 @@ class Content {
   private saveByDumpMeta = async (
     projectJson: DumpMetaJson,
     ctx,
-    extra = {}
+    extra = {},
+    type
   ) => {
     let {
       updatedPageAry,
@@ -558,7 +559,7 @@ class Content {
       projectContent,
     } = projectJson;
 
-    if (window.__type__ === "mpa") {
+    if (window.__type__ === "mpa" && type !== 'import') {
       updatedPageAry = updatedPageAry.filter((updatedPage) => {
         const { id, type } = updatedPage;
         if (!type) {
@@ -579,13 +580,13 @@ class Content {
     
     // console.log("this.changedPagesMap.needUpdate => ", this.changedPagesMap.needUpdate)
 
-    const updatePagesResult = await this.saveRemotePages(this.changedPagesMap.needUpdate);
+    const updatePagesResult = await this.saveRemotePages(this.changedPagesMap.needUpdate, type);
 
     // console.log("updatePagesResult => ", updatePagesResult)
     // console.log("pageModel.pages => ", pageModel.pages)
 
     // 找出新增的画布，写入pages,extraFiles
-    if (window.__type__ === "mpa") {
+    if (window.__type__ === "mpa" && type !== 'import') {
       updatePagesResult.forEach((updatePage) => {
         const dumpPage = pageAry.find((page) => page.id === updatePage.id)
         if (dumpPage && !dumpPage.type) {
@@ -624,7 +625,7 @@ class Content {
 
     // console.log("operationList => ", operationList)
 
-    if ((pageModel.fileContent.dumpJson || !pageModel.isInit) && window.__type__ === "mpa") {
+    if ((pageModel.fileContent.dumpJson || !pageModel.isInit) && window.__type__ === "mpa" && type !== 'import') {
       // 非空页面，拉最新的数据做合并
       // 没权限，能保存的一定是非空页面
       if (!pageModel.operable) {
@@ -763,7 +764,7 @@ class Content {
     const saves = [];
     const notCanvasSaves = [];
   
-    if (window.__type__ === "mpa") {
+    if (window.__type__ === "mpa" && type !== 'import') {
       // 更新的
       updatePagesResult.forEach((res) => {
         const detail = updatedPageAry.find(({id}) => id === res.id)
@@ -889,6 +890,10 @@ class Content {
 
   /** 导入API */
   loadContent = async (importData: ExportProjectInfo, ctx: any) => {
+    if (!pageModel.operable) {
+      message.info("未上锁，无法导入覆盖")
+      return
+    }
     const { project, pages, extra } = importData ?? ({} as ExportProjectInfo);
 
     if (!project || !Array.isArray(project?.pageAry) || !Array.isArray(pages)) {
@@ -911,7 +916,8 @@ class Content {
     await this.saveByDumpMeta(
       { ...project, updatedPageAry, deletedPageAry },
       ctx,
-      extra
+      extra,
+      "import"
     );
     message.success("导入成功，3秒后自动刷新");
 

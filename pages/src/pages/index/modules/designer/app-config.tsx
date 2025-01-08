@@ -885,7 +885,8 @@ export default function ({
           axios
             .post("/paas/api/file/updateFileCooperationUser", {
               userId: userModel.user?.id,
-              fileId: page.fileId,
+              fileId: pageModel.fileId + page.fileId,
+              parentFileId: pageModel.fileId,
               status: 1,
             })
             .then(({ data }: any) => {
@@ -936,7 +937,7 @@ export default function ({
           axios
             .post("/paas/api/file/updateFileCooperationUser", {
               userId: userModel.user?.id,
-              fileId: page.fileId,
+              fileId: pageModel.fileId + page.fileId,
               status: -1,
             })
             .then(({ data }: any) => {
