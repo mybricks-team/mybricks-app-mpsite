@@ -605,6 +605,7 @@ class Content {
               .post("/paas/api/file/updateFileCooperationUser", {
                 userId: userModel.user?.id,
                 fileId: pageModel.fileId + updatePage.fileId,
+                parentFileId: pageModel.fileId,
                 status: 1,
               })
           }
