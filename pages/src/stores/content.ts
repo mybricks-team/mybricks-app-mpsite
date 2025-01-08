@@ -604,7 +604,7 @@ class Content {
             axios
               .post("/paas/api/file/updateFileCooperationUser", {
                 userId: userModel.user?.id,
-                fileId: updatePage.fileId,
+                fileId: pageModel.fileId + updatePage.fileId,
                 status: 1,
               })
           }
