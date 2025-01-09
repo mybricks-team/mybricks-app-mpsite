@@ -564,6 +564,8 @@ class Content {
         const { id, type } = updatedPage;
         if (!type) {
           return this.editRecord.canvas.has(id) || !pageModel.pages[id]
+        } else if (type === "module") {
+          return this.editRecord.module.has(id) || !pageModel.pages[id]
         }
         return true
       })
@@ -764,6 +766,7 @@ class Content {
 
     const saves = [];
     const notCanvasSaves = [];
+    const notModuleSaves = [];
   
     if (window.__type__ === "mpa" && type !== 'import') {
       // 更新的
@@ -782,9 +785,14 @@ class Content {
 
       updatedPageAry.forEach((updatedPage) => {
         if (!updatePagesResult.find((updatePageRes) => updatePageRes.id === updatedPage.id)) {
-          // 结果里找不到dump，有修改但是没保存
-          if (this.editRecord.canvas.has(updatedPage.id)) {
-            notCanvasSaves.push(updatedPage)
+          if (updatedPage.type === "module") {
+            if (this.editRecord.module.has(updatedPage.id)) {
+              notModuleSaves.push(updatedPage)
+            }
+          } else {
+            if (this.editRecord.canvas.has(updatedPage.id)) {
+              notCanvasSaves.push(updatedPage)
+            }
           }
         }
       })

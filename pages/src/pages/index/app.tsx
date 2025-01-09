@@ -85,8 +85,8 @@ const Application = () => {
       const res = {};
 
       pageAry.forEach(({ id, title, type }) => {
-        if (type !== "module") {
-          // 只记录页面信息
+        if (!type || type === "module") {
+          // 记录页面和模块
           const pageInfo = pages.find((page) => id === page.id)
           if (pageInfo?.fileId) {
             res[id] = {

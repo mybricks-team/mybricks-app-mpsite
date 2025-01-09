@@ -865,20 +865,22 @@ export default function ({
         const user = userModel.user
         return new Promise((resolve, reject) => {
           const page = pageModel.pages[props.id]
+          // type
           if (!page) {
             return reject();
           }
+          const canvasName = page.type === "module" ? "模块" : "画布"
           const extraFile = pageModel.extraFiles[page.fileId]
           if (!extraFile || extraFile.id) {
             // 找不到 或者有user.id了
             if (extraFile) {
-              message.info(<span>当前画布已被 <b style={{ color: "#FA6400" }}>{extraFile.name || extraFile.email || extraFile.userId}</b> 上锁</span>)
+              message.info(<span>当前{canvasName}已被 <b style={{ color: "#FA6400" }}>{extraFile.name || extraFile.email || extraFile.userId}</b> 上锁</span>)
             }
             return reject()
           }
 
           if (page.updated) {
-            message.info("当前画布版本落后，不允许上锁，请刷新后再试")
+            message.info(`当前${canvasName}版本落后，不允许上锁，请刷新后再试`)
             return reject()
           }
 

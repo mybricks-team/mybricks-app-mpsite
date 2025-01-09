@@ -343,7 +343,7 @@ const Designer = ({ appData }) => {
                         </div>
                         <div>
                           {notModuleSaves.map(({ title }, index) => <><b style={{ color: "#FA6400" }}>{title}</b>{notModuleSaves.length - 1 === index ? "" : "，"}</>)}
-                          {notModuleSaves.length ? <span style={{fontWeight: 400, color: "black", fontSize: 12}}> - 没有应用锁</span> : null}
+                          {notModuleSaves.length ? <span style={{fontWeight: 400, color: "black", fontSize: 12}}> - 没有模块锁</span> : null}
                         </div>
                       </div>
                     </div>
@@ -362,7 +362,7 @@ const Designer = ({ appData }) => {
                     </div>
                   ),
                   placement: "top",
-                  description: notCanvasSaves.length ? (
+                  description: (notCanvasSaves.length || notModuleSaves.length) ? (
                     <div style={{ display: 'flex' }}>
                       <div><ExclamationCircleFilled style={{color: "#faad14", marginRight: 8, marginLeft: 2}}/>注意：</div>
                       <div style={{ flex: 1 }}>
@@ -370,6 +370,10 @@ const Designer = ({ appData }) => {
                         <div>
                           {notCanvasSaves.map(({ title }, index) => <><b style={{ color: "#FA6400" }}>{title}</b>{notCanvasSaves.length - 1 === index ? "" : "，"}</>)}
                           {notCanvasSaves.length ? <span style={{fontWeight: 400, color: "black", fontSize: 12}}> - 没有画布锁</span> : null}
+                        </div>
+                        <div>
+                          {notModuleSaves.map(({ title }, index) => <><b style={{ color: "#FA6400" }}>{title}</b>{notModuleSaves.length - 1 === index ? "" : "，"}</>)}
+                          {notModuleSaves.length ? <span style={{fontWeight: 400, color: "black", fontSize: 12}}> - 没有模块锁</span> : null}
                         </div>
                       </div>
                     </div>
@@ -431,7 +435,7 @@ const Designer = ({ appData }) => {
                           </div>
                           <div>
                             {notModuleSaves.map(({ title }, index) => <><b style={{ color: "#FA6400" }}>{title}</b>{notModuleSaves.length - 1 === index ? "" : "，"}</>)}
-                            {notModuleSaves.length ? <span style={{fontWeight: 400, color: "black", fontSize: 12}}> - 没有应用锁</span> : null}
+                            {notModuleSaves.length ? <span style={{fontWeight: 400, color: "black", fontSize: 12}}> - 没有模块锁</span> : null}
                           </div>
                         </div>
                       </div>
