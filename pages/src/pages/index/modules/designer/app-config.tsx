@@ -899,7 +899,7 @@ export default function ({
                   users: [
                     {
                       id: user.id,
-                      name: user.name,
+                      name: user.name || user.email || user.userId,
                       isMe: true,
                       avatarUrl: user.avatar === '/default_avatar.png' ? null : user.avatar,
                       readable: true,
