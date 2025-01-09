@@ -836,7 +836,7 @@ class Content {
           ...res,
           saves,
           notCanvasSaves,
-          notModuleSaves: []
+          notModuleSaves
         };
       });
 
