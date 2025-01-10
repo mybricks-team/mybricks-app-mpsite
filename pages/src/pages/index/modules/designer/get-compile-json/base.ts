@@ -509,14 +509,15 @@ function getPageDepsMap(toJson) {
     return isPageScene(item);
   });
 
-  function findOpenPopupIdsFromJson(json, popupIds = []) {
+  function findOpenPopupIdsFromJson(json, popupIds = [], findedSet = new Set()) {
     // 判断Fx的堆栈中是否有popup
     Object.values(json?.pinProxies || {}).forEach((p: any) => {
       if (p?.type === "frame") {
         const fx = toJson.global.fxFrames.find((fx) => fx.id === p?.frameId);
         // 说明连接上这个fx函数了，判断目前比较粗糙，不确定是不是靠谱
-        if (fx) {
-          findOpenPopupIdsFromJson(fx, popupIds);
+        if (fx && !findedSet.has(fx.id)) {
+          findedSet.add(fx.id) // 遍历后添加到Set，防止循环
+          findOpenPopupIdsFromJson(fx, popupIds, findedSet);
         }
       }
     });
@@ -534,7 +535,10 @@ function getPageDepsMap(toJson) {
           // console.log("scene.id", scene);
           return scene.id === com?.model?.data?.definedId;
         });
-        findOpenPopupIdsFromJson(moduleSceneJson, popupIds);
+        if (moduleSceneJson && !findedSet.has(moduleSceneJson.id)) {
+          findedSet.add(moduleSceneJson.id) // 遍历后添加到Set，防止循环
+          findOpenPopupIdsFromJson(moduleSceneJson, popupIds, findedSet);
+        }
       }
     });
 
