@@ -228,15 +228,18 @@ export const compilerMiniapp = async (
     fse.writeFileSync(
       filePath,
       `module.exports = ${JSON.stringify(tabBarJson)}`,
-      { encoding: "utf8" }
+      { encoding: "utf-8" }
     );
   }
 
   // 多端window配置兼容
   adpter.pageJsonTransform(data.appConfig.window, type);
 
+  // 获取小程序的插件配置，如果有的话，否则就是undefined
+  const { appPluginConfig, pageMapPluginConfig } = handlePluginsConfig(data.allComponents.map, data.pages, type, projectPath)
+
   // 写入全局配置
-  fse.writeJSONSync(path.resolve(projectPath, "./app.json"), data.appConfig);
+  fse.writeJSONSync(path.resolve(projectPath, "./app.json"), Object.assign({}, data.appConfig, appPluginConfig ? { plugins: appPluginConfig } : {}));
 
   // 全局样式添加
   let css = fs.readFileSync(
@@ -327,9 +330,9 @@ export const compilerMiniapp = async (
       ...(type === "weapp"
         ? {
             // 不支持递归的小程序需要添加全局的comp
-            usingComponents: {
+            usingComponents: Object.assign({
               comp: "../../comp",
-            },
+            }, pageMapPluginConfig[pageId]?.usingComponents ?? {}),
           }
         : {}),
       ...page.pageConfig,
@@ -996,4 +999,91 @@ function groupPages(pages, shouldSplitComponents, maxSize = 1.5 * 1024 * 1024) {
     deps: Array.from(pkg.deps).map(t => shouldSplitComponents.find(c => c.namespace === t)).filter(c => !!c),
     totalSize: pkg.totalSize
   }));
+}
+interface ComPluginItem {
+  provider: string,
+  version: string,
+  usingComponents: { // 参考小程序文档
+    [comp: string]: string
+  }
+}
+
+/**
+ * @description 小程序插件逻辑，比较临时
+ */
+function handlePluginsConfig (componenstMap, pages, type, projectPath) {
+  if (type !== 'weapp') { // 非微信小程序，目前不支持插件
+    return {}
+  }
+
+  const appPlugins = {}
+  const pagePlugins = {}
+
+  let compHtml = '';
+  let componentTags = []
+
+  pages.forEach(page => {
+    const { id, pageDeps } = page;
+
+    pagePlugins[id] = {}
+
+    Object.keys(componenstMap).forEach(key => {
+      const [namespace, version] = key.split('@') ?? []
+      if (pageDeps.includes(namespace)) {
+        const com = componenstMap[key]
+        if (com?.miniapp?.plugin) {
+          for (const pluginName in com.miniapp.plugin) {
+            const { provider, version, usingComponents } = com.miniapp.plugin[pluginName] as ComPluginItem;
+            Object.assign(appPlugins, { [pluginName]: { provider, version } })
+            Object.assign(pagePlugins[id], { usingComponents })
+
+            // TODO，目前先写死怎么生成wxml的，后面替换下
+            let appendHtml = ''
+            for (const componentTag in usingComponents) {
+              componentTags.push(componentTag)
+              switch (true) {
+                case componentTag === 'xzb-video': {
+                  for (let index = 0; index < 15; index++) {
+                    appendHtml += `
+<template name="tmpl_${index}_xzb-video">
+  <xzb-video  src="{{i.src}}" controls="{{i.controls}}" style="{{i.st}}" autoplay="{{i.autoplay}}" title="{{i.title}}" loop="{{i.loop}}" poster="{{i.poster}}" bindvideoloaded="eh" id="{{i.uid||i.sid}}" data-sid="{{i.sid}}">
+    <block wx:for="{{i.cn}}" wx:key="sid">
+      ${index === 14 ? '<template is="{{xs.e(15)}}" data="{{i:item,c:c,l:l}}" />' : '<template is="{{xs.a(c, item.nn, l)}}" data="{{i:item,c:c+1,l:xs.f(l,item.nn)}}" />'}
+      <template is="{{xs.a(c, item.nn, l)}}" data="{{i:item,c:c+1,l:xs.f(l,item.nn)}}" />
+    </block>
+  </xzb-video>
+</template>
+`
+                  }
+                }
+              }
+            }
+            compHtml += appendHtml
+          }
+        }
+      }
+    })
+
+    if (Object.keys(pagePlugins[id]).length === 0) {
+      delete pagePlugins[id]
+    }
+  })
+
+  // 替换comp.wxml文件 和 utils.wxs文件
+  if (!!compHtml) {
+    const content = fse.readFileSync(path.resolve(projectPath, 'base.wxml'), 'utf-8');
+    fse.writeFileSync(path.resolve(projectPath, 'base.wxml'), content + compHtml, 'utf-8');
+
+    const utilsContent = fse.readFileSync(path.resolve(projectPath, 'utils.wxs'), 'utf-8');
+    fse.writeFileSync(
+      path.resolve(projectPath, 'utils.wxs'),
+      utilsContent.replace('["7","0","21","5","2","12","6","4","62","63","31","24","59","68","69","57"]', `["7","0","21","5","2","12","6","4","62","63","31","24","59","68","69","57",${componentTags.map(t => `"${t}"`).join(',')}]`),
+      'utf-8'
+    );
+  }
+
+  return {
+    appPluginConfig: Object.keys(appPlugins).length > 0 ? appPlugins : void 0,
+    pageMapPluginConfig: pagePlugins,
+  }
 }
