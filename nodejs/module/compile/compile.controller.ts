@@ -15,7 +15,7 @@ import LimitInterceptor from "./../../common/interceptor/limitInterceptor";
 import * as path from "path";
 import * as fs from "fs";
 import * as fse from "fs-extra";
-import * as ci from "miniprogram-ci";
+// import * as ci from "miniprogram-ci";
 // import { minidev } from "minidev";
 import API from "@mybricks/sdk-for-app/api";
 import { AppProject } from './api';
@@ -32,6 +32,15 @@ import { compilerH5, compilerMiniapp } from "./compiler";
 import { CompileType } from "./compiler/types";
 import { getNextVersion } from "../tools/analysis";
 import axios from "axios";
+
+let ci
+try {
+  ci = require('miniprogram-ci')
+} catch (error) {
+  
+}
+
+const existMiniprogramCI = !!ci;
 
 // import * as profiler from 'v8-profiler-node8';
 
@@ -96,6 +105,10 @@ export default class CompileController {
     @Req() req: any
   ) {
     try {
+      if (!existMiniprogramCI) {
+        throw new Error("当前平台环境不支持小程序上传，请联系管理员");
+      }
+
       fse.ensureDirSync(tempFolderPath);
 
       const projectName = `project-${fileId}-preview-${type}`;
@@ -194,6 +207,10 @@ export default class CompileController {
     @Req() req: any
   ) {
     try {
+      if (!existMiniprogramCI) {
+        throw new Error("当前平台环境不支持小程序上传，请联系管理员");
+      }
+
       fse.ensureDirSync(tempFolderPath);
 
       const projectName = `project-${fileId}-build-${type}`;

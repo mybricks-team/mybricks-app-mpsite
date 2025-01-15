@@ -7,14 +7,17 @@ const zip = new JSZip();
 /** 根目录 */
 const rootDir = zip.folder(packageJSON.name);
 // /** 遍历文件 */
-function read (zip, files, dirPath) {
+function read (zip, files, dirPath, filterCallback) {
   files.forEach(function (fileName) {
+    if (!filterCallback(fileName)) {
+      return
+    }
     const fillPath = dirPath + '/' + fileName;
     const file = fs.statSync(fillPath);
     if (file.isDirectory()) {
       const childDir = zip.folder(fileName);
       const files = fs.readdirSync(fillPath)
-      read(childDir, files, fillPath);
+      read(childDir, files, fillPath, filterCallback);
     } else {
       // console.log(fillPath);
       zip.file(fileName, fs.readFileSync(fillPath));
@@ -42,14 +45,57 @@ const filterFileName = [
   'sync_offline.js',
   '.github',
   '.tmp',
-  '.download-assets'
+  '.download-assets',
+
+  'miniprogram-ci',
+  'sass',
+  'less',
+  'core-js',
+  'babel-register',
+  'caniuse-lite',
+  'reactivity',
+  'cos-nodejs-sdk-v5',
+  'chokidar',
+  'get-proxy',
+  'html-minifier',
+  'jimp',
+  'licia',
+  'html-minifier-terser',
+  'moment-timezone',
+  'ajv',
+  'request',
+  'preset-env',
+  'regenerate-unicode-properties',
+  'svgo',
+  'html-minifier',
+  'css-tree',
+  'har-validator',
+  'acorn',
+  'glob',
+  'path-scurry',
+  'core-js-compat',
+  'pixelmatch',
+  'babel-core',
+  'babel-generator',
+  'utif',
+  'needle',
+  'bmp-js',
+  'yaml',
+  'mdn-data',
+  'autoprefixer',
+  'psl',
+  'exif-parser',
+  'electron-to-chromium'
 ];
 
-const files = fs.readdirSync(zipDirPath).filter(filename => {
-  return filterFileName.indexOf(filename) === -1 && filename.indexOf('.zip') === -1;
-});
+// const files = fs.readdirSync(zipDirPath).filter(filename => {
+//   console.log(filename)
+//   return filterFileName.indexOf(filename) === -1 && filename.indexOf('.zip') === -1;
+// });
 
-read(rootDir, files, zipDirPath);
+read(rootDir, fs.readdirSync(zipDirPath), zipDirPath, (filename => {
+  return filterFileName.indexOf(filename) === -1 && filename.indexOf('.zip') === -1;
+}));
 
 zip.generateAsync({
   type: 'nodebuffer',

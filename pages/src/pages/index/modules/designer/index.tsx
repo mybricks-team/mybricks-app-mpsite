@@ -144,6 +144,7 @@ const Designer = ({ appData }) => {
     comlibs: getLibsFromConfig(appData),
     latestComlibs: [],
     hasMaterialApp: appData.hasMaterialApp,
+    setting: appData.config || {},
   });
 
   const [latestComlibs, setLatestComlibs] = useState<[]>();

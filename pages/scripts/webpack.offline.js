@@ -5,9 +5,12 @@ const path = require("path");
 const common = require("./webpack.common");
 const BuildPlugin = require('./buildplugin')
 const HtmlWebpackInlineSourcePlugin = require('@effortlessmotion/html-webpack-inline-source-plugin')
+const Plugins = require('@mybricks/sdk-for-app/plugin');
 // const config = require('../../config.prod.json');
 const rootPath = path.resolve(__dirname, "./../../");
 const outputPath = path.resolve(rootPath, './assets')
+
+const { generateAssetMapPlugin } = Plugins.default;
 
 module.exports = merge(common, {
   mode: "production",
@@ -31,7 +34,7 @@ module.exports = merge(common, {
       outputPath
     }),
 
-    new HtmlWebpackPlugin({
+    ...generateAssetMapPlugin({
       filename: "index.html",
       template: path.resolve(__dirname, "../assets/index.html"),
       chunks: ["index"],
