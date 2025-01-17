@@ -52,6 +52,8 @@ export const getPageCssMap = (pageToJson) => {
   Object.keys(jsonComs).forEach((key) => {
     let styleAry = jsonComs[key]?.model?.style?.styleAry || [];
 
+    console.log('styleAry', styleAry)
+
     pageCss[key] = styleAry.map((item) => {
       let { selector, css } = item;
       if(selector?.includes("_key")) {
@@ -93,18 +95,18 @@ export const getPageCssMap = (pageToJson) => {
           css: decodeURIComponent(_styleCode).replaceAll(
             "__id__",
             jsonComs[key]["id"]
-          ),
+          ).replace(/data-com-id/g, "data-key"),
         });
 
-        // 小程序无法兼容 #id #id 重复的写法，hack 一下再说
+        // 小程序的 #id 只能匹配第一个Dom，如果在循环列表中，会有问题，hack 一下再说
         pageCss[key].push({
           selector: null,
           css: decodeURIComponent(_styleCode).replaceAll(
             "#__id__",
             `.${jsonComs[key]["id"]}`
-          ),
+          ).replace(/data-com-id/g, "data-key"),
         });
-        // delete jsonComs[key]?.model?.data?._styleCode;
+        delete jsonComs[key]?.model?.data?._styleCode;
       }
     }
   });
