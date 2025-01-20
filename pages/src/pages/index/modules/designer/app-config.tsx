@@ -27,7 +27,7 @@ import { message } from "antd";
 
 // const DEFAULT_AI_MODEL = 'openai/gpt-4o-mini';
 
-const DEFAULT_AI_MODEL = 'deepseek-chat';
+const DEFAULT_AI_MODEL = "deepseek-chat";
 
 // 加密展示
 // 输入一个字符串，一行或者多行，需要把中间的内容隐藏，只显示前面几个字符和后面几个字符，中间用*号代替
@@ -73,7 +73,7 @@ export default function ({
   designerRef,
   FxService,
   appConfig,
-  setOperable
+  setOperable,
 }) {
   // console.log("应用设置: ", appConfig);
   return {
@@ -97,8 +97,8 @@ export default function ({
           limit: 0,
         },
         saveRevertData: {
-          isMpa: true
-        }
+          isMpa: true,
+        },
       }),
       toolsPlugin({
         dump: contentModel.dump,
@@ -643,6 +643,16 @@ export default function ({
           },
         ],
       },
+      nav: {
+        float:true,
+        comShortcuts: [
+          {
+            title: "AI组件",
+            icon: <svg viewBox="0 0 1024 1024" width="48" height="48"><path d="M487.061859 314.542494L617.31068 709.457506H540.741047l-26.839594-80.445651h-141.876875l-26.839594 80.445651h-76.78903l130.468219-394.915012h88.197686z m-46.073418 92.000571L394.988155 544.617055h88.197686L441.061573 406.543065zM755.530935 318.345379h-69.036995v394.915012h69.036995v-394.915012z" fill="currentColor" p-id="2721"></path><path d="M832.1737 908.889587H195.629206c-53.679189 0-99.679474-46.073418-99.679474-99.679474V214.789887c0-53.679189 46.000286-99.679474 99.679474-99.679474h636.544494c53.679189 0 99.679474 46.073418 99.679474 99.679474v594.420226c-3.802885 53.679189-46.000286 99.679474-99.679474 99.679474zM195.629206 191.826311a24.718754 24.718754 0 0 0-23.036709 22.963576v594.420226c0 11.481788 11.554921 22.963577 23.036709 22.963576h636.544494a24.718754 24.718754 0 0 0 23.036709-22.963576V214.789887a24.718754 24.718754 0 0 0-23.036709-22.963576H195.629206zM38.394526 302.987573a38.394515 38.394515 0 0 0 0 76.715898h57.555206V302.987573H38.394526z" fill="currentColor" p-id="2722"></path><path d="M985.605495 383.579489a38.394515 38.394515 0 0 0 0-76.715898h-57.482074v76.715898h57.482074zM38.394526 644.296529a38.394515 38.394515 0 0 0 0 76.715898h57.555206V640.493644H38.394526v3.802885zM985.605495 644.369661h-57.555206v80.445651h57.555206A38.394515 38.394515 0 0 0 1023.926878 686.493929c0-26.839594-15.357806-42.1974-38.321383-42.1974zM383.506367 38.394515a38.394515 38.394515 0 0 0-76.715898 0v76.715898h76.715898V38.394515zM303.060716 985.605485a38.394515 38.394515 0 0 0 76.715898 0v-76.715898h-76.78903v76.715898zM644.369672 985.605485c0 22.963577 19.087559 38.321383 38.321383 38.321383 19.160691 0 38.321383-19.160691 38.321382-38.321383v-76.715898H640.493654v76.715898h3.802886zM720.939305 38.394515A38.394515 38.394515 0 0 0 682.617922 0.073132c-19.160691 0-38.321383 19.160691-38.321382 38.321383v76.715898h80.44565V38.394515h-3.802885z" fill="currentColor" p-id="2723"></path></svg>,
+            namespace: "mybricks.taro.ai",
+          },
+        ],
+      },
     },
     toplView: {
       title: "交互",
@@ -862,26 +872,34 @@ export default function ({
     },
     permission: {
       applyCanvas(props) {
-        const user = userModel.user
+        const user = userModel.user;
         return new Promise((resolve, reject) => {
-          const page = pageModel.pages[props.id]
+          const page = pageModel.pages[props.id];
           // type
           if (!page) {
             return reject();
           }
-          const canvasName = page.type === "module" ? "模块" : "画布"
-          const extraFile = pageModel.extraFiles[page.fileId]
+          const canvasName = page.type === "module" ? "模块" : "画布";
+          const extraFile = pageModel.extraFiles[page.fileId];
           if (!extraFile || extraFile.id) {
             // 找不到 或者有user.id了
             if (extraFile) {
-              message.info(<span>当前{canvasName}已被 <b style={{ color: "#FA6400" }}>{extraFile.name || extraFile.email || extraFile.userId}</b> 上锁</span>)
+              message.info(
+                <span>
+                  当前{canvasName}已被{" "}
+                  <b style={{ color: "#FA6400" }}>
+                    {extraFile.name || extraFile.email || extraFile.userId}
+                  </b>{" "}
+                  上锁
+                </span>
+              );
             }
-            return reject()
+            return reject();
           }
 
           if (page.updated) {
-            message.info(`当前${canvasName}版本落后，不允许上锁，请刷新后再试`)
-            return reject()
+            message.info(`当前${canvasName}版本落后，不允许上锁，请刷新后再试`);
+            return reject();
           }
 
           axios
@@ -901,38 +919,41 @@ export default function ({
                       id: user.id,
                       name: user.name || user.email || user.userId,
                       isMe: true,
-                      avatarUrl: user.avatar === '/default_avatar.png' ? null : user.avatar,
+                      avatarUrl:
+                        user.avatar === "/default_avatar.png"
+                          ? null
+                          : user.avatar,
                       readable: true,
-                      writeable: true
-                    }
-                  ]
-                })
-                extraFile.id = userModel.user.id
-                extraFile.name = userModel.user.name
-                extraFile.email = userModel.user.email
-                extraFile.userId = userModel.user.email
+                      writeable: true,
+                    },
+                  ],
+                });
+                extraFile.id = userModel.user.id;
+                extraFile.name = userModel.user.name;
+                extraFile.email = userModel.user.email;
+                extraFile.userId = userModel.user.email;
 
-                message.success(`${page.title} 上锁成功`)
-                let operable = pageModel.operable
+                message.success(`${page.title} 上锁成功`);
+                let operable = pageModel.operable;
                 if (!operable) {
-                  pageModel.canSave = true
-                  setOperable(true)
+                  pageModel.canSave = true;
+                  setOperable(true);
                 }
               } else {
-                console.error("更新协作关系失败 => ", data.message)
-                message.error(data.message)
-                reject(data.message)
+                console.error("更新协作关系失败 => ", data.message);
+                message.error(data.message);
+                reject(data.message);
               }
             })
             .catch((e: any) => {
-              console.error("更新协作关系失败 => ", e)
-              reject(e)
+              console.error("更新协作关系失败 => ", e);
+              reject(e);
             });
-        })
+        });
       },
       cancelCanvas(props) {
         return new Promise((resolve, reject) => {
-          const page = pageModel.pages[props.id]
+          const page = pageModel.pages[props.id];
           if (!page) {
             return reject();
           }
@@ -947,52 +968,53 @@ export default function ({
                 resolve({
                   type: "canvas",
                   canvasId: props.id,
-                  users: []
-                })
+                  users: [],
+                });
 
-                const extraFile = pageModel.extraFiles[pageModel.pages[props.id].fileId]
+                const extraFile =
+                  pageModel.extraFiles[pageModel.pages[props.id].fileId];
                 if (extraFile && extraFile.id === userModel.user.id) {
-                  delete extraFile.id
+                  delete extraFile.id;
                 }
 
-                let operable = pageModel.operable
+                let operable = pageModel.operable;
 
                 if (!operable) {
                   // 没有权限，判断下还有没有画布权限
                   const user = userModel.user;
                   Object.entries(pageModel.pages).find(([pageId, pageInfo]) => {
-                    const extraFile = pageModel.extraFiles[pageInfo.fileId]
+                    const extraFile = pageModel.extraFiles[pageInfo.fileId];
                     if (pageId === props.id) {
-                      delete extraFile.id
+                      delete extraFile.id;
                     }
                     if (extraFile.id) {
                       if (user.id === extraFile.id) {
-                        operable = true
-                        return true
-                      } 
+                        operable = true;
+                        return true;
+                      }
                     }
-                    return false
-                  })
-        
-                  pageModel.canSave = operable
+                    return false;
+                  });
 
-                  setOperable(operable)
+                  pageModel.canSave = operable;
+
+                  setOperable(operable);
                 }
 
-                message.success(`${page.title} 解锁成功`)
+                message.success(`${page.title} 解锁成功`);
               } else {
-                console.error("更新协作关系失败 => ", data.message)
-                message.error(data.message)
-                reject(data.message)
+                console.error("更新协作关系失败 => ", data.message);
+                message.error(data.message);
+                reject(data.message);
               }
             })
             .catch((e: any) => {
-              console.error("更新协作关系失败 => ", e)
-              reject(e)
+              console.error("更新协作关系失败 => ", e);
+              reject(e);
             });
-        })
+        });
       },
-    }
+    },
   };
 }
 
@@ -1123,9 +1145,9 @@ const getAiView = (enableAI, option) => {
             usedModel = "anthropic/claude-3.5-sonnet";
             break;
           }
-          case ['architect'].includes(extraOption.aiRole): {
-            usedModel = 'openai/gpt-4o-2024-11-20';
-            break
+          case ["architect"].includes(extraOption.aiRole): {
+            usedModel = "openai/gpt-4o-2024-11-20";
+            break;
           }
           default: {
             usedModel = !!model ? model : undefined;
