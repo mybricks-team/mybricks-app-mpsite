@@ -21,6 +21,7 @@ import { getAiEncryptData } from "./utils/get-ai-encrypt-data";
 import extendsConfig from "./configs/extends";
 import systemContent from "./system.txt";
 import { message } from "antd";
+// import  AICom  from "../../../../../public/ai-com"
 // import typeConfig from "./configs/type";
 // import { PcEditor } from "/Users/stuzhaoxing-office/Program/editors-pc-common/src/index";
 // import system from "../../../../../../system.txt"
@@ -104,7 +105,7 @@ export default function ({
         dump: contentModel.dump,
         loadContent: (importData) => contentModel.loadContent(importData, ctx),
       }),
-      VarBind(),
+      // VarBind(),
     ],
     // comLibLoader: comlibLoader(ctx),
     // comLibLoader: () => {
