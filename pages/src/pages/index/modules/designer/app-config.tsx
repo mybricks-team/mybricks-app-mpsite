@@ -21,6 +21,7 @@ import { getAiEncryptData } from "./utils/get-ai-encrypt-data";
 import extendsConfig from "./configs/extends";
 import systemContent from "./system.txt";
 import { message } from "antd";
+import  AICom  from "../../../../../public/ai-com"
 // import typeConfig from "./configs/type";
 // import { PcEditor } from "/Users/stuzhaoxing-office/Program/editors-pc-common/src/index";
 // import system from "../../../../../../system.txt"
@@ -643,6 +644,16 @@ export default function ({
           },
         ],
       },
+      nav: {
+        float:true,
+        comShortcuts: [
+          {
+            title: 'AI组件',
+            icon: <AICom></AICom>,
+            namespace: 'mybricks.taro.ai'
+          }
+        ],
+      }
     },
     toplView: {
       title: "交互",
