@@ -812,10 +812,10 @@
   dependencies:
     nanoid "4.0.0"
 
-"@mybricks/sdk-for-app@^1.0.55":
-  version "1.0.55"
-  resolved "https://registry.npmjs.org/@mybricks/sdk-for-app/-/sdk-for-app-1.0.55.tgz"
-  integrity sha512-9UaQd5Zxfh0S3t76LyawuYhivArkXZSb+siMewSJgjb9DMI7xSrNowIhP+iRsEoxd1bdiGVPKJtOh0euvBrnUQ==
+"@mybricks/sdk-for-app@^1.0.56":
+  version "1.0.56"
+  resolved "https://registry.npmjs.org/@mybricks/sdk-for-app/-/sdk-for-app-1.0.56.tgz"
+  integrity sha512-lgQpH3yb5LWLM1oXlB36iM85s8OIIGTjRmu3+16O2KZt1PmbRa/hLOPojvQ4sj/7JrgY9M5pVExy+FkUCUyqvg==
   dependencies:
     dayjs "^1.11.7"
     dom-to-image "^2.6.0"
