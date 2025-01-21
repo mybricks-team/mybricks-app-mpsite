@@ -2,9 +2,9 @@ const Babel = window.Babel as any;
 const Terser = window.Terser as any;
 
 const TerserMinify = async (code) => {
-  const result = await Terser.minify(code)
-  return result.code
-}
+  const result = await Terser.minify(code);
+  return result.code;
+};
 
 /** 目前只编译有限的几个API */
 const babelScript = (code) => {
@@ -31,17 +31,17 @@ const repeatFnCodeCollector = (() => {
       if (!repeatIOFnMap.has(functionCode)) {
         repeatIOFnMap.set(functionCode, ++repeatIOFnCount);
       }
-      return `$n['${repeatIOFnMap.get(functionCode)}']`
+      return `$n['${repeatIOFnMap.get(functionCode)}']`;
     },
     /** 生成提取的代码 */
     generate: () => {
-      let allCodes = 'var $n = {};';
+      let allCodes = "var $n = {};";
       repeatIOFnMap.forEach((id, fn) => {
         allCodes += `$n['${id}'] = ${fn};`;
-      })
-      return allCodes
-    }
-  }
+      });
+      return allCodes;
+    },
+  };
 })();
 
 const JS_HEADER = `
@@ -93,7 +93,7 @@ function _execJs (script) {
       console.error('js计算组件运行错误.', ex);
     }
   }
-}`
+}`;
 
 const jsCodeCollector = () => {
   const codeMap = new Map();
@@ -103,7 +103,7 @@ const jsCodeCollector = () => {
     collect: (functionCode) => {
       if (!codeMap.has(functionCode)) {
         codeMap.set(functionCode, ++codeKey);
-        return `$js['${codeMap.get(functionCode)}']`
+        return `$js['${codeMap.get(functionCode)}']`;
       }
     },
     /** 生成提取的代码 */
@@ -113,19 +113,19 @@ const jsCodeCollector = () => {
       var $js = {};`;
       codeMap.forEach((id, fn) => {
         allCodes += `$js['${id}'] = ${fn};`;
-      })
-      return allCodes
-    }
-  }
-}
+      });
+      return allCodes;
+    },
+  };
+};
 
 /** 根据Json生成所有页面的Js，并按引用删除数据 */
 export const getAllModulesJsCode = async (pages, plugins, options = {}) => {
   const { isH5 } = options;
   let allModules = ``;
-  
+
   //解析「连接器」插件并生成到 modules
-  let connectorsCode = '';
+  let connectorsCode = "";
   plugins["@mybricks/plugins/service"].connectors.forEach((item) => {
     let content = `;comModules['${item.id}'] = {
       id: '${item.id}',
@@ -146,7 +146,6 @@ export const getAllModulesJsCode = async (pages, plugins, options = {}) => {
   });
 
   allModules += repeatFnCodeCollector.generate() + connectorsCode;
-  
 
   //解析 JS计算 + AI组件
   /** 全部代码 */
@@ -159,13 +158,19 @@ export const getAllModulesJsCode = async (pages, plugins, options = {}) => {
     let jsonComs = getComsFromPageJson(json);
 
     Object.keys(jsonComs ?? {}).forEach((key) => {
-
       const pageId = jsonComs[key].pageId;
 
       try {
         //解析新版「JS计算」并生成到 modules
-        if (jsonComs[key].def.namespace === "mybricks.taro._muilt-inputJs") {
-          let realJsCode = jsonComs[key].model.data?.fns?.code || jsonComs[key].model.data?.fns?.transformCode || jsonComs[key].model.data?.fns;
+        if (
+          jsonComs[key].def.namespace === "mybricks.taro._muilt-inputJs" ||
+          jsonComs[key].def.namespace === "mybricks.core-comlib.js-ai"
+        ) {
+
+          let realJsCode =
+            jsonComs[key].model.data?.fns?.code ||
+            jsonComs[key].model.data?.fns?.transformCode ||
+            jsonComs[key].model.data?.fns;
 
           if (!realJsCode) {
             return;
@@ -176,16 +181,17 @@ export const getAllModulesJsCode = async (pages, plugins, options = {}) => {
             comModules['${key}'] = _execJs(js_${key});
             `;
 
-          if (!isH5 && pageId) { // 小程序环境且属于某一个页面的话，需要将js文件分到每一个页面自己的文件下
+          if (!isH5 && pageId) {
+            // 小程序环境且属于某一个页面的话，需要将js文件分到每一个页面自己的文件下
             if (!pagesJsCode[pageId]) {
-              pagesJsCode[pageId] = JS_HEADER
+              pagesJsCode[pageId] = JS_HEADER;
             }
-            pagesJsCode[pageId] += content
+            pagesJsCode[pageId] += content;
           } else {
             jsCode += content;
           }
 
-          delete jsonComs[key].model.data.inputSchema
+          delete jsonComs[key].model.data.inputSchema;
           delete jsonComs[key].model.data.extraLib;
           delete jsonComs[key].model.data.fns;
         }
@@ -196,25 +202,32 @@ export const getAllModulesJsCode = async (pages, plugins, options = {}) => {
           const code = com.model.data._renderCode;
 
           // 注意，这里要修改这个key，小程序为_key，web为data-key，运行时的AIRender也是两个环境不一样的，目前无法统一，试过了
-          if (code) { // 有code才生成
-            if (!isH5) {  // 小程序环境
+          if (code) {
+            // 有code才生成
+            if (!isH5) {
+              // 小程序环境
               let content = `
               ;const ui_${key} = (exports, require) => {
-                ${decodeURIComponent(com.model.data._renderCode).replace(/data-com-key/g, '_key').replace(/data-com-id/g, '_key')}
-              };comModules['${key}'] = ui_${key};` 
+                ${decodeURIComponent(com.model.data._renderCode)
+                  .replace(/data-com-key/g, "_key")
+                  .replace(/data-com-id/g, "_key")}
+              };comModules['${key}'] = ui_${key};`;
 
               if (pageId) {
                 if (!pagesJsCode[pageId]) {
-                  pagesJsCode[pageId] = JS_HEADER
+                  pagesJsCode[pageId] = JS_HEADER;
                 }
-                pagesJsCode[pageId] += content
+                pagesJsCode[pageId] += content;
               } else {
                 jsCode += content;
               }
               delete com.model.data._renderCode;
-            } else { // H5 环境
+            } else {
+              // H5 环境
               com.model.data._renderCode = encodeURIComponent(
-                decodeURIComponent(com.model.data._renderCode).replace(/data-com-key/g, 'data-key').replace(/data-com-id/g, 'data-key')
+                decodeURIComponent(com.model.data._renderCode)
+                  .replace(/data-com-key/g, "data-key")
+                  .replace(/data-com-id/g, "data-key")
               );
             }
           }
@@ -224,9 +237,8 @@ export const getAllModulesJsCode = async (pages, plugins, options = {}) => {
       }
     });
 
-
     // 删除标记
-    deleteMarkForComs(jsonComs)
+    deleteMarkForComs(jsonComs);
   }
 
   allModules += jsCode;
@@ -259,25 +271,31 @@ export const getAllModulesJsCode = async (pages, plugins, options = {}) => {
   }
 
   if (isH5) {
-    const all = encodeURIComponent(await TerserMinify(await babelScript(allModules)));
+    const all = encodeURIComponent(
+      await TerserMinify(await babelScript(allModules))
+    );
 
     let result = {
-      all
-    }
-    return result
+      all,
+    };
+    return result;
   } else {
-    const all = encodeURIComponent(await TerserMinify(await babelScript(allModules)));
+    const all = encodeURIComponent(
+      await TerserMinify(await babelScript(allModules))
+    );
     const pages = {};
 
     for (const pageId in pagesJsCode) {
-      pages[pageId] = encodeURIComponent(await TerserMinify(await babelScript(pagesJsCode[pageId])))
+      pages[pageId] = encodeURIComponent(
+        await TerserMinify(await babelScript(pagesJsCode[pageId]))
+      );
     }
 
     let result = {
       all,
-      pages
-    }
-    return result
+      pages,
+    };
+    return result;
   }
 };
 
@@ -319,27 +337,31 @@ function getComsFromPageJson(pageJson) {
 }
 
 /** 给所有组件都加上标记，定义归属的页面 */
-function addMarkForComsByScene (coms, scene) {
+function addMarkForComsByScene(coms, scene) {
   if (isPageSceneJson(scene)) {
-    Object.keys(coms ?? {}).forEach(comKey => {
-      coms[comKey].pageId = scene.id
-    })
+    Object.keys(coms ?? {}).forEach((comKey) => {
+      coms[comKey].pageId = scene.id;
+    });
   }
-  return coms
+  return coms;
 }
 
 /** 删除组件的标记 */
-function deleteMarkForComs (coms) {
-  Object.keys(coms ?? {}).forEach(comKey => {
+function deleteMarkForComs(coms) {
+  Object.keys(coms ?? {}).forEach((comKey) => {
     if (coms[comKey].pageId) {
-      delete coms[comKey].pageId
+      delete coms[comKey].pageId;
     }
-  })
+  });
 }
 
 /** 判断是否是页面级Json */
 function isPageSceneJson(sceneJson) {
-  return sceneJson.type !== 'popup' && sceneJson.type !== 'module' && sceneJson.type !== 'fx'
+  return (
+    sceneJson.type !== "popup" &&
+    sceneJson.type !== "module" &&
+    sceneJson.type !== "fx"
+  );
 }
 
 function camelToKebab(str) {

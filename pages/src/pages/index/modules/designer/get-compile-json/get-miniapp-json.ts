@@ -140,8 +140,9 @@ const genLazyloadComs = async (comlibs, toJSON) => {
     "mybricks.core-comlib.selection",
     "mybricks.core-comlib.group",
     "mybricks.core-comlib.service",
+    "mybricks.core-comlib.js-ai",
   ];
-
+  
   let definedComsDeps = [];
   let modulesDeps = [];
 
