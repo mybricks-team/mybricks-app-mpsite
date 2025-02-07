@@ -106,7 +106,7 @@ export const getPageCssMap = (pageToJson) => {
             `.${jsonComs[key]["id"]}`
           ).replace(/data-com-id/g, "data-key"),
         });
-        delete jsonComs[key]?.model?.data?._styleCode;
+        // delete jsonComs[key]?.model?.data?._styleCode; // 不能 delete，ai 组件在模块内，然后被多个页面使用，会导致样式丢失
       }
     }
   });
