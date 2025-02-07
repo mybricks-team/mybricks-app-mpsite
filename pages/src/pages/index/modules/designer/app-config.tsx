@@ -753,7 +753,12 @@ export default function ({
                     localStorage.getItem("_MYBRICKS_GLOBAL_HEADERS_") ||
                     '{"data": {}}';
                   mybricksGlobalHeaders = JSON.parse(mybricksGlobalHeaders);
-                  Object.assign(newOptions.headers, mybricksGlobalHeaders.data);
+
+                  // 优先级应该是请求头 > 全局请求头
+                  newOptions.headers = {
+                    ...mybricksGlobalHeaders.data,
+                    ...newOptions.headers,
+                  };
 
                   /**
                    * 如果 url 不以 http 开头，添加默认域名
@@ -794,7 +799,11 @@ export default function ({
           let mybricksGlobalHeaders =
             localStorage.getItem("_MYBRICKS_GLOBAL_HEADERS_") || '{"data": {}}';
           mybricksGlobalHeaders = JSON.parse(mybricksGlobalHeaders);
-          Object.assign(headers, mybricksGlobalHeaders.data);
+
+          headers = {
+            ...mybricksGlobalHeaders.data,
+            ...headers,
+          };
 
           /**
            * 如果 url 不以 http 开头，添加默认域名
@@ -866,10 +875,11 @@ export default function ({
                       localStorage.getItem("_MYBRICKS_GLOBAL_HEADERS_") ||
                       '{"data": {}}';
                     mybricksGlobalHeaders = JSON.parse(mybricksGlobalHeaders);
-                    Object.assign(
-                      newOptions.headers,
-                      mybricksGlobalHeaders.data
-                    );
+
+                    newOptions.headers = {
+                      ...mybricksGlobalHeaders.data,
+                      ...newOptions.headers,
+                    };
 
                     return newOptions;
                   },
