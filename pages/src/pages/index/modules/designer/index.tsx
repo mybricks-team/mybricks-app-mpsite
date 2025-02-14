@@ -28,7 +28,7 @@ import { getLibsFromConfig } from "@/utils/getComlibs";
 import { sleep } from "@/utils";
 import { CompileType } from "@/types";
 import { DESIGNER_STATIC_PATH } from "../../../../constants";
-import { ExclamationCircleFilled, CheckCircleFilled } from "@ant-design/icons"
+import { ExclamationCircleFilled, CheckCircleFilled } from "@ant-design/icons";
 
 // message.success(
 //  "保存成功",
@@ -175,7 +175,7 @@ const Designer = ({ appData }) => {
         return appConfig.designer?.url || DESIGNER_STATIC_PATH;
       }
     }
-    return DESIGNER_STATIC_PATH
+    return DESIGNER_STATIC_PATH;
   }, [appConfig]);
 
   useMemo(() => {
@@ -285,7 +285,7 @@ const Designer = ({ appData }) => {
     pageModel.publishLoading = true;
     // 有一些大项目后面会CPU 100%，先让loading展示出来
     await sleep(300);
-  }, [])
+  }, []);
 
   /**
    * 保存
@@ -293,11 +293,11 @@ const Designer = ({ appData }) => {
   const onSave = useCallback(async (tip = true) => {
     const userId = userModel.user?.id;
     if (!userId) {
-      return true
+      return true;
     }
 
     if (!pageModel.canSave) {
-      return true
+      return true;
     }
 
     await contentModel
@@ -324,33 +324,99 @@ const Designer = ({ appData }) => {
               notification.open({
                 message: (
                   <div>
-                    <CheckCircleFilled style={{color: "#52c41a", marginRight: 8}}/>
+                    <CheckCircleFilled
+                      style={{ color: "#52c41a", marginRight: 8 }}
+                    />
                     <span>没有内容保存</span>
                   </div>
                 ),
-                placement: 'top',
-                description: (contentModel.editRecord.global || notCanvasSaves.length || notModuleSaves.length) ? (
-                  <div style={{ display: 'flex' }}>
-                    <div><ExclamationCircleFilled style={{color: "#faad14", marginRight: 8, marginLeft: 2}}/>注意：</div>
-                    <div style={{ flex: 1 }}>
-                      <div>以下内容未保存</div>
+                placement: "top",
+                description:
+                  contentModel.editRecord.global ||
+                  notCanvasSaves.length ||
+                  notModuleSaves.length ? (
+                    <div style={{ display: "flex" }}>
                       <div>
+                        <ExclamationCircleFilled
+                          style={{
+                            color: "#faad14",
+                            marginRight: 8,
+                            marginLeft: 2,
+                          }}
+                        />
+                        注意：
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <div>以下内容未保存</div>
                         <div>
-                          {contentModel.editRecord.global ? <><b style={{ color: "#FA6400" }}>应用配置(全局、插件)<span style={{fontWeight: 400, color: "black", fontSize: 12}}> - 没有应用锁</span></b></> : null}
-                        </div>
-                        <div>
-                          {notCanvasSaves.map(({ title }, index) => <><b style={{ color: "#FA6400" }}>{title}</b>{notCanvasSaves.length - 1 === index ? "" : "，"}</>)}
-                          {notCanvasSaves.length ? <span style={{fontWeight: 400, color: "black", fontSize: 12}}> - 没有画布锁</span> : null}
-                        </div>
-                        <div>
-                          {notModuleSaves.map(({ title }, index) => <><b style={{ color: "#FA6400" }}>{title}</b>{notModuleSaves.length - 1 === index ? "" : "，"}</>)}
-                          {notModuleSaves.length ? <span style={{fontWeight: 400, color: "black", fontSize: 12}}> - 没有模块锁</span> : null}
+                          <div>
+                            {contentModel.editRecord.global ? (
+                              <>
+                                <b style={{ color: "#FA6400" }}>
+                                  应用配置(全局、插件)
+                                  <span
+                                    style={{
+                                      fontWeight: 400,
+                                      color: "black",
+                                      fontSize: 12,
+                                    }}
+                                  >
+                                    {" "}
+                                    - 没有应用锁
+                                  </span>
+                                </b>
+                              </>
+                            ) : null}
+                          </div>
+                          <div>
+                            {notCanvasSaves.map(({ title }, index) => (
+                              <>
+                                <b style={{ color: "#FA6400" }}>{title}</b>
+                                {notCanvasSaves.length - 1 === index
+                                  ? ""
+                                  : "，"}
+                              </>
+                            ))}
+                            {notCanvasSaves.length ? (
+                              <span
+                                style={{
+                                  fontWeight: 400,
+                                  color: "black",
+                                  fontSize: 12,
+                                }}
+                              >
+                                {" "}
+                                - 没有画布锁
+                              </span>
+                            ) : null}
+                          </div>
+                          <div>
+                            {notModuleSaves.map(({ title }, index) => (
+                              <>
+                                <b style={{ color: "#FA6400" }}>{title}</b>
+                                {notModuleSaves.length - 1 === index
+                                  ? ""
+                                  : "，"}
+                              </>
+                            ))}
+                            {notModuleSaves.length ? (
+                              <span
+                                style={{
+                                  fontWeight: 400,
+                                  color: "black",
+                                  fontSize: 12,
+                                }}
+                              >
+                                {" "}
+                                - 没有模块锁
+                              </span>
+                            ) : null}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ): null,
-              })
+                  ) : null,
+              });
             } else {
               const { notCanvasSaves, notModuleSaves } = res;
               if (pageModel.globalOperable) {
@@ -358,35 +424,85 @@ const Designer = ({ appData }) => {
                 notification.open({
                   message: (
                     <div>
-                      <CheckCircleFilled style={{color: "#52c41a", marginRight: 8}}/>
+                      <CheckCircleFilled
+                        style={{ color: "#52c41a", marginRight: 8 }}
+                      />
                       <span>保存完成</span>
                     </div>
                   ),
                   placement: "top",
-                  description: (notCanvasSaves.length || notModuleSaves.length) ? (
-                    <div style={{ display: 'flex' }}>
-                      <div><ExclamationCircleFilled style={{color: "#faad14", marginRight: 8, marginLeft: 2}}/>注意：</div>
-                      <div style={{ flex: 1 }}>
-                        <div>以下内容未保存</div>
+                  description:
+                    notCanvasSaves.length || notModuleSaves.length ? (
+                      <div style={{ display: "flex" }}>
                         <div>
-                          {notCanvasSaves.map(({ title }, index) => <><b style={{ color: "#FA6400" }}>{title}</b>{notCanvasSaves.length - 1 === index ? "" : "，"}</>)}
-                          {notCanvasSaves.length ? <span style={{fontWeight: 400, color: "black", fontSize: 12}}> - 没有画布锁</span> : null}
+                          <ExclamationCircleFilled
+                            style={{
+                              color: "#faad14",
+                              marginRight: 8,
+                              marginLeft: 2,
+                            }}
+                          />
+                          注意：
                         </div>
-                        <div>
-                          {notModuleSaves.map(({ title }, index) => <><b style={{ color: "#FA6400" }}>{title}</b>{notModuleSaves.length - 1 === index ? "" : "，"}</>)}
-                          {notModuleSaves.length ? <span style={{fontWeight: 400, color: "black", fontSize: 12}}> - 没有模块锁</span> : null}
+                        <div style={{ flex: 1 }}>
+                          <div>以下内容未保存</div>
+                          <div>
+                            {notCanvasSaves.map(({ title }, index) => (
+                              <>
+                                <b style={{ color: "#FA6400" }}>{title}</b>
+                                {notCanvasSaves.length - 1 === index
+                                  ? ""
+                                  : "，"}
+                              </>
+                            ))}
+                            {notCanvasSaves.length ? (
+                              <span
+                                style={{
+                                  fontWeight: 400,
+                                  color: "black",
+                                  fontSize: 12,
+                                }}
+                              >
+                                {" "}
+                                - 没有画布锁
+                              </span>
+                            ) : null}
+                          </div>
+                          <div>
+                            {notModuleSaves.map(({ title }, index) => (
+                              <>
+                                <b style={{ color: "#FA6400" }}>{title}</b>
+                                {notModuleSaves.length - 1 === index
+                                  ? ""
+                                  : "，"}
+                              </>
+                            ))}
+                            {notModuleSaves.length ? (
+                              <span
+                                style={{
+                                  fontWeight: 400,
+                                  color: "black",
+                                  fontSize: 12,
+                                }}
+                              >
+                                {" "}
+                                - 没有模块锁
+                              </span>
+                            ) : null}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ) : (
-                    <div style={{ marginLeft: 24 }}>修改内容都已保存</div>
-                  )
+                    ) : (
+                      <div style={{ marginLeft: 24 }}>修改内容都已保存</div>
+                    ),
                 });
               } else {
                 notification.open({
                   message: (
                     <div>
-                      <CheckCircleFilled style={{color: "#52c41a", marginRight: 8}}/>
+                      <CheckCircleFilled
+                        style={{ color: "#52c41a", marginRight: 8 }}
+                      />
                       <span>保存完成</span>
                     </div>
                   ),
@@ -421,27 +537,93 @@ const Designer = ({ appData }) => {
                   // ) : (
                   //   <div style={{ marginLeft: 24 }}>修改内容都已保存</div>
                   // ))
-                  description: (contentModel.editRecord.global || notCanvasSaves.length || notModuleSaves.length) ? (
-                    <div style={{ display: 'flex' }}>
-                      <div><ExclamationCircleFilled style={{color: "#faad14", marginRight: 8, marginLeft: 2}}/>注意：</div>
-                      <div style={{ flex: 1 }}>
-                        <div>以下内容未保存</div>
+                  description:
+                    contentModel.editRecord.global ||
+                    notCanvasSaves.length ||
+                    notModuleSaves.length ? (
+                      <div style={{ display: "flex" }}>
                         <div>
+                          <ExclamationCircleFilled
+                            style={{
+                              color: "#faad14",
+                              marginRight: 8,
+                              marginLeft: 2,
+                            }}
+                          />
+                          注意：
+                        </div>
+                        <div style={{ flex: 1 }}>
+                          <div>以下内容未保存</div>
                           <div>
-                            {contentModel.editRecord.global ? <><b style={{ color: "#FA6400" }}>应用配置(全局、插件)<span style={{fontWeight: 400, color: "black", fontSize: 12}}> - 没有应用锁</span></b></> : null}
-                          </div>
-                          <div>
-                            {notCanvasSaves.map(({ title }, index) => <><b style={{ color: "#FA6400" }}>{title}</b>{notCanvasSaves.length - 1 === index ? "" : "，"}</>)}
-                            {notCanvasSaves.length ? <span style={{fontWeight: 400, color: "black", fontSize: 12}}> - 没有画布锁</span> : null}
-                          </div>
-                          <div>
-                            {notModuleSaves.map(({ title }, index) => <><b style={{ color: "#FA6400" }}>{title}</b>{notModuleSaves.length - 1 === index ? "" : "，"}</>)}
-                            {notModuleSaves.length ? <span style={{fontWeight: 400, color: "black", fontSize: 12}}> - 没有模块锁</span> : null}
+                            <div>
+                              {contentModel.editRecord.global ? (
+                                <>
+                                  <b style={{ color: "#FA6400" }}>
+                                    应用配置(全局、插件)
+                                    <span
+                                      style={{
+                                        fontWeight: 400,
+                                        color: "black",
+                                        fontSize: 12,
+                                      }}
+                                    >
+                                      {" "}
+                                      - 没有应用锁
+                                    </span>
+                                  </b>
+                                </>
+                              ) : null}
+                            </div>
+                            <div>
+                              {notCanvasSaves.map(({ title }, index) => (
+                                <>
+                                  <b style={{ color: "#FA6400" }}>{title}</b>
+                                  {notCanvasSaves.length - 1 === index
+                                    ? ""
+                                    : "，"}
+                                </>
+                              ))}
+                              {notCanvasSaves.length ? (
+                                <span
+                                  style={{
+                                    fontWeight: 400,
+                                    color: "black",
+                                    fontSize: 12,
+                                  }}
+                                >
+                                  {" "}
+                                  - 没有画布锁
+                                </span>
+                              ) : null}
+                            </div>
+                            <div>
+                              {notModuleSaves.map(({ title }, index) => (
+                                <>
+                                  <b style={{ color: "#FA6400" }}>{title}</b>
+                                  {notModuleSaves.length - 1 === index
+                                    ? ""
+                                    : "，"}
+                                </>
+                              ))}
+                              {notModuleSaves.length ? (
+                                <span
+                                  style={{
+                                    fontWeight: 400,
+                                    color: "black",
+                                    fontSize: 12,
+                                  }}
+                                >
+                                  {" "}
+                                  - 没有模块锁
+                                </span>
+                              ) : null}
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  ): <div style={{ marginLeft: 24 }}>修改内容都已保存</div>,
+                    ) : (
+                      <div style={{ marginLeft: 24 }}>修改内容都已保存</div>
+                    ),
                 });
               }
             }
@@ -561,6 +743,10 @@ const Designer = ({ appData }) => {
       if (data.code !== 1) {
         previewModel.close();
         handlePublishErrCode(data);
+
+        if (data.innerMessage) {
+          message.error(data.innerMessage);
+        }
         return;
         // throw new Error(data?.message ?? "构建失败，请重试");
       }
@@ -587,7 +773,7 @@ const Designer = ({ appData }) => {
     }) => {
       if (!pageModel.operable) {
         // 没有页面级权限
-        return true
+        return true;
       }
       if (pageModel?.publishLoading) {
         return;
@@ -662,6 +848,9 @@ const Designer = ({ appData }) => {
           handlePublishErrCode(data);
           pageModel.publishLoading = false;
 
+          if (data.innerMessage) {
+            message.error(data.innerMessage);
+          }
           return;
           // throw new Error(data?.data ?? data?.message);
         }
@@ -763,6 +952,10 @@ const Designer = ({ appData }) => {
       if (data.code !== 1) {
         previewModel.close();
         handlePublishErrCode(data);
+
+        if (data.innerMessage) {
+          message.error(data.innerMessage);
+        }
         return;
         // throw new Error(data?.message ?? "构建失败，请重试");
       }
@@ -780,7 +973,7 @@ const Designer = ({ appData }) => {
   const onH5Publish = useCallback(async ({ commitInfo }) => {
     if (!pageModel.operable) {
       // 没有页面级权限
-      return true
+      return true;
     }
     if (pageModel?.publishLoading) {
       return;
@@ -826,6 +1019,9 @@ const Designer = ({ appData }) => {
         handlePublishErrCode(data);
         pageModel.publishLoading = false;
 
+        if (data.innerMessage) {
+          message.error(data.innerMessage);
+        }
         return;
         // throw new Error(data?.data ?? data?.message);
       }
@@ -1023,6 +1219,10 @@ const Designer = ({ appData }) => {
         pageModel.publishLoading = false;
         if (data.code !== 1) {
           handlePublishErrCode(data);
+
+          if (data.innerMessage) {
+            message.error(data.innerMessage);
+          }
           return;
         }
         if (supportFSAccess && false) {
@@ -1062,14 +1262,14 @@ const Designer = ({ appData }) => {
     // console.log("info => ", info)
     const { id, type } = info;
     switch (type) {
-      case 'global':
+      case "global":
         contentModel.editRecord.global = true;
         break;
-      case 'module':
-        contentModel.editRecord.module.add(id)
+      case "module":
+        contentModel.editRecord.module.add(id);
         break;
-      case 'canvas':
-        contentModel.editRecord.canvas.add(id)
+      case "canvas":
+        contentModel.editRecord.canvas.add(id);
         break;
     }
     contentModel.operationList.current.push({
@@ -1104,17 +1304,17 @@ const Designer = ({ appData }) => {
         statusChange={(status, file, extraFiles, isNew) => {
           // setOperable(status === 1);
           let operable = status === 1;
-          pageModel.operable = status === 1
-          pageModel.globalOperable = status === 1
-          pageModel.extraFiles = extraFiles
+          pageModel.operable = status === 1;
+          pageModel.globalOperable = status === 1;
+          pageModel.extraFiles = extraFiles;
           pageModel.isNew = isNew;
-          versionModel.compare(file)
+          versionModel.compare(file);
 
           if (!isNew || window.__type__ === "spa") {
-            pageModel.canSave = operable
-            setOperable(operable)
-            setGlobalOperable(operable)
-            return
+            pageModel.canSave = operable;
+            setOperable(operable);
+            setGlobalOperable(operable);
+            return;
           }
 
           const user = userModel.user;
@@ -1127,44 +1327,48 @@ const Designer = ({ appData }) => {
                   id: user.id,
                   name: user.name || user.email,
                   isMe: true,
-                  avatarUrl: user.avatar === '/default_avatar.png' ? null : user.avatar,
+                  avatarUrl:
+                    user.avatar === "/default_avatar.png" ? null : user.avatar,
                   readable: true,
-                  writeable: true
-                }
-              ]
-            })
-            setGlobalOperable(true)
+                  writeable: true,
+                },
+              ],
+            });
+            setGlobalOperable(true);
           } else {
             cooperationAry.push({
               type: "global",
-              users: []
-            })
-            setGlobalOperable(false)
+              users: [],
+            });
+            setGlobalOperable(false);
           }
 
           Object.entries(pageModel.pages).forEach(([pageId, pageInfo]) => {
-            const extraFile = pageModel.extraFiles[pageInfo.fileId]
+            const extraFile = pageModel.extraFiles[pageInfo.fileId];
             if (extraFile.id) {
               if (user.id === extraFile.id) {
-                operable = true
+                operable = true;
               }
               cooperationAry.push({
-                type: 'canvas',
+                type: "canvas",
                 canvasId: pageId,
                 users: [
                   {
                     id: extraFile.id,
                     name: extraFile.name || extraFile.email || extraFile.userId,
                     isMe: user.id === extraFile.id,
-                    avatarUrl: extraFile.avatar === '/default_avatar.png' ? null : extraFile.avatar,
+                    avatarUrl:
+                      extraFile.avatar === "/default_avatar.png"
+                        ? null
+                        : extraFile.avatar,
                     readable: true,
-                    writeable: true
-                  }
-                ]
-              })
+                    writeable: true,
+                  },
+                ],
+              });
             } else {
               cooperationAry.push({
-                type: 'canvas',
+                type: "canvas",
                 canvasId: pageId,
                 // users: []
                 users: [
@@ -1184,7 +1388,7 @@ const Designer = ({ appData }) => {
                   //   readable: true,
                   //   writeable: false
                   // }
-                ]
+                ],
                 // users: [
                 //   {
                 //     id: extraFile.id,
@@ -1196,19 +1400,19 @@ const Designer = ({ appData }) => {
                 //     writeable: user.id === extraFile.id
                 //   }
                 // ]
-              })
+              });
             }
-          })
+          });
 
-          pageModel.canSave = operable
-          setOperable(operable)
+          pageModel.canSave = operable;
+          setOperable(operable);
 
           // console.log("cooperationAry => ", cooperationAry)
 
           if (!designerRef.current) {
-            lastCooperationAry = cooperationAry
+            lastCooperationAry = cooperationAry;
           } else {
-            designerRef.current?.setCooperationAry(cooperationAry)
+            designerRef.current?.setCooperationAry(cooperationAry);
           }
         }}
         checkIsMiniCIReady={checkIsMiniCIReady}
@@ -1234,14 +1438,18 @@ const Designer = ({ appData }) => {
               designerRef,
               FxService,
               appConfig,
-              setOperable
+              setOperable,
             })}
             ref={designerRef}
             onEdit={onEdit}
             onMessage={onMessage}
             onLoad={() => {
-              if (pageModel.isNew && lastCooperationAry && window.__type__ === "mpa") {
-                designerRef.current.setCooperationAry(lastCooperationAry)
+              if (
+                pageModel.isNew &&
+                lastCooperationAry &&
+                window.__type__ === "mpa"
+              ) {
+                designerRef.current.setCooperationAry(lastCooperationAry);
                 lastCooperationAry = null;
               }
             }}

@@ -18,7 +18,7 @@ import * as fse from "fs-extra";
 // import * as ci from "miniprogram-ci";
 // import { minidev } from "minidev";
 import API from "@mybricks/sdk-for-app/api";
-import { AppProject } from './api';
+import { AppProject } from "./api";
 import {
   PublishError,
   PublishErrCode,
@@ -33,12 +33,10 @@ import { CompileType } from "./compiler/types";
 import { getNextVersion } from "../tools/analysis";
 import axios from "axios";
 
-let ci
+let ci;
 try {
-  ci = require('miniprogram-ci')
-} catch (error) {
-  
-}
+  ci = require("miniprogram-ci");
+} catch (error) {}
 
 const existMiniprogramCI = !!ci;
 
@@ -134,14 +132,18 @@ export default class CompileController {
             fileId,
             envType: "staging",
             version: "1.0.0",
-            type
+            type,
           },
           json: data.services,
           database: data.database,
-        })
+        });
         Logger.info("[preview] upload system success");
       } catch (e) {
-        Logger.info(`[preview] upload system fail, ${e?.stack ?? e?.message ?? '未知错误'}`);
+        Logger.info(
+          `[preview] upload system fail, ${
+            e?.stack ?? e?.message ?? "未知错误"
+          }`
+        );
       }
 
       Logger.info("[preview] init miniapp template start");
@@ -182,11 +184,12 @@ export default class CompileController {
         qrcode: res.qrcode,
       };
     } catch (error) {
-      Logger.error("[preview] preview fail " + error.message, error);
+      Logger.error("[preview] preview fail " + error.message);
       return {
         code: -1,
         errCode: error.errCode,
         message: error.message || "构建失败，未知错误",
+        innerMessage: error?.message?.replace("Error:", "")?.trim(),
         qrcode: "",
         stack: error?.stack,
       };
@@ -236,14 +239,18 @@ export default class CompileController {
             fileId,
             envType: "prod",
             version: "1.0.0",
-            type
+            type,
           },
           json: data.services,
           database: data.database,
-        })
+        });
         Logger.info("[preview] upload system success");
       } catch (e) {
-        Logger.info(`[preview] upload system fail, ${e?.stack ?? e?.message ?? '未知错误'}`);
+        Logger.info(
+          `[preview] upload system fail, ${
+            e?.stack ?? e?.message ?? "未知错误"
+          }`
+        );
       }
 
       Logger.info("[publish] init miniapp template start");
@@ -299,6 +306,7 @@ export default class CompileController {
         message:
           error?.message ||
           (error.code ? `构建失败，错误码：${error.code}` : "构建失败"),
+        innerMessage: error?.message?.replace("Error:", "")?.trim(),
         stack: error?.stack,
       };
     }
@@ -411,14 +419,18 @@ export default class CompileController {
             fileId,
             envType: "prod",
             version: "1.0.0",
-            type
+            type,
           },
           json: data.services,
           database: data.database,
-        })
+        });
         Logger.info("[preview] upload system success");
       } catch (e) {
-        Logger.info(`[preview] upload system fail, ${e?.stack ?? e?.message ?? '未知错误'}`);
+        Logger.info(
+          `[preview] upload system fail, ${
+            e?.stack ?? e?.message ?? "未知错误"
+          }`
+        );
       }
 
       Logger.info("[compile] init miniapp template start");
@@ -816,8 +828,8 @@ async function compileWxAppCI(
   console.log("开始上传项目", projectPath);
   Logger.info("开始上传项目", projectPath);
   const project = new ci.Project({
-    appid: data.ci.appid,
-    privateKey: data.ci.privateKey,
+    appid: data.ci.appid?.trim(),
+    privateKey: data.ci.privateKey?.trim(),
     type: "miniProgram",
     projectPath: projectPath,
   });
