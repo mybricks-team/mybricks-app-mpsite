@@ -1154,9 +1154,15 @@ const getAiView = (enableAI, option) => {
           extraOption = args[2];
         }
 
-        const { write, complete, error } = context ?? {};
+        const { write, complete, error, cancel } = context ?? {};
 
         let usedModel = DEFAULT_AI_MODEL;
+
+        const cancelControl = !!AbortController ? new AbortController() : null;
+
+        cancel?.(() => {
+          cancelControl?.abort?.();
+        })
 
         switch (true) {
           case extraOption?.expert === "image": {
@@ -1286,6 +1292,7 @@ const getAiView = (enableAI, option) => {
               headers: {
                 "Content-Type": "application/json",
               },
+              signal: cancelControl?.signal,
               body: JSON.stringify(
                 getAiEncryptData({
                   model: usedModel,
