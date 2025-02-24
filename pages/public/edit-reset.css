@@ -7,3 +7,9 @@
 *::-webkit-scrollbar {
   display: none;
 }
+
+/* taro reset */
+
+taro-button-core + taro-button-core {
+  margin-top: unset;
+}
