@@ -1168,11 +1168,11 @@ const getAiView = (enableAI, option) => {
 
         switch (true) {
           case extraOption?.expert === "image": {
-            usedModel = "anthropic/claude-3.5-sonnet";
+            usedModel = "anthropic/claude-3.7-sonnet";
             break;
           }
           case ["image"].includes(extraOption?.aiRole): {
-            usedModel = "anthropic/claude-3.5-sonnet";
+            usedModel = "anthropic/claude-3.7-sonnet";
             break;
           }
           case ["architect"].includes(extraOption.aiRole): {
