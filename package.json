@@ -1,6 +1,6 @@
 {
   "name": "mybricks-app-mpsite",
-  "version": "0.5.40",
+  "version": "0.5.41",
   "description": "MyBricks 移动端应用",
   "scripts": {
     "start:dev": "NODE_ENV=development node nodejs/index.ts",
@@ -10,7 +10,7 @@
     "dev": "cd ./pages && npm run dev",
     "build": "npm run bootstrap && cd ./pages && npm run build",
     "publishToNpm:offline": "npm i && cd pages && npm run build:offline && cd ../ && node sync_offline.js",
-    "publishToNpm:serviceUpdate": "npm run build && npm publish --registry=https://registry.npmjs.org && node sync.js --origin=https://my.mybricks.world",
+    "publishToNpm:serviceUpdate": "npm run build && node sync.js --origin=https://my.mybricks.world",
     "publishToNpm": "npm run build && npm publish --registry=https://registry.npmjs.org && node sync.js --origin=https://my.mybricks.world --noServiceUpdate"
   },
   "keywords": [
