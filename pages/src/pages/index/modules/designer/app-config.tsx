@@ -28,9 +28,9 @@ import { message } from "antd";
 
 // const DEFAULT_AI_MODEL = 'openai/gpt-4o-mini';
 
-// const DEFAULT_AI_MODEL = "deepseek-chat";
+const DEFAULT_AI_MODEL = "deepseek-chat";
 // const DEFAULT_AI_MODEL = "deepseek/deepseek-r1";
-const DEFAULT_AI_MODEL = "qwen-max";
+// const DEFAULT_AI_MODEL = "qwen-max";
 
 // 加密展示
 // 输入一个字符串，一行或者多行，需要把中间的内容隐藏，只显示前面几个字符和后面几个字符，中间用*号代替
