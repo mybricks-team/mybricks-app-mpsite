@@ -758,10 +758,10 @@
   resolved "https://npm.corp.kuaishou.com/@mybricks/file-parser/-/file-parser-1.0.19.tgz"
   integrity sha512-bZK+GyT1PilGffulm53tIMxR/mk/i12TThe1HlPC7Sih+QH0dhSWhwRK5oPovKH1AItvubOCFZMB6BxijKpBBQ==
 
-"@mybricks/plugin-connector-http@^1.1.74", "@mybricks/plugin-connector-http@1.2.27":
-  version "1.2.27"
-  resolved "https://registry.npmjs.org/@mybricks/plugin-connector-http/-/plugin-connector-http-1.2.27.tgz"
-  integrity sha512-QE7n2IyQcb/lHJ/yYztMFjfGOP74vcl6YBL0+/KEVgkkJnudMbcc5NiEbjtCKiquABWJzJTcLpFjH2EWN5ICYg==
+"@mybricks/plugin-connector-http@^1.1.74", "@mybricks/plugin-connector-http@^1.2.28":
+  version "1.2.28"
+  resolved "https://registry.npmjs.org/@mybricks/plugin-connector-http/-/plugin-connector-http-1.2.28.tgz"
+  integrity sha512-uU+DP6t8IJcEAmQCLUoSRQ/40TYyYStgx6p48EGdqIpnMskJE2AUt0NJeKnCQEUkcxORW3yo+KyFkwFQaeNTOg==
 
 "@mybricks/plugin-note@^0.0.7":
   version "0.0.7"
