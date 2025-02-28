@@ -29,6 +29,7 @@ import { message } from "antd";
 // const DEFAULT_AI_MODEL = 'openai/gpt-4o-mini';
 
 const DEFAULT_AI_MODEL = "deepseek-chat";
+// const DEFAULT_AI_MODEL = "anthropic/claude-3.7-sonnet";
 // const DEFAULT_AI_MODEL = "deepseek/deepseek-r1";
 // const DEFAULT_AI_MODEL = "qwen-max";
 
@@ -161,7 +162,8 @@ export default function ({
             items: [
               {
                 title: "head 注入",
-                description: "内容支持任意合法的 HTML 标签，并且将被插入到页面的 <head> 标签中",
+                description:
+                  "内容支持任意合法的 HTML 标签，并且将被插入到页面的 <head> 标签中",
                 type: "code",
                 options: ({ data, output }) => {
                   return {
@@ -1106,36 +1108,42 @@ const getAiView = (enableAI, option) => {
 
   if (enableAI) {
     return {
-      async request(messages) {
-        // console.log(messages[0].content)
-        // console.log(messages[messages.length - 1].content)
+      // async request(messages) {
+      //   // console.log(messages[0].content)
+      //   // console.log(messages[messages.length - 1].content)
 
-        let content = "处理失败";
-        try {
-          let res = await axios({
-            method: "POST",
-            url: "//ai.mybricks.world/code",
-            withCredentials: false,
-            data: getAiEncryptData({
-              model: !!model ? model : undefined,
-              messages,
-            }),
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }).then((res) => res.data);
+      //   let content = "处理失败";
+      //   try {
+      //     let res = await axios({
+      //       method: "POST",
+      //       url: "//ai.mybricks.world/code",
+      //       withCredentials: false,
+      //       data: getAiEncryptData({
+      //         model: !!model ? model : undefined,
+      //         messages,
+      //       }),
+      //       headers: {
+      //         "Content-Type": "application/json",
+      //       },
+      //     }).then((res) => res.data);
 
-          content = res.choices[0].message.content;
-          return content;
-        } catch (e) {
-          console.error(e);
-        } finally {
-          // console.log(`prompts: ${prompts},
-          // question: ${question},
-          // 返回结果: ${content}`)
-        }
-      },
+      //     content = res.choices[0].message.content;
+      //     return content;
+      //   } catch (e) {
+      //     console.error(e);
+      //   } finally {
+      //     // console.log(`prompts: ${prompts},
+      //     // question: ${question},
+      //     // 返回结果: ${content}`)
+      //   }
+      // },
       async requestAsStream(messages, ...args) {
+
+        if (location.href.includes("localhost")) {
+          console.log("requestAsStream", JSON.parse(JSON.stringify(messages)));
+          console.log("requestAsStream", ...args);
+        }
+
         // console.log("requestAsStream", JSON.parse(JSON.stringify(messages)));
         if (messages[0] && false) {
           messages[0].content = systemContent;
@@ -1164,7 +1172,7 @@ const getAiView = (enableAI, option) => {
 
         cancel?.(() => {
           cancelControl?.abort?.();
-        })
+        });
 
         switch (true) {
           case extraOption?.expert === "image": {
@@ -1184,15 +1192,6 @@ const getAiView = (enableAI, option) => {
             break;
           }
         }
-
-        // let messages2 = [
-        //   {
-        //     role: "system",
-        //     content: system,
-        //   },
-        //   ...messages.slice(1),
-        // ];
-        // console.log("messages2",messages2)
 
         // 用于debug用户当前使用的模型
         window._ai_use_model_ = usedModel;
