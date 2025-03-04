@@ -5,7 +5,7 @@ import { pageModel, versionModel } from "@/stores";
 import { showH5RequireModal, showWeappRequireModal } from "./../modals";
 import { PreviewPopOver } from "./../pop-overs";
 import { Dropdown, message, Alert, Tooltip } from "antd";
-import { ExclamationCircleOutlined } from "@ant-design/icons"
+import { ExclamationCircleOutlined } from "@ant-design/icons";
 // import Marquee from 'react-fast-marquee';
 import {
   DownOutlined,
@@ -79,7 +79,7 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
   onAlipayPreview,
 }) => {
   const [selectType, setSelectType] = useState<CompileType>(
-    selectTypeStorage.get() ?? CompileType.weapp
+    (window.__PLATFORM__ || selectTypeStorage.get()) ?? CompileType.weapp
   );
 
   const handleSwitch2SaveVersion = useCallback(() => {
@@ -95,7 +95,11 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
 
   useEffect(() => {
     if (publishLoading) {
-      message.loading({ content: "产物发布中，请稍等...", key: "loading", duration: 0 });
+      message.loading({
+        content: "产物发布中，请稍等...",
+        key: "loading",
+        duration: 0,
+      });
     } else {
       message.destroy("loading");
     }
@@ -129,7 +133,7 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
 
   const publishHandle = () => {
     if (!globalOperable) {
-      return
+      return;
     }
     if ([CompileType.weapp].includes(selectType)) {
       showWeappRequireModal({
@@ -156,7 +160,7 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
     // return Object.entries(pageModel.pages).map(([,value]) => {
     //   return value.fileId
     // }).filter((fileId) => fileId)
-  }
+  };
 
   return (
     <>
@@ -193,20 +197,36 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
           compareVersion={false}
           getExtraFileIds={window.__type__ === "mpa" ? getExtraFileIds : null}
           autoLock={window.__type__ === "mpa" ? false : true}
-          beforeToggleLock={window.__type__ === "mpa" ? () => {
-            if (versionModel.file.updated) {
-              message.info("当前应用版本落后，不允许上锁，请刷新后再试")
-              return false
-            }
-            return true;
-          } : null}
+          beforeToggleLock={
+            window.__type__ === "mpa"
+              ? () => {
+                  if (versionModel.file.updated) {
+                    message.info("当前应用版本落后，不允许上锁，请刷新后再试");
+                    return false;
+                  }
+                  return true;
+                }
+              : null
+          }
           // pollable={false} // 测试
         />
-        <Toolbar.Save disabled={!operable} onClick={onSave} dotTip={isModify}/>
-        {(pageModel.isNew && window.__type__ === "mpa" && (globalOperable || operable)) ? <Tooltip placement="bottom" title={globalOperable ? "当前保存包含应用内容以及上锁画布" : "当前保存仅包含上锁画布"}>
-          <ExclamationCircleOutlined style={{color: isModify ? "#FA6400" : "inherit"}}/>
-        </Tooltip> : null}
-        
+        <Toolbar.Save disabled={!operable} onClick={onSave} dotTip={isModify} />
+        {pageModel.isNew &&
+        window.__type__ === "mpa" &&
+        (globalOperable || operable) ? (
+          <Tooltip
+            placement="bottom"
+            title={
+              globalOperable
+                ? "当前保存包含应用内容以及上锁画布"
+                : "当前保存仅包含上锁画布"
+            }
+          >
+            <ExclamationCircleOutlined
+              style={{ color: isModify ? "#FA6400" : "inherit" }}
+            />
+          </Tooltip>
+        ) : null}
 
         <CompileButtonGroups>
           <Dropdown
@@ -222,14 +242,17 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
                 setSelectType(e.key);
               },
             }}
-            trigger={["click"]}
+            trigger={window.__PLATFORM__ ? [] : ["click"]}
           >
             <CompileButton onClick={() => {}}>
               构建平台：
               <span style={{ color: "#ea732e", fontWeight: "bold" }}>
                 {DescMap[selectType]}
               </span>
-              <DownOutlined style={{ marginLeft: 3, color: "#ea732e" }} />
+              {/* 用户前置选择了平台，则不可切换 */}
+              {window.__PLATFORM__ ? null : (
+                <DownOutlined style={{ marginLeft: 3, color: "#ea732e" }} />
+              )}
             </CompileButton>
           </Dropdown>
 

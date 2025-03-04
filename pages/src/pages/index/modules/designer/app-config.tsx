@@ -144,43 +144,49 @@ export default function ({
       items({}, cate0, cate1, cate2) {
         cate0.title = "配置";
         cate0.items = [
-          {
-            title: "微信小程序配置",
-            items: [
-              {
-                type: "editorRender",
-                options: {
-                  render: () => {
-                    return <MpConfig />;
+          // 微信小程序配置
+          !window.__PLATFORM__ || window.__PLATFORM__ === "weapp"
+            ? {
+                title: "微信小程序配置",
+                items: [
+                  {
+                    type: "editorRender",
+                    options: {
+                      render: () => {
+                        return <MpConfig />;
+                      },
+                    },
                   },
-                },
-              },
-            ],
-          },
-          {
-            title: "H5 配置",
-            items: [
-              {
-                title: "head 注入",
-                description:
-                  "内容支持任意合法的 HTML 标签，并且将被插入到页面的 <head> 标签中",
-                type: "code",
-                options: ({ data, output }) => {
-                  return {
-                    language: "html",
-                  };
-                },
-                value: {
-                  get() {
-                    return pageModel.appConfig.h5Head;
+                ],
+              }
+            : {},
+          // H5 配置
+          !window.__PLATFORM__ || window.__PLATFORM__ === "h5"
+            ? {
+                title: "H5 配置",
+                items: [
+                  {
+                    title: "head 注入",
+                    description:
+                      "内容支持任意合法的 HTML 标签，并且将被插入到页面的 <head> 标签中",
+                    type: "code",
+                    options: ({ data, output }) => {
+                      return {
+                        language: "html",
+                      };
+                    },
+                    value: {
+                      get() {
+                        return pageModel.appConfig.h5Head;
+                      },
+                      set(_, value) {
+                        pageModel.appConfig.h5Head = value;
+                      },
+                    },
                   },
-                  set(_, value) {
-                    pageModel.appConfig.h5Head = value;
-                  },
-                },
-              },
-            ],
-          },
+                ],
+              }
+            : {},
           {
             title: "连接器",
             items: [
@@ -404,15 +410,15 @@ export default function ({
               },
             ],
           },
-          {
-            title: "",
-            type: "editorRender",
-            options: {
-              render: () => {
-                return <CompileConfig />;
-              },
-            },
-          },
+          // {
+          //   title: "",
+          //   type: "editorRender",
+          //   options: {
+          //     render: () => {
+          //       return <CompileConfig />;
+          //     },
+          //   },
+          // },
         ];
 
         cate1.title = "调试";
@@ -1108,40 +1114,9 @@ const getAiView = (enableAI, option) => {
 
   if (enableAI) {
     return {
-      // async request(messages) {
-      //   // console.log(messages[0].content)
-      //   // console.log(messages[messages.length - 1].content)
-
-      //   let content = "处理失败";
-      //   try {
-      //     let res = await axios({
-      //       method: "POST",
-      //       url: "//ai.mybricks.world/code",
-      //       withCredentials: false,
-      //       data: getAiEncryptData({
-      //         model: !!model ? model : undefined,
-      //         messages,
-      //       }),
-      //       headers: {
-      //         "Content-Type": "application/json",
-      //       },
-      //     }).then((res) => res.data);
-
-      //     content = res.choices[0].message.content;
-      //     return content;
-      //   } catch (e) {
-      //     console.error(e);
-      //   } finally {
-      //     // console.log(`prompts: ${prompts},
-      //     // question: ${question},
-      //     // 返回结果: ${content}`)
-      //   }
-      // },
       async requestAsStream(messages, ...args) {
-
         if (location.href.includes("localhost")) {
           console.log("requestAsStream", JSON.parse(JSON.stringify(messages)));
-          console.log("requestAsStream", ...args);
         }
 
         // console.log("requestAsStream", JSON.parse(JSON.stringify(messages)));
@@ -1184,7 +1159,8 @@ const getAiView = (enableAI, option) => {
             break;
           }
           case ["architect"].includes(extraOption.aiRole): {
-            usedModel = "openai/gpt-4o-2024-11-20";
+            usedModel = "anthropic/claude-3.7-sonnet";
+            // usedModel = "openai/gpt-4o-2024-11-20";
             break;
           }
           default: {
