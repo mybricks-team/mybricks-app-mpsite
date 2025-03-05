@@ -63,7 +63,7 @@
     "@mybricks/render-utils": "^0.0.46",
     "@mybricks/render-web": "^1.2.68",
     "@mybricks/rxui": "^1.0.87",
-    "@mybricks/sdk-for-app": "^1.0.56",
+    "@mybricks/sdk-for-app": "1.0.57",
     "@radix-ui/colors": "^3.0.0",
     "@tarojs/components": "3.5.11",
     "antd": "^4.23.6",
