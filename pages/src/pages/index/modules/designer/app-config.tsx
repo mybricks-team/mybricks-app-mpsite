@@ -579,7 +579,7 @@ export default function ({
         adder: [
           {
             type: "normal",
-            title: "小程序标签页",
+            title: window.__PLATFORM__ === "h5" ?  "H5 标签页" : "小程序标签页",
             template: {
               namespace: "mybricks.taro.systemPage",
               deletable: false,
@@ -597,7 +597,7 @@ export default function ({
           },
           {
             type: "normal",
-            title: "小程序页面",
+            title: window.__PLATFORM__ === "h5" ?  "H5 页面" : "小程序页面",
             template: {
               namespace: "mybricks.taro.systemPage",
               deletable: false,
