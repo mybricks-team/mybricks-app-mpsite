@@ -1,14 +1,22 @@
 import React, { useCallback } from "react";
 import qs from "qs";
 import { View as App } from "@mybricks/sdk-for-app/ui";
-import { pageModel, userModel, tabbarModel, EntryPagePath, versionModel } from "@/stores";
+import {
+  pageModel,
+  userModel,
+  tabbarModel,
+  EntryPagePath,
+  versionModel,
+} from "@/stores";
 import MyDesigner from "./modules/designer";
 import logger from "@/utils/logger";
 import "./app.less";
 
 function mpa() {
   // 弹出提示，二次确认是否切换到 MPA 模式
-  const confirm = window.confirm("是否切换到 MPA 模式？\n如果切换，将会导致三个问题：\n1、底部标签栏（Tabbar）会失效，需要重新设置；\n2、所有的页面跳转、打开对话框会失效，需要重新连线；\n3、所有的页面路径会发生变化，如果是已对外分享或设置的路径，可以先记录原ID，切换后通过页面别名进行重置。");
+  const confirm = window.confirm(
+    "是否切换到 MPA 模式？\n如果切换，将会导致三个问题：\n1、底部标签栏（Tabbar）会失效，需要重新设置；\n2、所有的页面跳转、打开对话框会失效，需要重新连线；\n3、所有的页面路径会发生变化，如果是已对外分享或设置的路径，可以先记录原ID，切换后通过页面别名进行重置。"
+  );
   if (!confirm) {
     return;
   }
@@ -28,8 +36,9 @@ function mpa() {
 
   window.__tabbar__.set([]);
   // 提示已复制到剪切板
-  alert("已切换到 MPA 模式，并已复制底部标签栏数据复制剪切板。\n请点击保存后，刷新页面，手动修改scene.id 字段后，通过 window.__tabbar__.set() 将数据回填。");
-
+  alert(
+    "已切换到 MPA 模式，并已复制底部标签栏数据复制剪切板。\n请点击保存后，刷新页面，手动修改scene.id 字段后，通过 window.__tabbar__.set() 将数据回填。"
+  );
 }
 
 window.mpa = mpa;
@@ -77,9 +86,9 @@ const Application = () => {
     pageModel.fileContent = data.fileContent.content || {};
 
     if (data.fileContent.content.dumpJson) {
-      pageModel.isInit = false
+      pageModel.isInit = false;
       // 初始化页面没有content
-      const { pages, meta } = data.fileContent.content.dumpJson
+      const { pages, meta } = data.fileContent.content.dumpJson;
       const { pageAry } = meta;
 
       const res = {};
@@ -87,21 +96,21 @@ const Application = () => {
       pageAry.forEach(({ id, title, type }) => {
         if (!type || type === "module") {
           // 记录页面和模块
-          const pageInfo = pages.find((page) => id === page.id)
+          const pageInfo = pages.find((page) => id === page.id);
           if (pageInfo?.fileId) {
             res[id] = {
               id,
               title,
               type,
-              ...pageInfo
-            }
+              ...pageInfo,
+            };
           }
         }
-      })
+      });
 
       pageModel.pages = res;
     } else {
-      pageModel.isInit = true
+      pageModel.isInit = true;
     }
 
     pageModel.pageConfig = data.fileContent.content?.pageConfig || {};
@@ -112,6 +121,12 @@ const Application = () => {
     pageModel.appConfig = data.fileContent.content?.appConfig || {};
     pageModel.wxConfig = data.fileContent.content?.wxConfig || {};
     pageModel.debug = data.fileContent.content?.debug || {};
+
+    // 限制构建平台
+    if (data.fileContent?.type) {
+      window.__PLATFORM__ = data.fileContent?.type;
+      console.warn("限制构建平台", window.__PLATFORM__);
+    }
 
     // 首页配置
     new EntryPagePath(data.fileContent.content?.entryPagePath || "");
