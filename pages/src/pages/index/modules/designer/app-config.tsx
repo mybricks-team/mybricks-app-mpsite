@@ -89,7 +89,92 @@ export default function ({
       servicePlugin({
         pure: true,
       }),
-      notePlugin(ctx),
+      // notePlugin(ctx),
+      notePlugin({
+        user: ctx.user,
+        onUpload: async (file: File) => {
+          return new Promise(async (resolve, reject) => {
+            const { manateeUserInfo, fileId } = ctx;
+            let uploadService = appConfig?.uploadServer?.uploadService || ''
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("folderPath", `/files/${fileId}`);
+
+            const useConfigService = !!uploadService;
+
+            if (!useConfigService) {
+              uploadService = "/paas/api/flow/saveFile";
+            }
+
+            try {
+              const res = await axios<any, any>({
+                url: uploadService,
+                method: "post",
+                data: formData,
+                headers: {
+                  "Content-Type": "multipart/form-data",
+                  ...manateeUserInfo,
+                },
+              });
+              const { data = {} } = res.data;
+              const { url } = data;
+              if (!url) {
+                reject(`没有返回图片地址`);
+              }
+              const staticUrl = /^http/.test(url)
+                ? url
+                : `${getDomainFromPath(uploadService)}${url}`;
+              resolve({ url: staticUrl });
+              reject(`【图片上传出错】: ${message}`);
+            } catch (error) {
+              message.error(error.message);
+              reject(error);
+            }
+          });
+        },
+        onAtsEmail: ({ subject, to, body, extra, from }) => {
+          let data = { fileId: ctx.fileId, subject, to, body, extra, from };
+          const config = appConfig
+          const serviceApi = config?.emailApiConfig?.sendAtsEmailApi || "";
+          if (serviceApi) {
+            axios({
+              method: "POST",
+              url: serviceApi,
+              withCredentials: false,
+              data,
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }).catch((err) => {
+              console.log("err", err);
+            });
+          }
+        },
+        onSearchUser: (keyword: string) => {
+          return new Promise(async (resolve, reject) => {
+            try {
+              const res = await searchUser(`api/compile/miniapp/searchUser`, {
+                keyword,
+              });
+              // @ts-ignore
+              const formatRes = (res || []).map((item) => {
+                const { email, id, name, avatar } = item;
+                return {
+                  name: name ? `${name}(${email})` : email,
+                  id,
+                  username: email,
+                  orgDisplayName: "",
+                  thumbnailAvatarUrl: avatar,
+                };
+              });
+              resolve(formatRes);
+            } catch (e) {
+              message.error("搜索用户失败!");
+              reject("搜索用户失败!");
+            }
+          });
+        },
+      }),
       versionPlugin({
         file: { id: pageModel.fileId },
         user: userModel.user,
@@ -1358,3 +1443,32 @@ const getAiView = (enableAI, option) => {
 
   return void 0;
 };
+
+function getDomainFromPath(path: string) {
+  if (!path) return path
+  if (path.startsWith('http') || path.startsWith('https')) {
+    const [protocol, url] = path.split('//')
+    const domain = url.split('/')[0]
+    return `${protocol}//${domain}`
+  } else {
+    return location.origin
+  }
+}
+
+async function searchUser(url: string, params) {
+  return await axios.post(
+      url,
+      params
+  ).then((response) => {
+    if (response.status >= 200 && response.status < 300) {
+      return response.data;
+    } else {
+      return Promise.reject('http status is not 200');
+    }
+  })
+      .catch((error) => {
+          console.error("搜索用户失败，报错信息:", error);
+          throw error;
+      });
+}
+
