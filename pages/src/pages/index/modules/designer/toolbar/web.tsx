@@ -162,6 +162,21 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
     // }).filter((fileId) => fileId)
   };
 
+  const getTooltipTitle = (type) => {
+    switch (type) {
+      case 'weapp':
+        return '微信小程序';
+      case 'h5':
+        return 'H5 应用';
+      case 'alipay':
+        return '支付宝小程序';
+      case 'dd':
+        return '钉钉应用';
+      default:
+        return '未知类型';
+    }
+  };
+
   return (
     <>
       <Toolbar
@@ -189,8 +204,9 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
             src="https://assets.mybricks.world/iFuRygS1BayUQRdkzq57nurLy0CR9PYd-1715416429457.png"
             alt=""
           />
-          帮助文档
+          帮助
         </div>
+        <div className="ant-divider ant-divider-vertical" style={{ marginLeft: 15, marginRight: -10 }}></div>
         {/* <PopContact></PopContact> */}
         <Locker
           statusChange={statusChange}
@@ -200,20 +216,50 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
           beforeToggleLock={
             window.__type__ === "mpa"
               ? () => {
-                  if (versionModel.file.updated) {
-                    message.info("当前应用版本落后，不允许上锁，请刷新后再试");
-                    return false;
-                  }
-                  return true;
+                if (versionModel.file.updated) {
+                  message.info("当前应用版本落后，不允许上锁，请刷新后再试");
+                  return false;
                 }
+                return true;
+              }
               : null
           }
-          // pollable={false} // 测试
+        // pollable={false} // 测试
         />
-        <Toolbar.Save disabled={!operable} onClick={onSave} dotTip={isModify} />
+
+        <div className="ant-divider ant-divider-vertical" style={{ marginLeft: -1, marginRight: 5 }}></div>
+
+
+        {console.log("DescMap", DescMap, "selectType", selectType)}
+
+        <Tooltip
+            placement="bottom"
+            title={
+              "当前应用类型："+getTooltipTitle(selectType)
+            }
+          >
+        <div className={css.app_type_box}>
+          {selectType == "weapp" && (
+            <img src="https://assets.mybricks.world/KM5fTOFMtt9DMKg1sLNsHP6Qj9gUnIdj-1741675701538.png" alt="" />
+          )}
+          {selectType == "h5" && (
+            <img src="https://assets.mybricks.world/LxICq38QngASLhvIUrQB1uhWp3c3lVvx-1741675926232.png" alt="" />
+          )}
+          {selectType == "alipay" && (
+            <img src="https://assets.mybricks.world/bt9ubWPJX0o4wJTka5jesu8JE44NyTsK-1741675953413.png" alt="" />
+          )}
+          {selectType == "dd" && (
+            <img src="https://assets.mybricks.world/xyeBRo7BKOfL06CPV5gN5fbQKXi1cyWF-1741675977117.png" alt="" />
+          )}
+        </div>
+        </Tooltip>
+
+
+        <div className="ant-divider ant-divider-vertical" style={{ marginLeft: 5, marginRight: 5 }}></div>
+
         {pageModel.isNew &&
-        window.__type__ === "mpa" &&
-        (globalOperable || operable) ? (
+          window.__type__ === "mpa" &&
+          (globalOperable || operable) ? (
           <Tooltip
             placement="bottom"
             title={
@@ -223,80 +269,36 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
             }
           >
             <ExclamationCircleOutlined
-              style={{ color: isModify ? "#FA6400" : "inherit" }}
+              style={{ color: isModify ? "#FA6400" : "inherit",opacity:0.5 }}
             />
           </Tooltip>
         ) : null}
 
-        <CompileButtonGroups>
-          <Dropdown
-            menu={{
-              items: Object.keys(DescMap).map((type) => ({
-                label: DescMap[type],
-                key: type,
-                // disabled: !operable,
-                style: { fontSize: 13 },
-              })),
-              onClick: (e) => {
-                // pageModel.previewStatus = PreviewStatus.LOADING
-                setSelectType(e.key);
-              },
-            }}
-            trigger={window.__PLATFORM__ ? [] : ["click"]}
-          >
-            <CompileButton onClick={() => {}}>
-              构建平台：
-              <span style={{ color: "#ea732e", fontWeight: "bold" }}>
-                {DescMap[selectType]}
-              </span>
-              {/* 用户前置选择了平台，则不可切换 */}
-              {window.__PLATFORM__ ? null : (
-                <DownOutlined style={{ marginLeft: 3, color: "#ea732e" }} />
-              )}
-            </CompileButton>
-          </Dropdown>
+        <Toolbar.Save disabled={!operable} onClick={onSave} dotTip={isModify} />
 
-          {/* h5 */}
-          {[CompileType.h5].includes(selectType) && (
-            <PreviewPopOver onCompile={previewHandle}>
-              <CompileButton onClick={previewHandle}>
-                预览
-                <EyeOutlined style={{ marginLeft: 3 }} />
-              </CompileButton>
-            </PreviewPopOver>
-          )}
-          {[CompileType.h5].includes(selectType) && (
-            <CompileButton disabled={!globalOperable} onClick={publishHandle}>
-              发布
-              <ToTopOutlined style={{ marginLeft: 3 }} />
-            </CompileButton>
+        {/* weapp */}
+        {[CompileType.weapp, CompileType.h5].includes(selectType) && (
+          <PreviewPopOver onCompile={previewHandle}>
+            <Toolbar.Button onClick={previewHandle}>
+              预览
+            </Toolbar.Button>
+          </PreviewPopOver>
+        )}
+
+        {/* 发布 */}
+        {[CompileType.weapp, CompileType.h5].includes(selectType) && (
+          <Toolbar.Button disabled={!globalOperable} onClick={publishHandle}>
+            发布
+          </Toolbar.Button>
+        )}
+
+
+        {[CompileType.weapp, CompileType.alipay, CompileType.dd].includes(
+          selectType
+        ) && (
+            <Toolbar.Button onClick={compileHandle}>下载</Toolbar.Button>
           )}
 
-          {/* weapp */}
-          {[CompileType.weapp].includes(selectType) && (
-            <PreviewPopOver onCompile={previewHandle}>
-              <CompileButton onClick={previewHandle}>
-                预览开发版
-                <EyeOutlined style={{ marginLeft: 3 }} />
-              </CompileButton>
-            </PreviewPopOver>
-          )}
-          {[CompileType.weapp].includes(selectType) && (
-            <CompileButton disabled={!globalOperable} onClick={publishHandle}>
-              发布体验版
-              <ToTopOutlined style={{ marginLeft: 3 }} />
-            </CompileButton>
-          )}
-
-          {[CompileType.weapp, CompileType.alipay, CompileType.dd].includes(
-            selectType
-          ) && (
-            <CompileButton onClick={compileHandle}>
-              编译到本地
-              <DownloadOutlined style={{ marginLeft: 3 }} />
-            </CompileButton>
-          )}
-        </CompileButtonGroups>
       </Toolbar>
     </>
   );
