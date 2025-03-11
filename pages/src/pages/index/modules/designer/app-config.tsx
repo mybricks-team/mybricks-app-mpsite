@@ -208,8 +208,8 @@ export default function ({
     },
     ...(ctx.hasMaterialApp
       ? {
-          comLibAdder: comLibAdderFunc(ctx),
-        }
+        comLibAdder: comLibAdderFunc(ctx),
+      }
       : {}),
     comLibLoader: comlibLoaderFunc(ctx),
     pageContentLoader: async (sceneId) => {
@@ -226,275 +226,219 @@ export default function ({
         return editorAppenderFn(editConfig, pageModel);
       },
       // eslint-disable-next-line no-empty-pattern
-      items({}, cate0, cate1, cate2) {
-        cate0.title = "配置";
+      items({ }, cate0, cate1, cate2) {
+        cate0.title = "属性";
         cate0.items = [
           // 微信小程序配置
           !window.__PLATFORM__ || window.__PLATFORM__ === "weapp"
             ? {
-                title: "微信小程序配置",
-                items: [
-                  {
-                    type: "editorRender",
-                    options: {
-                      render: () => {
-                        return <MpConfig />;
-                      },
+              title: "绑定微信小程序",
+              items: [
+                {
+                  type: "editorRender",
+                  options: {
+                    render: () => {
+                      return <MpConfig />;
                     },
                   },
-                ],
-              }
+                },
+              ],
+            }
             : {},
           // H5 配置
           !window.__PLATFORM__ || window.__PLATFORM__ === "h5"
             ? {
-                title: "H5 配置",
-                items: [
-                  {
-                    title: "head 注入",
-                    description:
-                      "内容支持任意合法的 HTML 标签，并且将被插入到页面的 <head> 标签中",
-                    type: "code",
-                    options: ({ data, output }) => {
-                      return {
-                        language: "html",
-                      };
+              title: "H5 配置",
+              items: [
+                {
+                  title: "head 注入",
+                  description:
+                    "内容支持任意合法的 HTML 标签，并且将被插入到页面的 <head> 标签中",
+                  type: "code",
+                  options: ({ data, output }) => {
+                    return {
+                      language: "html",
+                    };
+                  },
+                  value: {
+                    get() {
+                      return pageModel.appConfig.h5Head;
                     },
-                    value: {
-                      get() {
-                        return pageModel.appConfig.h5Head;
-                      },
-                      set(_, value) {
-                        pageModel.appConfig.h5Head = value;
-                      },
+                    set(_, value) {
+                      pageModel.appConfig.h5Head = value;
                     },
                   },
-                ],
-              }
+                },
+              ],
+            }
             : {},
           {
-            title: "连接器",
-            items: [
-              {
-                title: "直连（仅在调试模式下生效）",
-                type: "Switch",
-                description:
-                  "直连模式下「服务接口」直接由浏览器发起网络请求，通常用于请求本地接口或者其他网络情况",
-                value: {
-                  get() {
-                    return pageModel.appConfig.directConnection;
-                  },
-                  set(_, value) {
-                    pageModel.appConfig.directConnection = value;
-                  },
-                },
+            title: "接口默认域名",
+            description:
+              "接口允许单独配置域名。如未设置特定域名，则默认使用预设域名；若已配置特定域名，则会优先使用您所设定的域名。",
+            type: "array",
+            options: {
+              getTitle: (item) => {
+                return (
+                  <div
+                    style={{
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                      lineHeight: "30px",
+                    }}
+                    title={item.host}
+                  >
+                    {item.host || "未设置"}
+                  </div>
+                );
               },
-              {},
-              {
-                title: "默认域名",
-                description:
-                  "接口允许单独配置域名。如未设置特定域名，则默认使用预设域名；若已配置特定域名，则会优先使用您所设定的域名。",
-                type: "array",
-                options: {
-                  getTitle: (item) => {
-                    return (
-                      <div
-                        style={{
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",
-                          lineHeight: "30px",
-                        }}
-                        title={item.host}
-                      >
-                        {item.host || "未设置"}
-                      </div>
-                    );
-                  },
-                  items: [
-                    {
-                      title: "域名",
-                      type: "text",
-                      value: "host",
-                    },
-                  ],
-                  editable: false,
-                  selectable: true,
-                  onSelect(_id) {
-                    let item = pageModel.appConfig.hostList.find((hostItem) => {
-                      return hostItem._id === _id;
-                    });
+              items: [
+                {
+                  title: "域名",
+                  type: "text",
+                  value: "host",
+                },
+              ],
+              editable: false,
+              selectable: true,
+              onSelect(_id) {
+                let item = pageModel.appConfig.hostList.find((hostItem) => {
+                  return hostItem._id === _id;
+                });
 
-                    if (!item) {
-                      return;
-                    }
+                if (!item) {
+                  return;
+                }
 
-                    if (!item?.host) {
-                      window.antd.message.warn("请先设置域名");
-                      return;
-                    }
+                if (!item?.host) {
+                  window.antd.message.warn("请先设置域名");
+                  return;
+                }
 
-                    window.antd.message.success(
-                      `默认域名已切换为: ${item.host}`
-                    );
-                    pageModel.appConfig.defaultCallServiceHost = item.host;
-                  },
-                  onRemove(_id) {
-                    let item = pageModel.appConfig.hostList.find((hostItem) => {
-                      return hostItem._id === _id;
-                    });
+                window.antd.message.success(
+                  `默认域名已切换为: ${item.host}`
+                );
+                pageModel.appConfig.defaultCallServiceHost = item.host;
+              },
+              onRemove(_id) {
+                let item = pageModel.appConfig.hostList.find((hostItem) => {
+                  return hostItem._id === _id;
+                });
 
-                    if (!item) {
-                      return;
-                    }
+                if (!item) {
+                  return;
+                }
 
-                    if (
-                      item.host === pageModel.appConfig.defaultCallServiceHost
-                    ) {
-                      pageModel.appConfig.defaultCallServiceHost = undefined;
-                    }
-                  },
-                  customOptRender({ item, setList }) {
-                    return (
-                      <div style={{ display: "flex", alignItems: "center" }}>
-                        {pageModel.appConfig.defaultCallServiceHost ===
-                          item.host &&
-                          item.host && (
-                            <div
-                              style={{
-                                fontSize: "9px",
-                                border: "1px solid #FA6400",
-                                borderRadius: "20px",
-                                color: "white",
-                                fontWeight: "700",
-                                backgroundColor: "#FA6400",
-                                padding: "2px 4px",
-                              }}
-                            >
-                              使用该域名
-                            </div>
-                          )}
+                if (
+                  item.host === pageModel.appConfig.defaultCallServiceHost
+                ) {
+                  pageModel.appConfig.defaultCallServiceHost = undefined;
+                }
+              },
+              customOptRender({ item, setList }) {
+                return (
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    {pageModel.appConfig.defaultCallServiceHost ===
+                      item.host &&
+                      item.host && (
                         <div
                           style={{
-                            margin: "3px 0px 3px 5px",
-                            height: "22px",
-                            width: "22px",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                          }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-
-                            const host = window.prompt(
-                              "请输入域名，使用 https:// 或 http:// 开头",
-                              item.host
-                            );
-
-                            // 校验域名
-                            if (host && !/^https?:\/\/.*/.test(host)) {
-                              alert("请输入正确的域名");
-                              return;
-                            }
-
-                            // 重复域名校验
-                            if (
-                              host &&
-                              pageModel.appConfig.hostList.find(
-                                (hostItem) => hostItem.host === host
-                              )
-                            ) {
-                              alert("域名已存在");
-                              return;
-                            }
-
-                            if (host) {
-                              setList((c) =>
-                                c.map((t) => {
-                                  if (t._id === item._id) {
-                                    return {
-                                      ...t,
-                                      host,
-                                    };
-                                  }
-                                  return t;
-                                })
-                              );
-                            }
+                            fontSize: "9px",
+                            border: "1px solid #FA6400",
+                            borderRadius: "20px",
+                            color: "white",
+                            fontWeight: "700",
+                            backgroundColor: "#FA6400",
+                            padding: "2px 4px",
                           }}
                         >
-                          <svg viewBox="0 0 1024 1024" width="15" height="15">
-                            <path
-                              d="M341.108888 691.191148 515.979638 616.741529 408.633794 511.126097 341.108888 691.191148Z"
-                              p-id="5509"
-                            ></path>
-                            <path
-                              d="M860.525811 279.121092 749.7171 164.848489 428.544263 481.69274 543.68156 601.158622 860.525811 279.121092Z"
-                              p-id="5510"
-                            ></path>
-                            <path
-                              d="M951.813934 142.435013c0 0-29.331026-32.462343-63.091944-57.132208-33.759895-24.670889-59.729359 0-59.729359 0l-57.132208 57.132208 115.996874 115.565039c0 0 48.909943-49.342802 63.957661-66.222237C966.861652 174.897356 951.813934 142.435013 951.813934 142.435013L951.813934 142.435013z"
-                              p-id="5511"
-                            ></path>
-                            <path
-                              d="M802.174845 946.239985 176.165232 946.239985c-61.635779 0-111.786992-50.151213-111.786992-111.786992L64.37824 208.443379c0-61.635779 50.151213-111.786992 111.786992-111.786992l303.856449 0c12.357446 0 22.357194 10.011005 22.357194 22.357194s-9.999748 22.357194-22.357194 22.357194L176.165232 141.370775c-36.986379 0-67.072605 30.086226-67.072605 67.072605l0 626.009613c0 36.986379 30.086226 67.072605 67.072605 67.072605l626.009613 0c36.985356 0 67.072605-30.086226 67.072605-67.072605L869.24745 530.596544c0-12.347213 9.999748-22.357194 22.357194-22.357194s22.357194 10.011005 22.357194 22.357194l0 303.856449C913.961838 896.088772 863.810624 946.239985 802.174845 946.239985z"
-                              p-id="5512"
-                            ></path>
-                          </svg>
+                          使用该域名
                         </div>
-                      </div>
-                    );
-                  },
-                },
+                      )}
+                    <div
+                      style={{
+                        margin: "3px 0px 3px 5px",
+                        height: "22px",
+                        width: "22px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
 
-                value: {
-                  get({ data, focusArea }) {
-                    return pageModel.appConfig.hostList;
-                  },
-                  set({ data, focusArea, output, input, ...res }, value) {
-                    pageModel.appConfig.hostList = value;
-                  },
-                },
+                        const host = window.prompt(
+                          "请输入域名，使用 https:// 或 http:// 开头",
+                          item.host
+                        );
+
+                        // 校验域名
+                        if (host && !/^https?:\/\/.*/.test(host)) {
+                          alert("请输入正确的域名");
+                          return;
+                        }
+
+                        // 重复域名校验
+                        if (
+                          host &&
+                          pageModel.appConfig.hostList.find(
+                            (hostItem) => hostItem.host === host
+                          )
+                        ) {
+                          alert("域名已存在");
+                          return;
+                        }
+
+                        if (host) {
+                          setList((c) =>
+                            c.map((t) => {
+                              if (t._id === item._id) {
+                                return {
+                                  ...t,
+                                  host,
+                                };
+                              }
+                              return t;
+                            })
+                          );
+                        }
+                      }}
+                    >
+                      <svg viewBox="0 0 1024 1024" width="15" height="15">
+                        <path
+                          d="M341.108888 691.191148 515.979638 616.741529 408.633794 511.126097 341.108888 691.191148Z"
+                          p-id="5509"
+                        ></path>
+                        <path
+                          d="M860.525811 279.121092 749.7171 164.848489 428.544263 481.69274 543.68156 601.158622 860.525811 279.121092Z"
+                          p-id="5510"
+                        ></path>
+                        <path
+                          d="M951.813934 142.435013c0 0-29.331026-32.462343-63.091944-57.132208-33.759895-24.670889-59.729359 0-59.729359 0l-57.132208 57.132208 115.996874 115.565039c0 0 48.909943-49.342802 63.957661-66.222237C966.861652 174.897356 951.813934 142.435013 951.813934 142.435013L951.813934 142.435013z"
+                          p-id="5511"
+                        ></path>
+                        <path
+                          d="M802.174845 946.239985 176.165232 946.239985c-61.635779 0-111.786992-50.151213-111.786992-111.786992L64.37824 208.443379c0-61.635779 50.151213-111.786992 111.786992-111.786992l303.856449 0c12.357446 0 22.357194 10.011005 22.357194 22.357194s-9.999748 22.357194-22.357194 22.357194L176.165232 141.370775c-36.986379 0-67.072605 30.086226-67.072605 67.072605l0 626.009613c0 36.986379 30.086226 67.072605 67.072605 67.072605l626.009613 0c36.985356 0 67.072605-30.086226 67.072605-67.072605L869.24745 530.596544c0-12.347213 9.999748-22.357194 22.357194-22.357194s22.357194 10.011005 22.357194 22.357194l0 303.856449C913.961838 896.088772 863.810624 946.239985 802.174845 946.239985z"
+                          p-id="5512"
+                        ></path>
+                      </svg>
+                    </div>
+                  </div>
+                );
               },
-            ],
+            },
+
+            value: {
+              get({ data, focusArea }) {
+                return pageModel.appConfig.hostList;
+              },
+              set({ data, focusArea, output, input, ...res }, value) {
+                pageModel.appConfig.hostList = value;
+              },
+            },
           },
-          {
-            title: "服务",
-            description: "服务配置",
-            items: [
-              {
-                title: "数据源",
-                description: "选择数据源后，可以对数据源进行增删改查操作",
-                type: "filereader",
-                options: {
-                  fileId: pageModel.fileId,
-                  allowedFileExtNames: ["datasource"],
-                },
-                value: {
-                  get() {
-                    return pageModel.appConfig.datasource;
-                  },
-                  set(_, value) {
-                    console.log("数据源 set: ", value);
-                    pageModel.appConfig.datasource = value;
-                  },
-                },
-              },
-              {
-                title: "服务部署地址",
-                description: "默认为：https://{host}/runtime/service/{fileId}",
-                type: "text",
-                value: {
-                  get() {
-                    return pageModel.appConfig.serviceFxUrl;
-                  },
-                  set(_, value) {
-                    pageModel.appConfig.serviceFxUrl = value;
-                  },
-                },
-              },
-            ],
-          },
+          
           // {
           //   title: "",
           //   type: "editorRender",
@@ -506,8 +450,57 @@ export default function ({
           // },
         ];
 
-        cate1.title = "调试";
+        cate1.title = "服务";
         cate1.items = [
+          {
+            title: "数据源",
+            description: "选择数据源后，可以对数据源进行增删改查操作",
+            type: "filereader",
+            options: {
+              fileId: pageModel.fileId,
+              allowedFileExtNames: ["datasource"],
+            },
+            value: {
+              get() {
+                return pageModel.appConfig.datasource;
+              },
+              set(_, value) {
+                console.log("数据源 set: ", value);
+                pageModel.appConfig.datasource = value;
+              },
+            },
+          },
+          {
+            title: "服务部署地址",
+            description: "默认为：https://{host}/runtime/service/{fileId}",
+            type: "text",
+            value: {
+              get() {
+                return pageModel.appConfig.serviceFxUrl;
+              },
+              set(_, value) {
+                pageModel.appConfig.serviceFxUrl = value;
+              },
+            },
+          },
+        ]
+
+        cate2.title = "调试";
+        cate2.items = [
+          {
+            title: "连接器直连（仅在调试模式下生效）",
+            type: "Switch",
+            description:
+              "直连模式下「服务接口」直接由浏览器发起网络请求，通常用于请求本地接口或者其他网络情况",
+            value: {
+              get() {
+                return pageModel.appConfig.directConnection;
+              },
+              set(_, value) {
+                pageModel.appConfig.directConnection = value;
+              },
+            },
+          },
           {
             title: "注意",
             items: [
@@ -529,7 +522,7 @@ export default function ({
                           borderRadius: 3,
                         }}
                       >
-                        以下配置仅在
+                        以上配置仅在
                         <span
                           style={{
                             fontWeight: 500,
@@ -581,7 +574,7 @@ export default function ({
                     "_MYBRICKS_GLOBAL_HEADERS_",
                     JSON.stringify({ data })
                   );
-                } catch (e) {}
+                } catch (e) { }
               },
             },
           },
@@ -664,7 +657,7 @@ export default function ({
         adder: [
           {
             type: "normal",
-            title: window.__PLATFORM__ === "h5" ?  "H5 标签页" : "小程序标签页",
+            title: window.__PLATFORM__ === "h5" ? "H5 标签页" : "小程序标签页",
             template: {
               namespace: "mybricks.taro.systemPage",
               deletable: false,
@@ -682,7 +675,7 @@ export default function ({
           },
           {
             type: "normal",
-            title: window.__PLATFORM__ === "h5" ?  "H5 页面" : "小程序页面",
+            title: window.__PLATFORM__ === "h5" ? "H5 页面" : "小程序页面",
             template: {
               namespace: "mybricks.taro.systemPage",
               deletable: false,
@@ -1457,8 +1450,8 @@ function getDomainFromPath(path: string) {
 
 async function searchUser(url: string, params) {
   return await axios.post(
-      url,
-      params
+    url,
+    params
   ).then((response) => {
     if (response.status >= 200 && response.status < 300) {
       return response.data;
@@ -1466,9 +1459,9 @@ async function searchUser(url: string, params) {
       return Promise.reject('http status is not 200');
     }
   })
-      .catch((error) => {
-          console.error("搜索用户失败，报错信息:", error);
-          throw error;
-      });
+    .catch((error) => {
+      console.error("搜索用户失败，报错信息:", error);
+      throw error;
+    });
 }
 
