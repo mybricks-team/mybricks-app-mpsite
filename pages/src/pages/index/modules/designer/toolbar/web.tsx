@@ -228,10 +228,6 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
         />
 
         <div className="ant-divider ant-divider-vertical" style={{ marginLeft: -1, marginRight: 5 }}></div>
-
-
-        {console.log("DescMap", DescMap, "selectType", selectType)}
-
         <Tooltip
             placement="bottom"
             title={
