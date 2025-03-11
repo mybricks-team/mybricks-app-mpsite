@@ -5,13 +5,20 @@ import { _NAMESPACE_ } from "..";
 import dayjs from "dayjs";
 import { TConfigProps } from "../useConfig";
 import UploadConfig from "./UploadConfig";
-import RuntimeUploadConfig from "./RuntimeUploadConfig";
+// import RuntimeUploadConfig from "./RuntimeUploadConfig";
 import PublishApi from "./PublishApi";
+import EmailConfigApi from './EmailConfigApi';
 // import PublishLocalize from '../ConfigBase/PublishLocalize';
 const { Meta } = Card;
 
 export default (props: TConfigProps) => {
   const { config, mergeUpdateConfig, loading, user, options } = props;
 
-  return <PublishApi {...props} />;
+  return (
+    <>
+      <UploadConfig {...props} />
+      <PublishApi {...props} />
+      <EmailConfigApi {...props} />
+    </>
+  );
 };

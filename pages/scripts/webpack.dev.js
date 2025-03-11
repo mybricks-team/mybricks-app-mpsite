@@ -36,6 +36,7 @@ module.exports = merge(common, {
           "/api/compile/getMybricksConfig",
           "/api/compile/cpu",
           "/api/compile/wx/test",
+          "/api/compile/miniapp/searchUser"
         ],
         target: "http://localhost:3000",
         secure: false,
