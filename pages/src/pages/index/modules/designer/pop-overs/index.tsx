@@ -125,7 +125,7 @@ export const PreviewPopOver = ({ children, onCompile }) => {
       open={status !== PreviewStatus.IDLE}
       placement="bottom"
     >
-      <div onClick={(e) => e.stopPropagation()} style={{ marginRight: 5 }}>
+      <div onClick={(e) => e.stopPropagation()} style={{ marginRight: 0,marginLeft: 0 }}>
         {children}
       </div>
     </Popover>

@@ -193,24 +193,11 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
             </Marquee>
           }
         /> */}
-        <div
-          className={css.help_btn}
-          onClick={() => {
-            window.open(
-              "https://docs.mybricks.world/docs/miniprogram/basic/addComponent/"
-            );
-          }}
-        >
-          <img
-            src="https://assets.mybricks.world/iFuRygS1BayUQRdkzq57nurLy0CR9PYd-1715416429457.png"
-            alt=""
-          />
-          帮助
-        </div>
-        <div
+
+        {/* <div
           className="ant-divider ant-divider-vertical"
-          style={{ marginLeft: 15, marginRight: -10 }}
-        ></div>
+          style={{ marginLeft: 10, marginRight: -13 }}
+        ></div> */}
         {/* <PopContact></PopContact> */}
         <Locker
           statusChange={statusChange}
@@ -220,20 +207,20 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
           beforeToggleLock={
             window.__type__ === "mpa"
               ? () => {
-                  if (versionModel.file.updated) {
-                    message.info("当前应用版本落后，不允许上锁，请刷新后再试");
-                    return false;
-                  }
-                  return true;
+                if (versionModel.file.updated) {
+                  message.info("当前应用版本落后，不允许上锁，请刷新后再试");
+                  return false;
                 }
+                return true;
+              }
               : null
           }
-          // pollable={false} // 测试
+        // pollable={false} // 测试
         />
 
         <div
           className="ant-divider ant-divider-vertical"
-          style={{ marginLeft: -1, marginRight: 5 }}
+          style={{ marginLeft: -6, marginRight: 5 }}
         ></div>
 
         <Tooltip
@@ -241,7 +228,7 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
           title={
             selectType === CompileType.weapp
               ? "当前应用类型：微信小程序"
-              : "切换应用类型为 微信小程序"
+              : "切换应用类型为：微信小程序"
           }
         >
           <div
@@ -260,7 +247,7 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
           title={
             selectType === CompileType.alipay
               ? "当前应用类型：支付宝小程序"
-              : "切换应用类型为 支付宝小程序"
+              : "切换应用类型为：支付宝小程序"
           }
         >
           <div
@@ -279,7 +266,7 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
           title={
             selectType === CompileType.dd
               ? "当前应用类型：钉钉小程序"
-              : "切换应用类型为 钉钉小程序"
+              : "切换应用类型为：钉钉小程序"
           }
         >
           <div
@@ -298,7 +285,7 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
           title={
             selectType === CompileType.h5
               ? "当前应用类型：H5"
-              : "切换应用类型为 H5"
+              : "切换应用类型为：H5"
           }
         >
           <div
@@ -334,12 +321,31 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
 
         <div
           className="ant-divider ant-divider-vertical"
-          style={{ marginLeft: 5, marginRight: 5 }}
+          style={{ marginLeft: 5, marginRight: 2 }}
         ></div>
 
+        <Tooltip
+          placement="bottom"
+          title={"查看教程文档"}
+        >
+          <div
+            className={css.help_btn}
+            onClick={() => {
+              window.open(
+                "https://docs.mybricks.world/docs/miniprogram/basic/addComponent/"
+              );
+            }}
+          >
+            <img
+              src="https://assets.mybricks.world/iFuRygS1BayUQRdkzq57nurLy0CR9PYd-1715416429457.png"
+              alt=""
+            />
+          </div>
+        </Tooltip>
+
         {pageModel.isNew &&
-        window.__type__ === "mpa" &&
-        (globalOperable || operable) ? (
+          window.__type__ === "mpa" &&
+          (globalOperable || operable) ? (
           <Tooltip
             placement="bottom"
             title={
@@ -353,6 +359,7 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
             />
           </Tooltip>
         ) : null}
+
 
         <Toolbar.Save disabled={!operable} onClick={onSave} dotTip={isModify} />
 
@@ -373,6 +380,8 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
         {[CompileType.weapp, CompileType.alipay, CompileType.dd].includes(
           selectType
         ) && <Toolbar.Button onClick={compileHandle}>下载</Toolbar.Button>}
+
+
       </Toolbar>
     </>
   );
