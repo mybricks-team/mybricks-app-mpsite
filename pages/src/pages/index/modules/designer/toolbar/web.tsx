@@ -6,6 +6,7 @@ import { showH5RequireModal, showWeappRequireModal } from "./../modals";
 import { PreviewPopOver } from "./../pop-overs";
 import { Dropdown, message, Alert, Tooltip } from "antd";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
+import cx from "classnames";
 // import Marquee from 'react-fast-marquee';
 import {
   DownOutlined,
@@ -164,16 +165,16 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
 
   const getTooltipTitle = (type) => {
     switch (type) {
-      case 'weapp':
-        return '微信小程序';
-      case 'h5':
-        return 'H5 应用';
-      case 'alipay':
-        return '支付宝小程序';
-      case 'dd':
-        return '钉钉应用';
+      case "weapp":
+        return "微信小程序";
+      case "h5":
+        return "H5 应用";
+      case "alipay":
+        return "支付宝小程序";
+      case "dd":
+        return "钉钉应用";
       default:
-        return '未知类型';
+        return "未知类型";
     }
   };
 
@@ -206,7 +207,10 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
           />
           帮助
         </div>
-        <div className="ant-divider ant-divider-vertical" style={{ marginLeft: 15, marginRight: -10 }}></div>
+        <div
+          className="ant-divider ant-divider-vertical"
+          style={{ marginLeft: 15, marginRight: -10 }}
+        ></div>
         {/* <PopContact></PopContact> */}
         <Locker
           statusChange={statusChange}
@@ -216,46 +220,126 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
           beforeToggleLock={
             window.__type__ === "mpa"
               ? () => {
-                if (versionModel.file.updated) {
-                  message.info("当前应用版本落后，不允许上锁，请刷新后再试");
-                  return false;
+                  if (versionModel.file.updated) {
+                    message.info("当前应用版本落后，不允许上锁，请刷新后再试");
+                    return false;
+                  }
+                  return true;
                 }
-                return true;
-              }
               : null
           }
-        // pollable={false} // 测试
+          // pollable={false} // 测试
         />
 
-        <div className="ant-divider ant-divider-vertical" style={{ marginLeft: -1, marginRight: 5 }}></div>
+        <div
+          className="ant-divider ant-divider-vertical"
+          style={{ marginLeft: -1, marginRight: 5 }}
+        ></div>
+
         <Tooltip
-            placement="bottom"
-            title={
-              "当前应用类型："+getTooltipTitle(selectType)
-            }
+          placement="bottom"
+          title={
+            selectType === CompileType.weapp
+              ? "当前应用类型：微信小程序"
+              : "切换应用类型为 微信小程序"
+          }
+        >
+          <div
+            className={cx({
+              [css.app_type_box]: true,
+              [css.selected]: selectType === CompileType.weapp,
+            })}
+            onClick={() => setSelectType(CompileType.weapp)}
           >
-        <div className={css.app_type_box}>
-          {selectType == "weapp" && (
-            <img src="https://assets.mybricks.world/KM5fTOFMtt9DMKg1sLNsHP6Qj9gUnIdj-1741675701538.png" alt="" />
-          )}
-          {selectType == "h5" && (
-            <img src="https://assets.mybricks.world/LxICq38QngASLhvIUrQB1uhWp3c3lVvx-1741675926232.png" alt="" />
-          )}
-          {selectType == "alipay" && (
-            <img src="https://assets.mybricks.world/bt9ubWPJX0o4wJTka5jesu8JE44NyTsK-1741675953413.png" alt="" />
-          )}
-          {selectType == "dd" && (
-            <img src="https://assets.mybricks.world/xyeBRo7BKOfL06CPV5gN5fbQKXi1cyWF-1741675977117.png" alt="" />
-          )}
-        </div>
+            <img src="https://assets.mybricks.world/KM5fTOFMtt9DMKg1sLNsHP6Qj9gUnIdj-1741675701538.png" />
+          </div>
         </Tooltip>
 
+        <Tooltip
+          placement="bottom"
+          title={
+            selectType === CompileType.alipay
+              ? "当前应用类型：支付宝小程序"
+              : "切换应用类型为 支付宝小程序"
+          }
+        >
+          <div
+            className={cx({
+              [css.app_type_box]: true,
+              [css.selected]: selectType === CompileType.alipay,
+            })}
+            onClick={() => setSelectType(CompileType.alipay)}
+          >
+            <img src="https://assets.mybricks.world/bt9ubWPJX0o4wJTka5jesu8JE44NyTsK-1741675953413.png" />
+          </div>
+        </Tooltip>
 
-        <div className="ant-divider ant-divider-vertical" style={{ marginLeft: 5, marginRight: 5 }}></div>
+        <Tooltip
+          placement="bottom"
+          title={
+            selectType === CompileType.dd
+              ? "当前应用类型：钉钉小程序"
+              : "切换应用类型为 钉钉小程序"
+          }
+        >
+          <div
+            className={cx({
+              [css.app_type_box]: true,
+              [css.selected]: selectType === CompileType.dd,
+            })}
+            onClick={() => setSelectType(CompileType.dd)}
+          >
+            <img src="https://assets.mybricks.world/xyeBRo7BKOfL06CPV5gN5fbQKXi1cyWF-1741675977117.png" />
+          </div>
+        </Tooltip>
+
+        <Tooltip
+          placement="bottom"
+          title={
+            selectType === CompileType.h5
+              ? "当前应用类型：H5"
+              : "切换应用类型为 H5"
+          }
+        >
+          <div
+            className={cx({
+              [css.app_type_box]: true,
+              [css.selected]: selectType === CompileType.h5,
+            })}
+            onClick={() => setSelectType(CompileType.h5)}
+          >
+            <img src="https://assets.mybricks.world/LxICq38QngASLhvIUrQB1uhWp3c3lVvx-1741675926232.png" />
+          </div>
+        </Tooltip>
+
+        {/* <Tooltip
+          placement="bottom"
+          title={"当前应用类型：" + getTooltipTitle(selectType)}
+        >
+          <div className={css.app_type_box}>
+            {selectType == "weapp" && (
+              <img src="https://assets.mybricks.world/KM5fTOFMtt9DMKg1sLNsHP6Qj9gUnIdj-1741675701538.png" />
+            )}
+            {selectType == "h5" && (
+              <img src="https://assets.mybricks.world/LxICq38QngASLhvIUrQB1uhWp3c3lVvx-1741675926232.png" />
+            )}
+            {selectType == "alipay" && (
+              <img src="https://assets.mybricks.world/bt9ubWPJX0o4wJTka5jesu8JE44NyTsK-1741675953413.png" />
+            )}
+            {selectType == "dd" && (
+              <img src="https://assets.mybricks.world/xyeBRo7BKOfL06CPV5gN5fbQKXi1cyWF-1741675977117.png" />
+            )}
+          </div>
+        </Tooltip> */}
+
+        <div
+          className="ant-divider ant-divider-vertical"
+          style={{ marginLeft: 5, marginRight: 5 }}
+        ></div>
 
         {pageModel.isNew &&
-          window.__type__ === "mpa" &&
-          (globalOperable || operable) ? (
+        window.__type__ === "mpa" &&
+        (globalOperable || operable) ? (
           <Tooltip
             placement="bottom"
             title={
@@ -265,7 +349,7 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
             }
           >
             <ExclamationCircleOutlined
-              style={{ color: isModify ? "#FA6400" : "inherit",opacity:0.5 }}
+              style={{ color: isModify ? "#FA6400" : "inherit", opacity: 0.5 }}
             />
           </Tooltip>
         ) : null}
@@ -275,9 +359,7 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
         {/* weapp */}
         {[CompileType.weapp, CompileType.h5].includes(selectType) && (
           <PreviewPopOver onCompile={previewHandle}>
-            <Toolbar.Button onClick={previewHandle}>
-              预览
-            </Toolbar.Button>
+            <Toolbar.Button onClick={previewHandle}>预览</Toolbar.Button>
           </PreviewPopOver>
         )}
 
@@ -288,13 +370,9 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
           </Toolbar.Button>
         )}
 
-
         {[CompileType.weapp, CompileType.alipay, CompileType.dd].includes(
           selectType
-        ) && (
-            <Toolbar.Button onClick={compileHandle}>下载</Toolbar.Button>
-          )}
-
+        ) && <Toolbar.Button onClick={compileHandle}>下载</Toolbar.Button>}
       </Toolbar>
     </>
   );
