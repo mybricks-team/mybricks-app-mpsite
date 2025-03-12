@@ -80,7 +80,7 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
   onAlipayPreview,
 }) => {
   const [selectType, setSelectType] = useState<CompileType>(
-    (window.__PLATFORM__ || selectTypeStorage.get()) ?? CompileType.weapp
+    (selectTypeStorage.get()) ?? CompileType.weapp
   );
 
   const handleSwitch2SaveVersion = useCallback(() => {
@@ -108,6 +108,7 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
 
   useEffect(() => {
     selectTypeStorage.set(selectType);
+    window.__PLATFORM__ = selectType
   }, [selectType]);
 
   const previewHandle = () => {
