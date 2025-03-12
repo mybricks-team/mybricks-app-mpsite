@@ -231,6 +231,12 @@ export class BaseJson {
       .sort((a, b) => (a.id === "main" ? -1 : 1));
     // ----- 全局逻辑编排使用场景，不可或缺
 
+    const globalVarMap = Object.entries(toJson.global.comsReg).reduce((pre, [id, { model
+    }]) => {
+      pre[id] = model.data.initValue
+      return pre;
+    }, {})
+
     events?.onBeforeTransformCode?.();
 
     return {
@@ -243,6 +249,7 @@ export class BaseJson {
       depModules: getDepModules(comlibs, useF2ForTaro),
       pageCssMap,
       pageAliasMap,
+      globalVarMap
     };
   };
 

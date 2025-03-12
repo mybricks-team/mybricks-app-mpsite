@@ -18,12 +18,14 @@ export class GetH5Json extends BaseJson {
       pageCssMap,
       pageAliasMap,
       appConfig,
+      globalVarMap
     } = await this.initJson({ toJson, events, comlibs, status });
 
     const rootConfig = {
       scenes,
       fxFrames,
       status,
+      globalVarMap
     };
 
     let cssContent: any = [];
