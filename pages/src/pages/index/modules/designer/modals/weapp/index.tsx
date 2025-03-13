@@ -70,7 +70,7 @@ const WeappRequireForm = ({ onCancel, onOk }) => {
 
 export const showWeappRequireModal = ({ onSubmit }) => {
   globalModal.show({
-    title: "发布",
+    title: "发布为微信小程序",
     footer: null,
     width: 480,
     children: (

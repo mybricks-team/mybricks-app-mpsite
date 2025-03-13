@@ -19,6 +19,10 @@ import { CompileButtonGroups, CompileButton } from "./compile-buttons";
 import PopContact from "../pop-contact";
 import css from "./web.less";
 
+import help from "./icons/help"
+
+import { showDownloadConfig } from "./model/downloadModel"
+
 interface PublishParams {
   type: string;
   version: string;
@@ -80,7 +84,7 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
   onAlipayPreview,
 }) => {
   const [selectType, setSelectType] = useState<CompileType>(
-    (selectTypeStorage.get() || window.__PLATFORM__ ) ?? CompileType.weapp
+    (selectTypeStorage.get() || window.__PLATFORM__) ?? CompileType.weapp
   );
 
   const handleSwitch2SaveVersion = useCallback(() => {
@@ -117,7 +121,9 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
     }
 
     if ([CompileType.alipay].includes(selectType)) {
-      onAlipayPreview?.();
+      // onAlipayPreview?.();
+      onPreview?.();
+      //支付宝的预览还没做，暂时先用微信小程序的预览
     }
 
     if (selectType === CompileType.h5) {
@@ -126,18 +132,20 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
   };
 
   const compileHandle = () => {
-    onCompile?.({
-      type: selectType,
-      // version: version,
-      // description: description,
-    });
+    showDownloadConfig({onCompile})
+    // onCompile?.({
+    //   type: selectType,
+    //   // version: version,
+    //   // description: description,
+    // });
   };
 
   const publishHandle = () => {
     if (!globalOperable) {
       return;
     }
-    if ([CompileType.weapp].includes(selectType)) {
+    if ([CompileType.weapp, CompileType.alipay].includes(selectType)) {
+      //支付宝小程序发布还没做，所以点击后暂时先用小程序的发布逻辑
       showWeappRequireModal({
         onSubmit: ({ version, description }) => {
           onPublish?.({
@@ -162,21 +170,6 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
     // return Object.entries(pageModel.pages).map(([,value]) => {
     //   return value.fileId
     // }).filter((fileId) => fileId)
-  };
-
-  const getTooltipTitle = (type) => {
-    switch (type) {
-      case "weapp":
-        return "微信小程序";
-      case "h5":
-        return "H5 应用";
-      case "alipay":
-        return "支付宝小程序";
-      case "dd":
-        return "钉钉应用";
-      default:
-        return "未知类型";
-    }
   };
 
   return (
@@ -219,111 +212,6 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
         // pollable={false} // 测试
         />
 
-        <div
-          className="ant-divider ant-divider-vertical"
-          style={{ marginLeft: -6, marginRight: 5 }}
-        ></div>
-
-        <Tooltip
-          placement="bottom"
-          title={
-            selectType === CompileType.weapp
-              ? "当前应用类型：微信小程序"
-              : "切换应用类型为：微信小程序"
-          }
-        >
-          <div
-            className={cx({
-              [css.app_type_box]: true,
-              [css.selected]: selectType === CompileType.weapp,
-            })}
-            onClick={() => setSelectType(CompileType.weapp)}
-          >
-            <img src="https://assets.mybricks.world/KM5fTOFMtt9DMKg1sLNsHP6Qj9gUnIdj-1741675701538.png" />
-          </div>
-        </Tooltip>
-
-        <Tooltip
-          placement="bottom"
-          title={
-            selectType === CompileType.alipay
-              ? "当前应用类型：支付宝小程序"
-              : "切换应用类型为：支付宝小程序"
-          }
-        >
-          <div
-            className={cx({
-              [css.app_type_box]: true,
-              [css.selected]: selectType === CompileType.alipay,
-            })}
-            onClick={() => setSelectType(CompileType.alipay)}
-          >
-            <img src="https://assets.mybricks.world/bt9ubWPJX0o4wJTka5jesu8JE44NyTsK-1741675953413.png" />
-          </div>
-        </Tooltip>
-
-        <Tooltip
-          placement="bottom"
-          title={
-            selectType === CompileType.dd
-              ? "当前应用类型：钉钉小程序"
-              : "切换应用类型为：钉钉小程序"
-          }
-        >
-          <div
-            className={cx({
-              [css.app_type_box]: true,
-              [css.selected]: selectType === CompileType.dd,
-            })}
-            onClick={() => setSelectType(CompileType.dd)}
-          >
-            <img src="https://assets.mybricks.world/xyeBRo7BKOfL06CPV5gN5fbQKXi1cyWF-1741675977117.png" />
-          </div>
-        </Tooltip>
-
-        <Tooltip
-          placement="bottom"
-          title={
-            selectType === CompileType.h5
-              ? "当前应用类型：H5"
-              : "切换应用类型为：H5"
-          }
-        >
-          <div
-            className={cx({
-              [css.app_type_box]: true,
-              [css.selected]: selectType === CompileType.h5,
-            })}
-            onClick={() => setSelectType(CompileType.h5)}
-          >
-            <img src="https://assets.mybricks.world/LxICq38QngASLhvIUrQB1uhWp3c3lVvx-1741675926232.png" />
-          </div>
-        </Tooltip>
-
-        {/* <Tooltip
-          placement="bottom"
-          title={"当前应用类型：" + getTooltipTitle(selectType)}
-        >
-          <div className={css.app_type_box}>
-            {selectType == "weapp" && (
-              <img src="https://assets.mybricks.world/KM5fTOFMtt9DMKg1sLNsHP6Qj9gUnIdj-1741675701538.png" />
-            )}
-            {selectType == "h5" && (
-              <img src="https://assets.mybricks.world/LxICq38QngASLhvIUrQB1uhWp3c3lVvx-1741675926232.png" />
-            )}
-            {selectType == "alipay" && (
-              <img src="https://assets.mybricks.world/bt9ubWPJX0o4wJTka5jesu8JE44NyTsK-1741675953413.png" />
-            )}
-            {selectType == "dd" && (
-              <img src="https://assets.mybricks.world/xyeBRo7BKOfL06CPV5gN5fbQKXi1cyWF-1741675977117.png" />
-            )}
-          </div>
-        </Tooltip> */}
-
-        <div
-          className="ant-divider ant-divider-vertical"
-          style={{ marginLeft: 5, marginRight: 2 }}
-        ></div>
 
         <Tooltip
           placement="bottom"
@@ -338,7 +226,7 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
             }}
           >
             <img
-              src="https://assets.mybricks.world/iFuRygS1BayUQRdkzq57nurLy0CR9PYd-1715416429457.png"
+              src={help}
               alt=""
             />
           </div>
@@ -364,19 +252,13 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
 
         <Toolbar.Save disabled={!operable} onClick={onSave} dotTip={isModify} />
 
-        {/* weapp */}
-        {[CompileType.weapp, CompileType.h5].includes(selectType) && (
-          <PreviewPopOver onCompile={previewHandle}>
-            <Toolbar.Button onClick={previewHandle}>预览</Toolbar.Button>
-          </PreviewPopOver>
-        )}
+        {/* 预览 */}
+        <PreviewPopOver onCompile={previewHandle}>
+          <Toolbar.Button onClick={previewHandle}>预览</Toolbar.Button>
+        </PreviewPopOver>
 
         {/* 发布 */}
-        {[CompileType.weapp, CompileType.h5].includes(selectType) && (
-          <Toolbar.Button disabled={!globalOperable} onClick={publishHandle}>
-            发布
-          </Toolbar.Button>
-        )}
+        <Toolbar.Button disabled={!globalOperable} onClick={publishHandle}>发布</Toolbar.Button>
 
         {[CompileType.weapp, CompileType.alipay, CompileType.dd].includes(
           selectType
