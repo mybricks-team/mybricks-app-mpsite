@@ -71,6 +71,7 @@ function _execJs (script) {
   return function ({ env, data, inputs, outputs, logger, onError }) {
     const { fns, runImmediate } = data;
     const runJSParams = {
+      logger,
       outputs: convertObject2Array(outputs)
     };
     try {
