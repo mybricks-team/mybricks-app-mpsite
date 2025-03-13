@@ -230,48 +230,45 @@ export default function ({
         cate0.title = "属性";
         cate0.items = [
           // 微信小程序配置
-          !window.__PLATFORM__ || window.__PLATFORM__ === "weapp"
-            ? {
-              title: "绑定微信小程序",
-              items: [
-                {
-                  type: "editorRender",
-                  options: {
-                    render: () => {
-                      return <MpConfig />;
-                    },
+          {
+            ifVisible: ({ data }) => {
+              return !window.__PLATFORM__ || window.__PLATFORM__ !== "h5";
+            },
+            title: "绑定微信小程序",
+            description: "用来发布和预览微信小程序，其他小程序（支付宝、钉钉）请点击右上角「下载」直接构建到本地",
+            type: "editorRender",
+            options: {
+              render: () => {
+                return <MpConfig />;
+              },
+            },
+          }, {
+            ifVisible: ({ data }) => {
+              return !window.__PLATFORM__ || window.__PLATFORM__ === "h5";
+            },
+            title: "H5 配置",
+            items: [
+              {
+                title: "head 注入",
+                description:
+                  "内容支持任意合法的 HTML 标签，并且将被插入到页面的 <head> 标签中",
+                type: "code",
+                options: ({ data, output }) => {
+                  return {
+                    language: "html",
+                  };
+                },
+                value: {
+                  get() {
+                    return pageModel.appConfig.h5Head;
+                  },
+                  set(_, value) {
+                    pageModel.appConfig.h5Head = value;
                   },
                 },
-              ],
-            }
-            : {},
-          // H5 配置
-          !window.__PLATFORM__ || window.__PLATFORM__ === "h5"
-            ? {
-              title: "H5 配置",
-              items: [
-                {
-                  title: "head 注入",
-                  description:
-                    "内容支持任意合法的 HTML 标签，并且将被插入到页面的 <head> 标签中",
-                  type: "code",
-                  options: ({ data, output }) => {
-                    return {
-                      language: "html",
-                    };
-                  },
-                  value: {
-                    get() {
-                      return pageModel.appConfig.h5Head;
-                    },
-                    set(_, value) {
-                      pageModel.appConfig.h5Head = value;
-                    },
-                  },
-                },
-              ],
-            }
-            : {},
+              },
+            ],
+          },
           {
             title: "接口默认域名",
             description:
@@ -438,7 +435,7 @@ export default function ({
               },
             },
           },
-          
+
           // {
           //   title: "",
           //   type: "editorRender",

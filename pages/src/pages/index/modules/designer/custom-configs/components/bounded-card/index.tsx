@@ -8,7 +8,7 @@ const BoundedCard = ({ appid, onBind }) => {
   return (
     <div className={css.card}>
       <div className={css.title}>APPID:{appid}</div>
-      <div className={css.desc}>已绑定小程序</div>
+      <div className={css.desc}>已绑定微信小程序</div>
       <div
         className={css.btn}
         onClick={(e) => {
