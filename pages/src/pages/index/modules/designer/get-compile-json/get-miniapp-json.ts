@@ -9,7 +9,7 @@ export class GetMiniappJson extends BaseJson {
   }
 
   getJson = async ({ toJson, ci, status, comlibs, events = {} }) => {
-    const { pages, fxFrames, depModules, pageCssMap, pageAliasMap } =
+    const { pages, fxFrames, depModules, pageCssMap, pageAliasMap, globalVarMap } =
       await this.initJson({
         toJson,
         events,
@@ -71,6 +71,7 @@ export class GetMiniappJson extends BaseJson {
       },
       depModules,
       pageAliasMap,
+      globalVarMap
     };
 
     console.warn("toJson2Json", params);

@@ -569,6 +569,7 @@ export const compilerMiniapp = async (
       routeMap,
       scenes: data.scenes, // 用于给render-taro创建全局多场景的交互
       fxFrames: data.fxFrames, // 用于给render-taro创建全局Fx的实现
+      globalVarMap: data.globalVarMap, // 全局变量默认值
     })
   );
 
