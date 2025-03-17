@@ -52,8 +52,6 @@ export const getPageCssMap = (pageToJson) => {
   Object.keys(jsonComs).forEach((key) => {
     let styleAry = jsonComs[key]?.model?.style?.styleAry || [];
 
-    console.log('styleAry', styleAry)
-
     pageCss[key] = styleAry.map((item) => {
       let { selector, css } = item;
       if(selector?.includes("_key")) {

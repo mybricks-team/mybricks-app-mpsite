@@ -368,7 +368,7 @@ export function toFrameJSON(frame, regs: {
             
             const startPinParentKey = con.startPin.parent._key
             const finishPinParentKey = con.finishPin.parent._key
-            
+
             const conReg = {
               id: con.id,
               type: 'com',
@@ -379,9 +379,12 @@ export function toFrameJSON(frame, regs: {
               comId: parentComId,
               def: parentComDef,
               timerPinInputId,
-              pinId: realFPin.hostId,
-              pinType: realFPin.type,
-              direction: realFPin.direction,
+              // pinId: realFPin.hostId,
+              // pinType: realFPin.type,
+              // direction: realFPin.direction,
+              pinId: realFPin.hostId || realFPin.pinHostId,
+              pinType: realFPin.type || "normal",
+              direction: realFPin.direction || "input",
               extBinding: realFPin.extBinding,
               isIgnored: con.isIgnored,
               isBreakpoint: opts?.forDebug ? con.isBreakpoint : void 0
