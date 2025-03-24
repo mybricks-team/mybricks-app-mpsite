@@ -116,7 +116,7 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
   }, [selectType]);
 
   const previewHandle = () => {
-    if(selectType === CompileType.miniprogram) {
+    if(selectType === CompileType.miniprogram || selectType === CompileType.alipay || selectType === CompileType.dd || selectType === CompileType.weapp) {
       //miniprogram 指代所有小程序类型，目前预览时统一都先使用微信小程序
       onPreview?.();
     }
@@ -138,7 +138,7 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
     if (!globalOperable) {
       return;
     }
-    if ([CompileType.weapp, CompileType.alipay].includes(selectType)) {
+    if ([CompileType.weapp, CompileType.alipay, CompileType.miniprogram, CompileType.dd].includes(selectType)) {
       //支付宝小程序发布还没做，所以点击后暂时先用小程序的发布逻辑
       showWeappRequireModal({
         onSubmit: ({ version, description }) => {
@@ -254,7 +254,7 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
         {/* 发布 */}
         <Toolbar.Button disabled={!globalOperable} onClick={publishHandle}>发布</Toolbar.Button>
 
-        {[CompileType.weapp, CompileType.alipay, CompileType.dd].includes(
+        {[CompileType.weapp, CompileType.alipay, CompileType.dd, CompileType.miniprogram].includes(
           selectType
         ) && <Toolbar.Button onClick={compileHandle}>下载</Toolbar.Button>}
 
