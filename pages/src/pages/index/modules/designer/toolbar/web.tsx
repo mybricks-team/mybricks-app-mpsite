@@ -116,16 +116,10 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
   }, [selectType]);
 
   const previewHandle = () => {
-    if ([CompileType.weapp].includes(selectType)) {
+    if(selectType === CompileType.miniprogram) {
+      //miniprogram 指代所有小程序类型，目前预览时统一都先使用微信小程序
       onPreview?.();
     }
-
-    if ([CompileType.alipay].includes(selectType)) {
-      // onAlipayPreview?.();
-      onPreview?.();
-      //支付宝的预览还没做，暂时先用微信小程序的预览
-    }
-
     if (selectType === CompileType.h5) {
       onH5Preview?.();
     }

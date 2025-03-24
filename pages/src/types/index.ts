@@ -13,5 +13,6 @@ export enum CompileType {
   h5 = 'h5',
   weapp = 'weapp',
   alipay = 'alipay',
-  dd = 'dd'
+  dd = 'dd',
+  miniprogram = 'miniprogram'
 }
