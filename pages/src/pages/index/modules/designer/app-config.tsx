@@ -232,15 +232,19 @@ export default function ({
         cate0.items = [
           {
             title: "绑定微信小程序",
-            type: "editorRender",
-            ifVisible: ({ data }) => {
-              return !window.__PLATFORM__ || window.__PLATFORM__ !== "h5";
-            },
-            options: {
-              render: () => {
-                return <MpConfig />;
+            items: [
+              {
+                type: "editorRender",
+                ifVisible: ({ data }) => {
+                  return !window.__PLATFORM__ || window.__PLATFORM__ !== "h5";
+                },
+                options: {
+                  render: () => {
+                    return <MpConfig />;
+                  },
+                }
               },
-            }
+            ]
           },
           {
             title: "H5 配置",
