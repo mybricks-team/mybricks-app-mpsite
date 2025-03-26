@@ -65,6 +65,7 @@ export const MpConfig = () => {
 
   return (
     <div className={css.bindPanel}>
+      <div className={css.desc}>目前只支持微信小程序，支付宝、钉钉小程序请点击右上角「下载」直接构建到本地</div>
       <div>
         {hasBind ? (
           <>

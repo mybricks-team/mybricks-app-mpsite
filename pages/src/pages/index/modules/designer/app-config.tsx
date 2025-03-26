@@ -21,6 +21,7 @@ import { getAiEncryptData } from "./utils/get-ai-encrypt-data";
 import extendsConfig from "./configs/extends";
 import systemContent from "./system.txt";
 import { message } from "antd";
+import { CompileType } from "@/types";
 // import  AICom  from "../../../../../public/ai-com"
 // import typeConfig from "./configs/type";
 // import { PcEditor } from "/Users/stuzhaoxing-office/Program/editors-pc-common/src/index";
@@ -227,28 +228,31 @@ export default function ({
       },
       // eslint-disable-next-line no-empty-pattern
       items({ }, cate0, cate1, cate2) {
-        cate0.title = "属性";
+        cate0.title = "项目";
         cate0.items = [
-          // 微信小程序配置
           {
+            title: "绑定微信小程序",
+            type: "editorRender",
             ifVisible: ({ data }) => {
               return !window.__PLATFORM__ || window.__PLATFORM__ !== "h5";
             },
-            title: "绑定微信小程序",
-            description: "用来发布和预览微信小程序，其他小程序（支付宝、钉钉）请点击右上角「下载」直接构建到本地",
-            type: "editorRender",
             options: {
               render: () => {
                 return <MpConfig />;
               },
-            },
-          }, {
-            ifVisible: ({ data }) => {
-              return !window.__PLATFORM__ || window.__PLATFORM__ === "h5";
-            },
+            }
+          },
+          {
             title: "H5 配置",
             items: [
               {
+                ifVisible: ({ data }) => {
+                  if (window.__PLATFORM__ === CompileType.miniprogram || window.__PLATFORM__ === CompileType.weapp || window.__PLATFORM__ === CompileType.alipay || window.__PLATFORM__ === CompileType.dd) {
+                    return false
+                  } else if (window.__PLATFORM__ === CompileType.h5) {
+                    return true
+                  }
+                },
                 title: "head 注入",
                 description:
                   "内容支持任意合法的 HTML 标签，并且将被插入到页面的 <head> 标签中",
