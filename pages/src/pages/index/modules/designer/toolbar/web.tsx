@@ -191,7 +191,8 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
           statusChange={statusChange}
           compareVersion={false}
           getExtraFileIds={window.__type__ === "mpa" ? getExtraFileIds : null}
-          autoLock={window.__type__ === "mpa" ? false : true}
+          // autoLock={window.__type__ === "mpa" ? false : true}
+          autoLock={true}
           beforeToggleLock={
             window.__type__ === "mpa"
               ? () => {
