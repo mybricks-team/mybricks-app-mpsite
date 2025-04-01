@@ -14,10 +14,27 @@ import alipay from "./../../icons/alipay"
 import dd from "./../../icons/dd";
 import h5 from "./../../icons/h5";
 
+class SelectTypeStorage {
+    key = `_mybricks_mpsite_${new URL(location.href).searchParams.get(
+      "id"
+    )}_type_`;
+  
+    set = (selectType: CompileType) => {
+      localStorage.setItem(this.key, selectType);
+    };
+  
+    get = (): CompileType => {
+      return localStorage.getItem(this.key) as CompileType;
+    };
+  }
+  
+  const selectTypeStorage = new SelectTypeStorage();
+
 export const AppSelector = ({ onCompile }) => {
-    const [selectType, setSelectType] = useState(CompileType.weapp);
+    const [selectType, setSelectType] = useState(selectTypeStorage.get());
     const itemClick = (type) => {
         setSelectType(type);
+        selectTypeStorage.set(type)
     }
 
     const downloadClick = () => {
