@@ -1225,29 +1225,33 @@ const Designer = ({ appData }) => {
           }
           return;
         }
-        if (supportFSAccess && false) {
-          // 临时关闭 fs access API 的下载，文件多了后太慢了
+        // if (supportFSAccess && false) {
+        //   // 临时关闭 fs access API 的下载，文件多了后太慢了
 
-          // 支持 fs acess API 的浏览器走直接下载
-          message.loading({
-            key: "compile",
-            content: "正在构建到本地文件夹",
-          });
-          await downloadProjectToLocal({ type });
-          message.success({
-            key: "compile",
-            content: "已构建至本地文件夹",
-          });
-        } else {
-          showCompileSuccess({
+        //   // 支持 fs acess API 的浏览器走直接下载
+        //   message.loading({
+        //     key: "compile",
+        //     content: "正在构建到本地文件夹",
+        //   });
+        //   await downloadProjectToLocal({ type });
+        //   message.success({
+        //     key: "compile",
+        //     content: "已构建至本地文件夹",
+        //   });
+        // } else {
+          download({
             type,
-            onDownload: () =>
-              download({
-                type,
-                backEndProjectPath: data?.data?.backEndProjectPath,
-              }),
-          });
-        }
+            backEndProjectPath: data?.data?.backEndProjectPath,
+          })
+          // showCompileSuccess({
+          //   type,
+          //   onDownload: () =>
+          //     download({
+          //       type,
+          //       backEndProjectPath: data?.data?.backEndProjectPath,
+          //     }),
+          // });
+        // }
       } catch (e) {
         pageModel.publishLoading = false;
         console.error(e);
