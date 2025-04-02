@@ -496,6 +496,11 @@ const Designer = ({ appData }) => {
                       <div style={{ marginLeft: 24 }}>修改内容都已保存</div>
                     ),
                 });
+                if(notCanvasSaves.length || notModuleSaves.length){
+                  setBeforeunload(true)
+                }else{
+                  setBeforeunload(false)
+                }
               } else {
                 notification.open({
                   message: (
@@ -624,14 +629,23 @@ const Designer = ({ appData }) => {
                     ) : (
                       <div style={{ marginLeft: 24 }}>修改内容都已保存</div>
                     ),
+
                 });
+                if(contentModel.editRecord.global ||
+                  notCanvasSaves.length ||
+                  notModuleSaves.length){
+                  setBeforeunload(true)
+                }else{
+                  setBeforeunload(false)
+                }
               }
             }
           }
         } else {
           !!tip && message.success("保存完成");
+          setBeforeunload(false);
         }
-        setBeforeunload(false);
+
       })
       .catch((e) => {
         !!tip && message.error(`保存失败：${e.message}`);
