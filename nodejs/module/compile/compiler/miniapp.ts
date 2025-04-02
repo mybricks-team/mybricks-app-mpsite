@@ -504,6 +504,17 @@ export const compilerMiniapp = async (
               );
             }
           );
+        }else{
+          //有些小程序触发了分包逻辑了，但是又没有hasSubPackageComDef，这个时候直接引用根目录的components/comDefs
+          modifyFileContent(
+            path.resolve(pkgTarget, `./pages/${pageId}`, "./index.js"),
+            (str) => {
+              return str.replace(
+                /\.\/\.\.\/\.\.\/components\/comDefs/g,
+                `./../../../components/comDefs` 
+              );
+            }
+          );
         }
 
       });
