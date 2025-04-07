@@ -15,6 +15,7 @@ import versionPlugin from "mybricks-plugin-version";
 
 import { editorAppenderFn } from "./editorAppender";
 
+import { showAIPageModal, MobilePrompts, MobileDefinitions } from '/Users/cocolbell/Desktop/projects/mybricks/sdk-for-ai'
 import { LOCAL_EDITOR_ASSETS } from "@/constants";
 import { MpConfig, CompileConfig } from "./custom-configs";
 import { getAiEncryptData } from "./utils/get-ai-encrypt-data";
@@ -660,6 +661,22 @@ export default function ({
           // },
         ],
         adder: [
+          {
+            type: 'defined',
+            title: 'AI生成...',
+            load: () => {
+              return new Promise((resolve, reject) => {
+                showAIPageModal({
+                  prompts: MobilePrompts,
+                  definitions: MobileDefinitions,
+                  onConfirm({ templateJson }) {
+                    resolve(templateJson)
+                  },
+                })
+              })
+            }
+          },
+          {},
           {
             type: "normal",
             title: window.__PLATFORM__ === "h5" ? "H5 标签页" : "小程序标签页",

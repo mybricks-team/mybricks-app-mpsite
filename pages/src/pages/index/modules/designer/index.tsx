@@ -138,6 +138,10 @@ const Designer = ({ appData }) => {
   const designerRef = useRef<{ switchActivity; dump; toJSON }>();
   const [SPADesigner, setSPADesigner] = useState(null);
 
+  useMemo(() => {
+    (window as any).designerRef = designerRef
+  }, [])
+
   const [ctx] = useState({
     sdk: appData,
     user: appData.user,
