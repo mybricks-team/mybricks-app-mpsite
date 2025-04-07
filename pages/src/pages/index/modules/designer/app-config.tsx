@@ -780,60 +780,60 @@ export default function ({
       title: "交互",
       vars: {},
       fx: {},
-      useService: {
-        debug(toJSON) {
-          // return new Promise((resolve, reject) => {
-          //   resolve();
-          // });
+      // useService: {
+      //   debug(toJSON) {
+      //     // return new Promise((resolve, reject) => {
+      //     //   resolve();
+      //     // });
 
-          let database = null;
+      //     let database = null;
 
-          if (pageModel?.appConfig.datasource) {
-            const { domainModel, ...config } = pageModel?.appConfig.datasource;
-            database = config;
-          }
+      //     if (pageModel?.appConfig.datasource) {
+      //       const { domainModel, ...config } = pageModel?.appConfig.datasource;
+      //       database = config;
+      //     }
 
-          const toJson = {
-            ...toJSON,
-            plugins: {
-              // '@mybricks/plugins/service': designerRef.current.getPluginData('@mybricks/plugins/service')
-            },
-          };
+      //     const toJson = {
+      //       ...toJSON,
+      //       plugins: {
+      //         // '@mybricks/plugins/service': designerRef.current.getPluginData('@mybricks/plugins/service')
+      //       },
+      //     };
 
-          return FxService.serviceDebug({
-            database,
-            fileId: pageModel?.fileId,
-            toJSON: toJson,
-          });
+      //     return FxService.serviceDebug({
+      //       database,
+      //       fileId: pageModel?.fileId,
+      //       toJSON: toJson,
+      //     });
 
-          // return new Promise((resolve, reject) => {
-          //   axios
-          //     .post("/paas/api/project/service/push", {
-          //       target: "debug",
-          //       version: "1.0.0",
-          //       fileId: pageModel.fileId,
-          //       json: toJSON,
-          //       database,
-          //     })
-          //     .then((res) => {
-          //       // debugErrMessageRef.current = "";
-          //       scopeIdRef.current = res.data.data.scopeId;
-          //       resolve("");
-          //     })
-          //     .catch((err) => {
-          //       let message = "";
-          //       if (err?.response && err.response.status === 404) {
-          //         message = "调试服务异常：找不到调试服务，请联系平台管理员";
-          //       } else {
-          //         message = `调试服务异常：${err?.response?.data?.message ?? err?.message ?? "未知错误"}`;
-          //       }
-          //       // debugErrMessageRef.current = message;
-          //       resolve("");
-          //     });
-          // });
-        },
-        outline: FxService.getServiceOutline(),
-      },
+      //     // return new Promise((resolve, reject) => {
+      //     //   axios
+      //     //     .post("/paas/api/project/service/push", {
+      //     //       target: "debug",
+      //     //       version: "1.0.0",
+      //     //       fileId: pageModel.fileId,
+      //     //       json: toJSON,
+      //     //       database,
+      //     //     })
+      //     //     .then((res) => {
+      //     //       // debugErrMessageRef.current = "";
+      //     //       scopeIdRef.current = res.data.data.scopeId;
+      //     //       resolve("");
+      //     //     })
+      //     //     .catch((err) => {
+      //     //       let message = "";
+      //     //       if (err?.response && err.response.status === 404) {
+      //     //         message = "调试服务异常：找不到调试服务，请联系平台管理员";
+      //     //       } else {
+      //     //         message = `调试服务异常：${err?.response?.data?.message ?? err?.message ?? "未知错误"}`;
+      //     //       }
+      //     //       // debugErrMessageRef.current = message;
+      //     //       resolve("");
+      //     //     });
+      //     // });
+      //   },
+      //   outline: FxService.getServiceOutline(),
+      // },
       extends: extendsConfig,
     },
     // aiView: getAiView(appConfig?.publishLocalizeConfig?.enableAI, {

@@ -87,6 +87,13 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
     (selectTypeStorage.get() || window.__PLATFORM__) ?? CompileType.weapp
   );
 
+  //如果默认是miniprogram的应用类型，则设置为weapp
+  useEffect(()=>{
+    if(selectType === CompileType.miniprogram) {
+      setSelectType(CompileType.weapp)
+    }
+  },[selectType])
+
   const handleSwitch2SaveVersion = useCallback(() => {
     designerRef.current?.switchActivity?.("@mybricks/plugins/version");
     setTimeout(() => {
