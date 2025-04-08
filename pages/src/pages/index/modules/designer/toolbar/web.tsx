@@ -50,21 +50,21 @@ const DescMap = {
   [CompileType.dd]: "钉钉小程序(Beta)",
 };
 
-// class SelectTypeStorage {
-//   key = `_mybricks_mpsite_${new URL(location.href).searchParams.get(
-//     "id"
-//   )}_type_`;
+class SelectTypeStorage {
+  key = `_mybricks_mpsite_${new URL(location.href).searchParams.get(
+    "id"
+  )}_type_`;
 
-//   set = (selectType: CompileType) => {
-//     localStorage.setItem(this.key, selectType);
-//   };
+  set = (selectType: CompileType) => {
+    localStorage.setItem(this.key, selectType);
+  };
 
-//   get = (): CompileType => {
-//     return localStorage.getItem(this.key) as CompileType;
-//   };
-// }
+  get = (): CompileType => {
+    return localStorage.getItem(this.key) as CompileType;
+  };
+}
 
-// const selectTypeStorage = new SelectTypeStorage();
+const selectTypeStorage = new SelectTypeStorage();
 
 export const WebToolbar: React.FC<WebToolbarProps> = ({
   operable,
@@ -84,15 +84,16 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
   onAlipayPreview,
 }) => {
   const [selectType, setSelectType] = useState<CompileType>(
-    window.__PLATFORM__ ?? CompileType.weapp
+    selectTypeStorage.get() ?? window.__PLATFORM__ ?? CompileType.weapp
   );
 
   //如果默认是miniprogram的应用类型，则设置为weapp
-  useEffect(()=>{
-    if(selectType === CompileType.miniprogram) {
+  useEffect(() => {
+    if (selectType === CompileType.miniprogram) {
       setSelectType(CompileType.weapp)
     }
-  },[selectType])
+    window.__PLATFORM__ = selectType
+  }, [selectType])
 
   const handleSwitch2SaveVersion = useCallback(() => {
     designerRef.current?.switchActivity?.("@mybricks/plugins/version");
@@ -118,12 +119,12 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
   }, [publishLoading]);
 
   // useEffect(() => {
-  //   selectTypeStorage.set(selectType);
+  //   // selectTypeStorage.set(selectType);
   //   window.__PLATFORM__ = selectType
   // }, [selectType]);
 
   const previewHandle = () => {
-    if(selectType === CompileType.miniprogram || selectType === CompileType.alipay || selectType === CompileType.dd || selectType === CompileType.weapp) {
+    if (selectType === CompileType.miniprogram || selectType === CompileType.alipay || selectType === CompileType.dd || selectType === CompileType.weapp) {
       //miniprogram 指代所有小程序类型，目前预览时统一都先使用微信小程序
       onPreview?.();
     }
@@ -133,13 +134,18 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
   };
 
   const compileHandle = () => {
-    showDownloadConfig({onCompile})
-    // onCompile?.({
-    //   type: selectType,
-    //   // version: version,
-    //   // description: description,
-    // });
+    // 判断是不是老文件（没有应用类型）走下拉框直接下载的逻辑
+    if(window.__isOldFile__){
+    onCompile?.({
+      type: selectType,
+      // version: version,
+      // description: description,
+    });
+    }else{
+      showDownloadConfig({ onCompile })
+    }
   };
+
 
   const publishHandle = () => {
     if (!globalOperable) {
@@ -266,6 +272,36 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
           selectType
         ) && <Toolbar.Button onClick={compileHandle}>下载</Toolbar.Button>}
 
+        {/* 判断是不是老文件（没有应用类型数据） */}
+        {window.__isOldFile__ === true && <CompileButtonGroups>
+          <Dropdown
+            menu={{
+              items: Object.keys(DescMap).map((type) => ({
+                label: DescMap[type],
+                key: type,
+                // disabled: !operable,
+                style: { fontSize: 13 },
+              })),
+              onClick: (e) => {
+                // pageModel.previewStatus = PreviewStatus.LOADING
+                setSelectType(e.key);
+                selectTypeStorage.set(e.key);
+                //触发刷新页面
+                window.location.reload();
+              },
+            }}
+            trigger={["click"]}
+          >
+            <CompileButton onClick={() => { }}>
+              <span style={{ color: "#ea732e", fontWeight: "bold" }}>
+                {DescMap[selectType]}
+              </span>
+              <DownOutlined style={{ marginLeft: 3, color: "#ea732e" }} />
+            </CompileButton>
+          </Dropdown>
+        </CompileButtonGroups>
+
+        }
 
       </Toolbar>
     </>

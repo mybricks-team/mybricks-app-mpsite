@@ -125,8 +125,11 @@ const Application = () => {
       window.__PLATFORM__ = data.fileContent?.type
     } else {
       // 是否之前配置过微信
-      const hasConfigWeapp = !!pageModel?.wxConfig?.appid
-      window.__PLATFORM__ = hasConfigWeapp ? CompileType.weapp : CompileType.h5
+      // const hasConfigWeapp = !!pageModel?.wxConfig?.appid
+      // window.__PLATFORM__ = CompileType.miniprogram
+
+      //老文件标记
+      window.__isOldFile__ = true
     }
     console.log(`当前构建平台为 ${window.__PLATFORM__}，类型为 ${window.__type__}`)
 
