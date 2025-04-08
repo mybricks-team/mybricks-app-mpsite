@@ -50,21 +50,21 @@ const DescMap = {
   [CompileType.dd]: "钉钉小程序(Beta)",
 };
 
-class SelectTypeStorage {
-  key = `_mybricks_mpsite_${new URL(location.href).searchParams.get(
-    "id"
-  )}_type_`;
+// class SelectTypeStorage {
+//   key = `_mybricks_mpsite_${new URL(location.href).searchParams.get(
+//     "id"
+//   )}_type_`;
 
-  set = (selectType: CompileType) => {
-    localStorage.setItem(this.key, selectType);
-  };
+//   set = (selectType: CompileType) => {
+//     localStorage.setItem(this.key, selectType);
+//   };
 
-  get = (): CompileType => {
-    return localStorage.getItem(this.key) as CompileType;
-  };
-}
+//   get = (): CompileType => {
+//     return localStorage.getItem(this.key) as CompileType;
+//   };
+// }
 
-const selectTypeStorage = new SelectTypeStorage();
+// const selectTypeStorage = new SelectTypeStorage();
 
 export const WebToolbar: React.FC<WebToolbarProps> = ({
   operable,
@@ -84,7 +84,7 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
   onAlipayPreview,
 }) => {
   const [selectType, setSelectType] = useState<CompileType>(
-    (selectTypeStorage.get() || window.__PLATFORM__) ?? CompileType.weapp
+    window.__PLATFORM__ ?? CompileType.weapp
   );
 
   //如果默认是miniprogram的应用类型，则设置为weapp
@@ -117,10 +117,10 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
     }
   }, [publishLoading]);
 
-  useEffect(() => {
-    selectTypeStorage.set(selectType);
-    window.__PLATFORM__ = selectType
-  }, [selectType]);
+  // useEffect(() => {
+  //   selectTypeStorage.set(selectType);
+  //   window.__PLATFORM__ = selectType
+  // }, [selectType]);
 
   const previewHandle = () => {
     if(selectType === CompileType.miniprogram || selectType === CompileType.alipay || selectType === CompileType.dd || selectType === CompileType.weapp) {

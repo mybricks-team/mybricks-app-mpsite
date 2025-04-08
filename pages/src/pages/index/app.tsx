@@ -8,6 +8,7 @@ import {
   EntryPagePath,
   versionModel,
 } from "@/stores";
+import { CompileType } from '@/types'
 import MyDesigner from "./modules/designer";
 import logger from "@/utils/logger";
 import "./app.less";
@@ -75,9 +76,6 @@ const Application = () => {
       window.__type__ = "spa";
     }
 
-    console.log("type", window.__type__);
-
-    //
     userModel.setUser(data.user);
 
     versionModel.file = { version: data.fileContent.version };
@@ -122,11 +120,15 @@ const Application = () => {
     pageModel.wxConfig = data.fileContent.content?.wxConfig || {};
     pageModel.debug = data.fileContent.content?.debug || {};
 
-    // 限制构建平台
-    if (data.fileContent?.type) {
-      window.__PLATFORM__ = data.fileContent?.type;
-      console.warn("限制构建平台", window.__PLATFORM__);
+    // 判断构建平台
+    if ([CompileType.alipay, CompileType.dd, CompileType.h5, CompileType.miniprogram, CompileType.weapp].includes(data.fileContent?.type)) {
+      window.__PLATFORM__ = data.fileContent?.type
+    } else {
+      // 是否之前配置过微信
+      const hasConfigWeapp = !!pageModel?.wxConfig?.appid
+      window.__PLATFORM__ = hasConfigWeapp ? CompileType.weapp : CompileType.h5
     }
+    console.log(`当前构建平台为 ${window.__PLATFORM__}，类型为 ${window.__type__}`)
 
     // 首页配置
     new EntryPagePath(data.fileContent.content?.entryPagePath || "");
