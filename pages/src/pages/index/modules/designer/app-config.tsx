@@ -666,11 +666,12 @@ export default function ({
             title: 'AI生成...',
             load: () => {
               return new Promise((resolve, reject) => {
-                showAIPageModal({
+                const destroy = showAIPageModal({
                   prompts: MobilePrompts,
                   definitions: MobileDefinitions,
-                  onConfirm({ templateJson }) {
+                  onGenerateFinish({ templateJson }) {
                     resolve(templateJson)
+                    destroy?.()
                   },
                 })
               })
