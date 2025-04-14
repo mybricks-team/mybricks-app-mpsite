@@ -248,37 +248,6 @@ export default function ({
             ]
           },
           {
-            title: "H5 配置",
-            items: [
-              {
-                ifVisible: ({ data }) => {
-                  if (window.__PLATFORM__ === CompileType.miniprogram || window.__PLATFORM__ === CompileType.weapp || window.__PLATFORM__ === CompileType.alipay || window.__PLATFORM__ === CompileType.dd) {
-                    return false
-                  } else if (window.__PLATFORM__ === CompileType.h5) {
-                    return true
-                  }
-                },
-                title: "head 注入",
-                description:
-                  "内容支持任意合法的 HTML 标签，并且将被插入到页面的 <head> 标签中",
-                type: "code",
-                options: ({ data, output }) => {
-                  return {
-                    language: "html",
-                  };
-                },
-                value: {
-                  get() {
-                    return pageModel.appConfig.h5Head;
-                  },
-                  set(_, value) {
-                    pageModel.appConfig.h5Head = value;
-                  },
-                },
-              },
-            ],
-          },
-          {
             title: "接口默认域名",
             description:
               "接口允许单独配置域名。如未设置特定域名，则默认使用预设域名；若已配置特定域名，则会优先使用您所设定的域名。",
@@ -444,6 +413,38 @@ export default function ({
               },
             },
           },
+          {
+            title: "H5 配置",
+            items: [
+              {
+                ifVisible: ({ data }) => {
+                  if (window.__PLATFORM__ === CompileType.miniprogram || window.__PLATFORM__ === CompileType.weapp || window.__PLATFORM__ === CompileType.alipay || window.__PLATFORM__ === CompileType.dd) {
+                    return false
+                  } else if (window.__PLATFORM__ === CompileType.h5) {
+                    return true
+                  }
+                },
+                title: "head 注入",
+                description:
+                  "内容支持任意合法的 HTML 标签，并且将被插入到页面的 <head> 标签中",
+                type: "code",
+                options: ({ data, output }) => {
+                  return {
+                    language: "html",
+                  };
+                },
+                value: {
+                  get() {
+                    return pageModel.appConfig.h5Head;
+                  },
+                  set(_, value) {
+                    pageModel.appConfig.h5Head = value;
+                  },
+                },
+              },
+            ],
+          },
+          
 
           // {
           //   title: "",
