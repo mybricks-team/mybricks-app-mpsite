@@ -444,7 +444,7 @@ export default function ({
               },
             ],
           },
-          
+
 
           // {
           //   title: "",
@@ -495,20 +495,6 @@ export default function ({
         cate2.title = "调试";
         cate2.items = [
           {
-            title: "连接器直连（仅在调试模式下生效）",
-            type: "Switch",
-            description:
-              "直连模式下「服务接口」直接由浏览器发起网络请求，通常用于请求本地接口或者其他网络情况",
-            value: {
-              get() {
-                return pageModel.appConfig.directConnection;
-              },
-              set(_, value) {
-                pageModel.appConfig.directConnection = value;
-              },
-            },
-          },
-          {
             title: "注意",
             items: [
               {
@@ -529,10 +515,10 @@ export default function ({
                           borderRadius: 3,
                         }}
                       >
-                        以上配置仅在
+                        以下配置仅在
                         <span
                           style={{
-                            fontWeight: 500,
+                            fontWeight: 700,
                             color: "#ea732e",
                             marginLeft: 2,
                             marginRight: 2,
@@ -553,7 +539,21 @@ export default function ({
             ],
           },
           {
-            title: "默认全局请求头",
+            title: "连接器直连（仅在调试模式下生效）",
+            type: "Switch",
+            description:
+              "直连模式下「服务接口」直接由浏览器发起网络请求，通常用于请求本地接口或者其他网络情况",
+            value: {
+              get() {
+                return pageModel.appConfig.directConnection;
+              },
+              set(_, value) {
+                pageModel.appConfig.directConnection = value;
+              },
+            },
+          },
+          {
+            title: "默认全局请求头（仅在调试模式下生效）",
             description: "每当页面刷新时会，将会在每次请求时自动携带",
             type: "code",
             options: ({ data, output }) => {
