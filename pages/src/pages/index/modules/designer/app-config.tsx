@@ -1211,68 +1211,71 @@ export function mergeEditorOptions(
   return options;
 }
 
+const DEFAULT_MODEL = 'deepseek-chat';
+function getDesignerParams (args) {
+  let context = args[0];
+  let tools = undefined;
+  let extraOption = {};
+  
+  if (args.length === 2) {
+    tools = args[0];
+    context = args[1];
+  }
+
+  if (args.length === 3) {
+    tools = args[0];
+    context = args[1];
+    extraOption = args[2];
+  }
+
+  let model = DEFAULT_MODEL, role;
+
+  switch (true) {
+    case extraOption?.expert === 'image': {
+      model = 'anthropic/claude-3.7-sonnet';
+      role = 'image'
+      break;
+    }
+    case ['image'].includes(extraOption?.aiRole): {
+      model = 'anthropic/claude-3.7-sonnet';
+      role = 'image'
+      break
+    }
+    case ['architect'].includes(extraOption.aiRole): {
+      model = 'openai/gpt-4o-2024-11-20';
+      role = 'architect'
+      break
+    }
+    default: {
+      role = 'default'
+      break;
+    }
+  }
+
+  return {
+    context: context ?? {},
+    tools,
+    model,
+    role,
+  }
+}
+
 const getAiView = (enableAI, option) => {
   const { model } = option ?? {};
 
   if (enableAI) {
     return {
       async requestAsStream(messages, ...args) {
-        if (location.href.includes("localhost")) {
-          console.log("requestAsStream", JSON.parse(JSON.stringify(messages)));
-        }
-
-        // console.log("requestAsStream", JSON.parse(JSON.stringify(messages)));
-        if (messages[0] && false) {
-          messages[0].content = systemContent;
-        }
-
-        let context = args[0];
-        let tools = undefined;
-        let extraOption = {};
-
-        if (args.length === 2) {
-          tools = args[0];
-          context = args[1];
-        }
-
-        if (args.length === 3) {
-          tools = args[0];
-          context = args[1];
-          extraOption = args[2];
-        }
-
+        const { context, tools, model, role } = getDesignerParams(args);
         const { write, complete, error, cancel } = context ?? {};
-
-        let usedModel = DEFAULT_AI_MODEL;
+        // 用于debug用户当前使用的模型
+        window._ai_use_model_ = model;
 
         const cancelControl = !!AbortController ? new AbortController() : null;
 
         cancel?.(() => {
           cancelControl?.abort?.();
         });
-
-        switch (true) {
-          case extraOption?.expert === "image": {
-            usedModel = "anthropic/claude-3.7-sonnet";
-            break;
-          }
-          case ["image"].includes(extraOption?.aiRole): {
-            usedModel = "anthropic/claude-3.7-sonnet";
-            break;
-          }
-          case ["architect"].includes(extraOption.aiRole): {
-            usedModel = "anthropic/claude-3.7-sonnet";
-            // usedModel = "openai/gpt-4o-2024-11-20";
-            break;
-          }
-          default: {
-            usedModel = !!model ? model : undefined;
-            break;
-          }
-        }
-
-        // 用于debug用户当前使用的模型
-        window._ai_use_model_ = usedModel;
 
         try {
           // messages[0].content = require('./promte.md').default;
@@ -1370,69 +1373,25 @@ const getAiView = (enableAI, option) => {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
+                ...(role ? {
+                  "M-Request-Role": role,
+                }: {})
               },
               signal: cancelControl?.signal,
               body: JSON.stringify(
-                getAiEncryptData({
-                  model: usedModel,
-                  // model: 'openai/gpt-4o-mini',
-                  // top_p: 0.2,
+                APP_ENV === 'production' ? getAiEncryptData({
+                  model,
+                  role,
                   messages,
                   tools,
-                  // tools: [
-                  //   {
-                  //     "type": "function",
-                  //     "function": {
-                  //       "name": "select_icons",
-                  //       "description": "选择图标",
-                  //       "parameters": {
-                  //         "type": "object",
-                  //         "properties": {
-
-                  //         }
-                  //       }
-                  //     }
-                  //   },
-                  //   // {
-                  //   //   "type": "function",
-                  //   //   "function": {
-                  //   //     "name": "query_weather",
-                  //   //     "description": "根据城市名称查询当前天气",
-                  //   //     "parameters": {
-                  //   //       "type": "object",
-                  //   //       "properties": {
-                  //   //         "city": {
-                  //   //           "type": "string",
-                  //   //           "description": "城市名称"
-                  //   //         }
-                  //   //       },
-                  //   //       "required": [
-                  //   //         "city"
-                  //   //       ]
-                  //   //     }
-                  //   //   }
-                  //   // },
-                  //   // {
-                  //   //   "type": "function",
-                  //   //   "function": {
-                  //   //     "name": "query_wet",
-                  //   //     "description": "根据城市名称查询降雨概率",
-                  //   //     "parameters": {
-                  //   //       "type": "object",
-                  //   //       "properties": {
-                  //   //         "city": {
-                  //   //           "type": "string",
-                  //   //           "description": "城市名称"
-                  //   //         }
-                  //   //       },
-                  //   //       "required": [
-                  //   //         "city"
-                  //   //       ]
-                  //   //     }
-                  //   //   }
-                  //   // }
-                  // ]
-                })
+                  tool_choice: 'auto',
+                  // tool_choice: {"type": "function", "function": {"name": "query_knowledges"}},
+                }) : {
+                  model,
+                  messages,
+                  tools,
+                  tool_choice: 'auto',
+                }
               ),
             }
           );

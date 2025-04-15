@@ -3,6 +3,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const path = require("path");
 const common = require("./webpack.common");
+const webpack = require("webpack");
 const BuildPlugin = require('./buildplugin')
 const HtmlWebpackInlineSourcePlugin = require('@effortlessmotion/html-webpack-inline-source-plugin')
 const Plugins = require('@mybricks/sdk-for-app/plugin');
@@ -22,6 +23,9 @@ module.exports = merge(common, {
     path: path.resolve(rootPath, "./assets"),
   },
   plugins: [
+    new webpack.DefinePlugin({
+      APP_ENV: JSON.stringify('production')
+    }),
     new CleanWebpackPlugin({
       protectWebpackAssets: false,
       cleanAfterEveryBuildPatterns: ["**/*.LICENSE.txt"],

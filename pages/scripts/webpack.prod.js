@@ -4,6 +4,7 @@ const Plugins = require('@mybricks/sdk-for-app/plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const path = require('path');
 const common = require('./webpack.common');
+const webpack = require('webpack')
 const BuildPlugin = require('./buildplugin')
 const HtmlWebpackInlineSourcePlugin = require('@effortlessmotion/html-webpack-inline-source-plugin')
 // const config = require('../../config.prod.json');
@@ -22,13 +23,15 @@ module.exports = merge(common, {
     path: path.resolve(rootPath, "./assets"),
   },
   plugins: [
+    new webpack.DefinePlugin({
+      APP_ENV: JSON.stringify('production')
+    }),
     new CleanWebpackPlugin({
       protectWebpackAssets: false,
       cleanAfterEveryBuildPatterns: ['**/*.LICENSE.txt'],
       // dangerouslyAllowCleanPatternsOutsideProject: true,
       cleanOnceBeforeBuildPatterns: ['**/*', '!favicon.ico*', '!css/**'],
     }),
-    
     /** Copy 静态资源逻辑都在这，用CopyWebpackPlugin的话会让静态资源都走一遍编译，时间太长了，还编译不了rtComs */
     new BuildPlugin({
       outputPath
