@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo } from 'react'
 import { Popover, Spin, Divider } from 'antd'
 import QrCode from 'react-qr-code';
+import { pageModel, userModel, contentModel } from "@/stores";
 
 import { observable, useComputed } from 'rxui-t'
 
@@ -96,12 +97,12 @@ export const PreviewPopOver = ({ children, onCompile }) => {
               <div
                 className={styles.block}
               >
-                <QrCode style={{ width: 170, height: 170 }} value={fillUrl(successConfig.webUrl) ?? ''} />
+                <QrCode style={{ width: 170, height: 170 }} value={(pageModel.appConfig.useVconsole ? addVconsoleParam(fillUrl(successConfig.webUrl)) : fillUrl(successConfig.webUrl)) ?? ''} />
                 <div className={styles.retry}>
                   <a onClick={onCompile}>刷新</a>
                 </div>
               </div>
-              <div className={styles.open} onClick={() => window.open(fillUrl(successConfig.webUrl))}>点击浏览器打开</div>
+              <div className={styles.open} onClick={() => window.open(pageModel.appConfig.useVconsole ? addVconsoleParam(fillUrl(successConfig.webUrl)) : fillUrl(successConfig.webUrl))}>点击浏览器打开</div>
             </>
           )}
           {[PreviewStatus.LOADING, PreviewStatus.IDLE].includes(status) && (
@@ -135,4 +136,12 @@ export const PreviewPopOver = ({ children, onCompile }) => {
 function fillUrl(urlString) {
   const url = new URL(urlString, window.location); // 用当前页面的URL对象补全相对路径
   return /^\/[^/]/.test(urlString) ? url.href : urlString;
+}
+
+function addVconsoleParam(url) {
+  const [baseUrl, hash] = url.split('#');
+  
+  const newBaseUrl = baseUrl + (baseUrl.includes('?') ? '&' : '?') + 'vconsole=1';
+  
+  return hash ? `${newBaseUrl}#${hash}` : newBaseUrl;
 }

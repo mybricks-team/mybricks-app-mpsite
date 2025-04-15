@@ -445,7 +445,6 @@ export default function ({
             ],
           },
 
-
           // {
           //   title: "",
           //   type: "editorRender",
@@ -495,48 +494,63 @@ export default function ({
         cate2.title = "调试";
         cate2.items = [
           {
-            title: "注意",
-            items: [
-              {
-                type: "editorRender",
-                options: {
-                  render: () => {
-                    return (
-                      <div
-                        style={{
-                          color: "#333333",
-                          padding: 12,
-                          fontSize: 12,
-                          lineHeight: 1.5,
-                          background: "#ffffff",
-                          borderColor: "#f0f0f0",
-                          borderStyle: "solid",
-                          borderWidth: 1,
-                          borderRadius: 3,
-                        }}
-                      >
-                        以下配置仅在
-                        <span
-                          style={{
-                            fontWeight: 700,
-                            color: "#ea732e",
-                            marginLeft: 2,
-                            marginRight: 2,
-                          }}
-                        >
-                          调试时
-                        </span>
-                        作为默认值生效，并且可能被其他组件的设置所覆盖。在
-                        <span style={{ fontWeight: 500 }}>预览</span>、
-                        <span style={{ fontWeight: 500 }}>发布</span>、
-                        <span style={{ fontWeight: 500 }}>编译到本地等</span>
-                        情况下均失效。
-                      </div>
-                    );
-                  },
-                },
+            ifVisible: ({ data }) => {
+              if (window.__PLATFORM__ === CompileType.miniprogram || window.__PLATFORM__ === CompileType.weapp || window.__PLATFORM__ === CompileType.alipay || window.__PLATFORM__ === CompileType.dd) {
+                return false
+              } else if (window.__PLATFORM__ === CompileType.h5) {
+                return true
+              }
+            },
+            title: "预览时打开vconsole",
+            type: "switch",
+            value: {
+              get() {
+                return pageModel.appConfig.useVconsole ?? false;
               },
-            ],
+              set(_, value) {
+                pageModel.appConfig.useVconsole = value;
+              },
+            },
+          },
+          {
+            title: "注意",
+            type: "editorRender",
+            options: {
+              render: () => {
+                return (
+                  <div
+                    style={{
+                      color: "#333333",
+                      padding: 12,
+                      fontSize: 12,
+                      lineHeight: 1.5,
+                      background: "#ffffff",
+                      borderColor: "#f0f0f0",
+                      borderStyle: "solid",
+                      borderWidth: 1,
+                      borderRadius: 3,
+                    }}
+                  >
+                    以下配置仅在
+                    <span
+                      style={{
+                        fontWeight: 700,
+                        color: "#ea732e",
+                        marginLeft: 2,
+                        marginRight: 2,
+                      }}
+                    >
+                      调试时
+                    </span>
+                    作为默认值生效，并且可能被其他组件的设置所覆盖。在
+                    <span style={{ fontWeight: 500 }}>预览</span>、
+                    <span style={{ fontWeight: 500 }}>发布</span>、
+                    <span style={{ fontWeight: 500 }}>编译到本地等</span>
+                    情况下均失效。
+                  </div>
+                );
+              },
+            },
           },
           {
             title: "连接器直连（仅在调试模式下生效）",
@@ -1212,11 +1226,11 @@ export function mergeEditorOptions(
 }
 
 const DEFAULT_MODEL = 'deepseek-chat';
-function getDesignerParams (args) {
+function getDesignerParams(args) {
   let context = args[0];
   let tools = undefined;
   let extraOption = {};
-  
+
   if (args.length === 2) {
     tools = args[0];
     context = args[1];
@@ -1375,7 +1389,7 @@ const getAiView = (enableAI, option) => {
                 "Content-Type": "application/json",
                 ...(role ? {
                   "M-Request-Role": role,
-                }: {})
+                } : {})
               },
               signal: cancelControl?.signal,
               body: JSON.stringify(
