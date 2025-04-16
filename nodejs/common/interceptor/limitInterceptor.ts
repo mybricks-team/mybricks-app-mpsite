@@ -5,13 +5,13 @@ import {
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
-import { Observable, tap, of } from 'rxjs';
+import { Observable, tap, of, finalize } from 'rxjs';
 import { catchError } from 'rxjs/operators'
 
 /** 全局共享一个实例 */
 const counter = {
   count: 0,
-  limit: 15// 并发上限暂时设置为15，目前应该没那么大的用户量
+  limit: 20 // 并发上限暂时设置为20，目前应该没那么大的用户量
 }
 
 /** 限制路由的并发数量，全局共享一个池子 */
@@ -28,16 +28,18 @@ export default class LimitInterceptor implements NestInterceptor {
     counter.count++; // 计数器加1
 
     return next.handle().pipe(
-      tap(() => {
-        counter.count--; // 计数器减1
-      }),
+      tap(() => {}),
       catchError((err) => {
-        counter.count--; // 计数器减1
         return of({
           code: -1,
           message: err?.message,
           stack: err?.stack
         })
+      }),
+      finalize(() => {
+        if (counter.count > 0) {
+          counter.count--;  // 计数器减1
+        }
       })
     );
   }
