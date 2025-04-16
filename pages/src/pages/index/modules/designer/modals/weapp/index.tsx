@@ -27,6 +27,11 @@ const WeappRequireForm = ({ onCancel, onOk }) => {
   const [form] = Form.useForm();
   return (
     <div className={styles.weappRequire}>
+      <div className={styles.help}>
+         <div className={styles.title}>如何查看在线版本号</div>
+         <div className={styles.listItem}>1.登录微信小程序后台:<a href="https://mp.weixin.qq.com/" target="_blank">https://mp.weixin.qq.com/</a></div>
+         <div className={styles.listItem}>2.左侧菜单：管理-版本管理-线上版本 进行查看</div>
+        </div>
       <Form form={form} layout="vertical">
         <Form.Item
           name="version"
