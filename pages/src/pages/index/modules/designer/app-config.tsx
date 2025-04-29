@@ -15,7 +15,7 @@ import versionPlugin from "mybricks-plugin-version";
 
 import { editorAppenderFn } from "./editorAppender";
 
-import { showAIPageModal, MobilePrompts, MobileDefinitions } from '/Users/cocolbell/Desktop/projects/mybricks/sdk-for-ai'
+import { showAIPageModal, MobilePrompts, MobileDefinitions } from '@mybricks/sdk-for-ai'
 import { LOCAL_EDITOR_ASSETS } from "@/constants";
 import { MpConfig, CompileConfig } from "./custom-configs";
 import { getAiEncryptData } from "./utils/get-ai-encrypt-data";

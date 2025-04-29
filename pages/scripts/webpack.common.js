@@ -46,7 +46,8 @@ module.exports = {
         root: "ReactDOM",
       },
       moment: "moment",
-      antd: 'antd'
+      antd: 'antd',
+      '@mybricks/sdk-for-ai': 'mybricks_sdk_for_ai'
     },
   ],
   module: {
