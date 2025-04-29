@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import * as fse from 'fs-extra';
-import * as nodeJsUrl from "url"
+import AdmZip from 'adm-zip';
 import axios from "axios";
 import * as path from "path";
 import * as crypto from "crypto";
@@ -47,22 +47,65 @@ async function zipDirectory(zip, dirPath) {
 
 const DOWNLOAD_TEMP_FOLDER = path.resolve(__dirname, './../../.download-assets');
 
+// export const downloadAssetsFromPath = async (folderPath, assetsZipName) => {
+//   await fse.ensureDir(DOWNLOAD_TEMP_FOLDER);
+
+//   if (!await fse.exists(folderPath)) {
+//     throw new Error('no exist folderPath need zip')
+//   }
+
+//   const zip = new JSZip();
+
+//   await zipDirectory(zip, folderPath);
+
+//   const zipResult = await zip.generateAsync({ type: 'nodebuffer' });
+
+//   await fse.writeFile(path.resolve(DOWNLOAD_TEMP_FOLDER, `./${assetsZipName}.zip`), zipResult);
+
+//   return path.resolve(DOWNLOAD_TEMP_FOLDER, `./${assetsZipName}.zip`)
+// }
+
 export const downloadAssetsFromPath = async (folderPath, assetsZipName) => {
   await fse.ensureDir(DOWNLOAD_TEMP_FOLDER);
 
   if (!await fse.exists(folderPath)) {
-    throw new Error('no exist folderPath need zip')
+    throw new Error('no exist folderPath need zip');
   }
 
-  const zip = new JSZip();
+  const zip = new AdmZip();
+  
+  // 直接添加整个文件夹
+  zip.addLocalFolder(folderPath);
 
-  await zipDirectory(zip, folderPath);
+  // 生成zip文件的完整路径
+  const zipFilePath = path.resolve(DOWNLOAD_TEMP_FOLDER, `${assetsZipName}.zip`);
+  
+  // 写入zip文件
+  zip.writeZip(zipFilePath);
 
-  const zipResult = await zip.generateAsync({ type: 'nodebuffer' });
+  return zipFilePath;
+}
 
-  await fse.writeFile(path.resolve(DOWNLOAD_TEMP_FOLDER, `./${assetsZipName}.zip`), zipResult);
+export const unzipToDirectory = async (zipFilePath, targetDirectory) => {
+  console.log('zipFilePath', zipFilePath)
+  // 检查zip文件是否存在
+  if (!await fse.exists(zipFilePath)) {
+    throw new Error('zip file does not exist');
+  }
 
-  return path.resolve(DOWNLOAD_TEMP_FOLDER, `./${assetsZipName}.zip`)
+  // 确保目标目录存在
+  await fse.ensureDir(targetDirectory);
+
+  try {
+    const zip = new AdmZip(zipFilePath);
+    
+    // 解压所有文件到目标目录
+    zip.extractAllTo(targetDirectory, /* overwrite */ true);
+
+    return targetDirectory;
+  } catch (error) {
+    throw new Error(`Failed to extract zip file: ${error.message}`);
+  }
 }
 
 const getFilesFromDirectory = async (dirPath, relativePath = [], result = []) => {

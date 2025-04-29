@@ -23,12 +23,13 @@ import {
   PublishError,
   PublishErrCode,
   downloadAssetsFromPath,
+  unzipToDirectory,
   getComboFilesStringFromPath,
   localizeFile,
 } from "./utils";
 import { publishPush } from "./push";
 import { Logger } from "@mybricks/rocker-commons";
-import { compilerH5, compilerMiniapp } from "./compiler";
+import { compilerH5, compilerMiniapp, compilerHarmony } from "./compiler";
 import { CompileType } from "./compiler/types";
 import { getNextVersion } from "../tools/analysis";
 import axios from "axios";
@@ -75,6 +76,9 @@ const getDepModules = (depModules) => {
 };
 
 const getTemplatePath = (type = "weapp") => {
+  if (type === 'harmony') {
+    return path.resolve(__dirname, `./templates/harmony.zip`);
+  }
   return path.resolve(__dirname, `./templates/${type}`);
 };
 
@@ -481,7 +485,67 @@ export default class CompileController {
         },
       };
     } catch (error) {
-      Logger.error("[compile] compile fail " + error.message, error);
+      Logger.info("[compile] compile fail " + error.message, error);
+      return {
+        code: -1,
+        errCode: error.errCode,
+        message:
+          error?.message ||
+          (error.code ? `构建失败，错误码：${error.code}` : "构建失败"),
+        stack: error?.stack,
+      };
+    }
+  }
+
+  /**
+   * compile
+   */
+  @Post("harmony/compile")
+  @UseInterceptors(LimitInterceptor)
+  async harmonyCompile(
+    @Body("userId") userId: string,
+    @Body("fileId") fileId: number,
+    @Body("fileName") fileName: string,
+    @Body("data") data: any,
+    @Body("type") type: string = "harmony",
+    @Req() req: any
+  ) {
+    try {
+      fse.ensureDirSync(tempFolderPath);
+
+      const projectName = `project-${fileId}-build-${type}`;
+      const projectPath = path.resolve(tempFolderPath, `./${projectName}`);
+
+      await fse.ensureDir(projectPath);
+      await fse.emptyDir(projectPath);
+      await unzipToDirectory(getTemplatePath(type), projectPath)
+
+      Logger.info("[compile] init harmony template start");
+
+      await compilerHarmony(
+        {
+          data,
+          projectPath,
+          projectName,
+          fileName,
+          depModules: getDepModules(data.depModules),
+          origin: req.headers.origin,
+          type,
+        },
+        { Logger }
+      );
+
+      Logger.info("[compile] init harmony template success");
+
+      return {
+        code: 1,
+        message: "构建成功",
+        data: {
+          
+        },
+      };
+    } catch (error) {
+      Logger.info("[compile] compile harmony fail " + error.message, error);
       return {
         code: -1,
         errCode: error.errCode,

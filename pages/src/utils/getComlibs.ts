@@ -1,11 +1,16 @@
 import {
   MP_BASIC_COM_LIB,
-  MySelf_COM_LIB
+  MySelf_COM_LIB,
+  HARMONY_COM_LIB,
 } from "../constants";
 import { compareVersions } from "compare-versions";
 const legacyLibs = [MP_BASIC_COM_LIB]
 
-const getLibsFromConfig = (appData: Record<string, any>) => {
+const getLibsFromConfig = (appData: Record<string, any>, isHarmony = false) => {
+  if (isHarmony) {
+    return [HARMONY_COM_LIB]
+  }
+
   let libs = [];
   if (appData?.defaultComlibs?.length) {
     appData?.defaultComlibs.forEach((lib) => {

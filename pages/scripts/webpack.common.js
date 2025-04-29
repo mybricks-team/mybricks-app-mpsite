@@ -46,6 +46,7 @@ module.exports = {
         root: "ReactDOM",
       },
       moment: "moment",
+      antd: 'antd'
     },
   ],
   module: {

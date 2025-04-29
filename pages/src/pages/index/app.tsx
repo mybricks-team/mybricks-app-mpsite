@@ -131,6 +131,8 @@ const Application = () => {
       //老文件标记
       window.__isOldFile__ = true
     }
+
+    // window.__PLATFORM__ = CompileType.harmony
     console.log(`当前构建平台为 ${window.__PLATFORM__}，类型为 ${window.__type__}`)
 
     // 首页配置

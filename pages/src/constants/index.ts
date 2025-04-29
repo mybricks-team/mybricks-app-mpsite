@@ -19,6 +19,12 @@ export const MP_BASIC_COM_LIB = {
   version: "0.3.85",
 };
 
+export const HARMONY_COM_LIB = {
+  id: 'default',
+  namespace: 'mybricks.normal-harmony.taro',
+  editJs: "./public/comlibs/comlib-harmony-normal/0.0.1/edit.js",
+  version: '0.0.1',
+}
 
 export const LOCAL_EDITOR_ASSETS = {
   expression: {
