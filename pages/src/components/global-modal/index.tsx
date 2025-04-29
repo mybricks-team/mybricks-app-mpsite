@@ -22,6 +22,7 @@ function GModal() {
       <Modal
         {...props}
         open={true}
+        visible={true}
         onCancel={() => hide()}
       />,
       container

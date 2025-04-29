@@ -136,12 +136,16 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
   const compileHandle = () => {
     // 判断是不是老文件（没有应用类型）走下拉框直接下载的逻辑
     if(window.__isOldFile__){
-    onCompile?.({
-      type: selectType,
-      // version: version,
-      // description: description,
-    });
-    }else{
+      onCompile?.({
+        type: selectType,
+        // version: version,
+        // description: description,
+      });
+    } else if (CompileType.harmony === selectType) {
+      onCompile?.({
+        type: selectType,
+      })
+    } else {
       showDownloadConfig({ onCompile })
     }
   };
@@ -260,15 +264,17 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
 
         <Toolbar.Save disabled={!operable} onClick={onSave} dotTip={isModify} />
 
-        {/* 预览 */}
-        <PreviewPopOver onCompile={previewHandle}>
-          <Toolbar.Button onClick={previewHandle}>预览</Toolbar.Button>
-        </PreviewPopOver>
+        {
+          CompileType.harmony !== selectType ? <PreviewPopOver onCompile={previewHandle}>
+            <Toolbar.Button onClick={previewHandle}>预览</Toolbar.Button>
+          </PreviewPopOver> : null
+        }
 
-        {/* 发布 */}
-        <Toolbar.Button disabled={!globalOperable} onClick={publishHandle}>发布</Toolbar.Button>
+        {
+          CompileType.harmony !== selectType ? <Toolbar.Button disabled={!globalOperable} onClick={publishHandle}>发布</Toolbar.Button> : null
+        }
 
-        {[CompileType.weapp, CompileType.alipay, CompileType.dd, CompileType.miniprogram].includes(
+        {[CompileType.weapp, CompileType.alipay, CompileType.dd, CompileType.miniprogram, CompileType.harmony].includes(
           selectType
         ) && <Toolbar.Button onClick={compileHandle}>下载</Toolbar.Button>}
 

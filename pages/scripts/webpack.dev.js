@@ -26,6 +26,7 @@ module.exports = merge(common, {
           "/api/compile/miniapp/preview",
           "/api/compile/miniapp/publish",
           "/api/compile/miniapp/compile",
+          "/api/compile/harmony/compile",
           "/api/compile/alipay/preview",
           "/api/compile/alipay/publish",
           "/api/compile/alipay/compile",

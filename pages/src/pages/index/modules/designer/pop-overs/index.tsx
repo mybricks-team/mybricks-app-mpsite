@@ -125,6 +125,7 @@ export const PreviewPopOver = ({ children, onCompile }) => {
       destroyTooltipOnHide
       open={status !== PreviewStatus.IDLE}
       placement="bottom"
+      trigger={'click'}
     >
       <div onClick={(e) => e.stopPropagation()} style={{ marginRight: 0,marginLeft: 0 }}>
         {children}

@@ -15,7 +15,7 @@ import versionPlugin from "mybricks-plugin-version";
 
 import { editorAppenderFn } from "./editorAppender";
 
-import { showAIPageModal, MobilePrompts, MobileDefinitions } from '/Users/cocolbell/Desktop/projects/mybricks/sdk-for-ai'
+import { showAIPageModal, MobilePrompts, MobileDefinitions } from '@mybricks/sdk-for-ai'
 import { LOCAL_EDITOR_ASSETS } from "@/constants";
 import { MpConfig, CompileConfig } from "./custom-configs";
 import { getAiEncryptData } from "./utils/get-ai-encrypt-data";
@@ -23,6 +23,7 @@ import extendsConfig from "./configs/extends";
 import systemContent from "./system.txt";
 import { message } from "antd";
 import { CompileType } from "@/types";
+import { getPageTitlePrefix, isDesignFilePlatform } from '@/utils'
 // import  AICom  from "../../../../../public/ai-com"
 // import typeConfig from "./configs/type";
 // import { PcEditor } from "/Users/stuzhaoxing-office/Program/editors-pc-common/src/index";
@@ -208,7 +209,7 @@ export default function ({
       // return Promise.resolve(undefined)
       return contentModel.getMetaContent();
     },
-    ...(ctx.hasMaterialApp
+    ...(ctx.hasMaterialApp && !isDesignFilePlatform('harmony')
       ? {
         comLibAdder: comLibAdderFunc(ctx),
       }
@@ -237,7 +238,7 @@ export default function ({
               {
                 type: "editorRender",
                 ifVisible: ({ data }) => {
-                  return !window.__PLATFORM__ || window.__PLATFORM__ !== "h5";
+                  return isDesignFilePlatform('miniprogram')
                 },
                 options: {
                   render: () => {
@@ -418,11 +419,7 @@ export default function ({
             items: [
               {
                 ifVisible: ({ data }) => {
-                  if (window.__PLATFORM__ === CompileType.miniprogram || window.__PLATFORM__ === CompileType.weapp || window.__PLATFORM__ === CompileType.alipay || window.__PLATFORM__ === CompileType.dd) {
-                    return false
-                  } else if (window.__PLATFORM__ === CompileType.h5) {
-                    return true
-                  }
+                  return isDesignFilePlatform('h5')
                 },
                 title: "head 注入",
                 description:
@@ -456,50 +453,46 @@ export default function ({
           // },
         ];
 
-        cate1.title = "服务";
+        // cate1.title = "服务";
+        // cate1.items = [
+        //   {
+        //     title: "数据源",
+        //     description: "选择数据源后，可以对数据源进行增删改查操作",
+        //     type: "filereader",
+        //     options: {
+        //       fileId: pageModel.fileId,
+        //       allowedFileExtNames: ["datasource"],
+        //     },
+        //     value: {
+        //       get() {
+        //         return pageModel.appConfig.datasource;
+        //       },
+        //       set(_, value) {
+        //         console.log("数据源 set: ", value);
+        //         pageModel.appConfig.datasource = value;
+        //       },
+        //     },
+        //   },
+        //   {
+        //     title: "服务部署地址",
+        //     description: "默认为：https://{host}/runtime/service/{fileId}",
+        //     type: "text",
+        //     value: {
+        //       get() {
+        //         return pageModel.appConfig.serviceFxUrl;
+        //       },
+        //       set(_, value) {
+        //         pageModel.appConfig.serviceFxUrl = value;
+        //       },
+        //     },
+        //   },
+        // ]
+
+        cate1.title = "调试";
         cate1.items = [
           {
-            title: "数据源",
-            description: "选择数据源后，可以对数据源进行增删改查操作",
-            type: "filereader",
-            options: {
-              fileId: pageModel.fileId,
-              allowedFileExtNames: ["datasource"],
-            },
-            value: {
-              get() {
-                return pageModel.appConfig.datasource;
-              },
-              set(_, value) {
-                console.log("数据源 set: ", value);
-                pageModel.appConfig.datasource = value;
-              },
-            },
-          },
-          {
-            title: "服务部署地址",
-            description: "默认为：https://{host}/runtime/service/{fileId}",
-            type: "text",
-            value: {
-              get() {
-                return pageModel.appConfig.serviceFxUrl;
-              },
-              set(_, value) {
-                pageModel.appConfig.serviceFxUrl = value;
-              },
-            },
-          },
-        ]
-
-        cate2.title = "调试";
-        cate2.items = [
-          {
             ifVisible: ({ data }) => {
-              if (window.__PLATFORM__ === CompileType.miniprogram || window.__PLATFORM__ === CompileType.weapp || window.__PLATFORM__ === CompileType.alipay || window.__PLATFORM__ === CompileType.dd) {
-                return false
-              } else if (window.__PLATFORM__ === CompileType.h5) {
-                return true
-              }
+              return isDesignFilePlatform('h5')
             },
             title: "预览时打开vconsole",
             type: "switch",
@@ -676,26 +669,28 @@ export default function ({
           // },
         ],
         adder: [
-          {
-            type: 'defined',
-            title: 'AI生成...',
-            load: () => {
-              return new Promise((resolve, reject) => {
-                const destroy = showAIPageModal({
-                  prompts: MobilePrompts,
-                  definitions: MobileDefinitions,
-                  onGenerateFinish({ templateJson }) {
-                    resolve(templateJson)
-                    destroy?.()
-                  },
+          ...(isDesignFilePlatform('harmony') ? [] : [
+            {
+              type: 'defined',
+              title: 'AI生成...',
+              load: () => {
+                return new Promise((resolve, reject) => {
+                  const destroy = showAIPageModal({
+                    prompts: MobilePrompts,
+                    definitions: MobileDefinitions,
+                    onGenerateFinish({ templateJson }) {
+                      resolve(templateJson)
+                      destroy?.()
+                    },
+                  })
                 })
-              })
-            }
-          },
-          {},
+              }
+            },
+            {}
+          ]),
           {
             type: "normal",
-            title: window.__PLATFORM__ === "h5" ? "H5 标签页" : "小程序标签页",
+            title: `${getPageTitlePrefix()}标签页`,
             template: {
               namespace: "mybricks.taro.systemPage",
               deletable: false,
@@ -713,7 +708,7 @@ export default function ({
           },
           {
             type: "normal",
-            title: window.__PLATFORM__ === "h5" ? "H5 页面" : "小程序页面",
+            title: `${getPageTitlePrefix()}页面`,
             template: {
               namespace: "mybricks.taro.systemPage",
               deletable: false,
@@ -855,7 +850,7 @@ export default function ({
     // aiView: getAiView(appConfig?.publishLocalizeConfig?.enableAI, {
     //   model: appConfig?.publishLocalizeConfig?.selectAIModel
     // }), // TODO: 开发settings页面后再放开注释
-    aiView: getAiView(true, {
+    aiView: isDesignFilePlatform('harmony') ? null : getAiView(true, {
       model: DEFAULT_AI_MODEL,
     }),
     com: {
@@ -1269,7 +1264,7 @@ function getDesignerParams(args) {
   return {
     context: context ?? {},
     tools,
-    model,
+    model: 'qwen/qwen3-14b',
     role,
   }
 }
@@ -1395,7 +1390,7 @@ const getAiView = (enableAI, option) => {
               body: JSON.stringify(
                 APP_ENV === 'production' ? getAiEncryptData({
                   model,
-                  role,
+                  // role,
                   messages,
                   tools,
                   tool_choice: 'auto',

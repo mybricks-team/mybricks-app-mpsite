@@ -25,7 +25,7 @@ import config from "./app-config";
 import { useFxServices } from "../utils/use-fx-services";
 
 import { getLibsFromConfig } from "@/utils/getComlibs";
-import { sleep } from "@/utils";
+import { sleep, isDesignFilePlatform } from "@/utils";
 import { CompileType } from "@/types";
 import { DESIGNER_STATIC_PATH } from "../../../../constants";
 import { ExclamationCircleFilled, CheckCircleFilled } from "@ant-design/icons";
@@ -145,7 +145,7 @@ const Designer = ({ appData }) => {
   const [ctx] = useState({
     sdk: appData,
     user: appData.user,
-    comlibs: getLibsFromConfig(appData),
+    comlibs: getLibsFromConfig(appData, isDesignFilePlatform('harmony')),
     latestComlibs: [],
     hasMaterialApp: appData.hasMaterialApp,
     setting: appData.config || {},
@@ -244,10 +244,10 @@ const Designer = ({ appData }) => {
         url: `/api/compile/download?fileId=${pageModel.fileId}&type=${type}&localize=${localize}`,
         filename: `${pageModel.fileId}-${type}.zip`,
       },
-      {
-        url: `/paas/api/project/download?fileId=${pageModel.fileId}&target=prod`,
-        filename: `node-app-${pageModel.fileId}-prod.zip`,
-      },
+      // {
+      //   url: `/paas/api/project/download?fileId=${pageModel.fileId}&target=prod`,
+      //   filename: `node-app-${pageModel.fileId}-prod.zip`,
+      // },
     ];
 
     urls.forEach((item) => {
@@ -1216,8 +1216,10 @@ const Designer = ({ appData }) => {
           comlibs: comlibs,
         });
 
+        const url = type === CompileType.harmony ? "/api/compile/harmony/compile" : "/api/compile/miniapp/compile"
+
         const res = await axios({
-          url: "/api/compile/miniapp/compile",
+          url,
           method: "POST",
           data: {
             userId: userModel.user?.id,
