@@ -121,7 +121,7 @@ const Application = () => {
     pageModel.debug = data.fileContent.content?.debug || {};
 
     // 判断构建平台
-    if ([CompileType.alipay, CompileType.dd, CompileType.h5, CompileType.miniprogram, CompileType.weapp].includes(data.fileContent?.type)) {
+    if ([CompileType.alipay, CompileType.dd, CompileType.h5, CompileType.miniprogram, CompileType.weapp, CompileType.harmony].includes(data.fileContent?.type)) {
       window.__PLATFORM__ = data.fileContent?.type
     } else {
       // 是否之前配置过微信
