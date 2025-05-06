@@ -1264,7 +1264,7 @@ function getDesignerParams(args) {
   return {
     context: context ?? {},
     tools,
-    model: 'qwen/qwen3-14b',
+    model,
     role,
   }
 }

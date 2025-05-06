@@ -110,5 +110,5 @@ export const LOCAL_EDITOR_ASSETS = {
   },
 }
 
-export const DESIGNER_STATIC_PATH = './public/designer-spa/3.9.112/index.min.js'
+export const DESIGNER_STATIC_PATH = './public/designer-spa/3.9.346/index.min.js'
 // export const DESIGNER_STATIC_PATH = 'https://f2.eckwai.com/kos/nlav12333/mybricks/designer-spa/3.9.137/index.min.js'
