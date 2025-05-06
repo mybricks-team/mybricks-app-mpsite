@@ -1,4 +1,3 @@
-import { isNumber, isObject, cloneDeep } from "lodash";
 import { Modal, message } from "antd";
 // import { MaterialComlib } from './../../../types'
 import {
@@ -83,9 +82,9 @@ export default (ctx) => (libDesc) => {
     return mySelfLib.comAray;
   };
 
-  const getSelfComponents = () => {
-    return mySelfLib?.comAray.filter((com) => isObject(com));
-  };
+  // const getSelfComponents = () => {
+  //   return mySelfLib?.comAray.filter((com) => isObject(com));
+  // };
 
   // const LATEST_COMLIBS = cloneDeep(ctx.latestComlibs || []);
 

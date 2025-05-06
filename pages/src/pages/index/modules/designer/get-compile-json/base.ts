@@ -1,9 +1,13 @@
-import cloneDeep from "lodash/cloneDeep";
+// import cloneDeep from "lodash/cloneDeep";
 import { getAllModulesJsCode, getPageCssCode } from "../getAllModules";
 // import { transformToJSON, transformSingleToJSON } from '../json-util'
 import { Css, getComsFromPageJson } from "./utils";
 import { transformToJSON } from "@mybricks/render-utils";
 import axios from "axios";
+
+const cloneDeep = (obj) => {
+  return JSON.parse(JSON.stringify(obj))
+}
 
 interface SceneToJson {}
 
@@ -61,7 +65,7 @@ export class BaseJson {
     status,
   }): Promise<GenerateJsons> => {
     toJson = cloneDeep(toJson);
-    log("before toJson", JSON.parse(JSON.stringify(toJson)));
+    log("before toJson", toJson);
 
     const useF2ForTaro = JSON.stringify(toJson).includes("f2-for-taro");
 
