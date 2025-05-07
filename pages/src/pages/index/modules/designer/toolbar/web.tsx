@@ -4,7 +4,7 @@ import { Locker, Toolbar } from "@mybricks/sdk-for-app/ui";
 import { pageModel, versionModel } from "@/stores";
 import { showH5RequireModal, showWeappRequireModal } from "./../modals";
 import { PreviewPopOver } from "./../pop-overs";
-import { Dropdown, message, Alert, Tooltip } from "antd";
+import { Dropdown, message, Alert, Tooltip, Menu } from "antd";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import cx from "classnames";
 // import Marquee from 'react-fast-marquee';
@@ -135,7 +135,7 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
 
   const compileHandle = () => {
     // 判断是不是老文件（没有应用类型）走下拉框直接下载的逻辑
-    if(window.__isOldFile__){
+    if (window.__isOldFile__) {
       onCompile?.({
         type: selectType,
         // version: version,
@@ -278,36 +278,37 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
           selectType
         ) && <Toolbar.Button onClick={compileHandle}>下载</Toolbar.Button>}
 
+
         {/* 判断是不是老文件（没有应用类型数据） */}
-        {window.__isOldFile__ === true && <CompileButtonGroups>
+        {window.__isOldFile__ === true && (
+          <CompileButtonGroups>
           <Dropdown
-            menu={{
-              items: Object.keys(DescMap).map((type) => ({
-                label: DescMap[type],
-                key: type,
-                // disabled: !operable,
-                style: { fontSize: 13 },
-              })),
-              onClick: (e) => {
-                // pageModel.previewStatus = PreviewStatus.LOADING
-                setSelectType(e.key);
-                selectTypeStorage.set(e.key);
-                //触发刷新页面
-                window.location.reload();
-              },
-            }}
+            overlay={
+              <Menu
+                onClick={(e) => {
+                  setSelectType(e.key);
+                  selectTypeStorage.set(e.key);
+                  window.location.reload();
+                }}
+              >
+                {Object.keys(DescMap).map((type) => (
+                  <Menu.Item key={type} style={{ fontSize: 13 }}>
+                    {DescMap[type]}
+                  </Menu.Item>
+                ))}
+              </Menu>
+            }
             trigger={["click"]}
           >
             <CompileButton onClick={() => { }}>
               <span style={{ color: "#ea732e", fontWeight: "bold" }}>
                 {DescMap[selectType]}
               </span>
-              <DownOutlined style={{ marginLeft: 3, color: "#ea732e" }} />
+              <DownOutlined style={{ marginLeft: 3, color: "#ea732e" }}/>
             </CompileButton>
           </Dropdown>
-        </CompileButtonGroups>
-
-        }
+          </CompileButtonGroups>
+        )}
 
       </Toolbar>
     </>
