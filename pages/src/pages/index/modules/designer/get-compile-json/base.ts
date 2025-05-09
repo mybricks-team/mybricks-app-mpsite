@@ -659,9 +659,11 @@ function getTabbarJson(toJson) {
         selectedIconPath: item.selectedIconPath,
         selectedIconStyle: item.selectedIconStyle,
         selectedTextStyle: item.selectedTextStyle,
+        selectedBackgroundStyle: item.selectedBackgroundStyle,
         normalIconPath: item.normalIconPath,
         normalIconStyle: item.normalIconStyle,
         normalTextStyle: item.normalTextStyle,
+        normalBackgroundStyle: item.normalBackgroundStyle,
         subMenu:
           item.subMenu &&
           item.subMenu.map((item) => {
@@ -671,6 +673,7 @@ function getTabbarJson(toJson) {
               normalIconPath: item.normalIconPath,
               normalIconStyle: item.normalIconStyle,
               normalTextStyle: item.normalTextStyle,
+              normalBackgroundStyle: item.normalBackgroundStyle,
             };
           }),
       };
