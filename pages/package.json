@@ -63,7 +63,7 @@
     "@mybricks/render-web": "^1.2.68",
     "@mybricks/rxui": "^1.0.87",
     "@mybricks/sdk-for-app": "1.0.61",
-    "@mybricks/to-code-react": "^0.0.5-next.19",
+    "@mybricks/to-code-react": "^0.0.5-next.22",
     "classnames": "^2.3.1",
     "compare-versions": "^6.1.0",
     "dayjs": "^1.11.3",

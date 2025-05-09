@@ -8,7 +8,7 @@ const getDesignStyle = {
 
 type ComponentAttribute = CommonAttribute
 
-function isNil(value: string | number | null | undefined): boolean {
+function isNil(value: string | number | null | undefined | ResourceColor | BorderRadiuses | Length | LocalizedBorderRadiuses): boolean {
   return value === null || value === undefined;
 }
 
@@ -26,43 +26,83 @@ export class ApplyRootStyleModifier implements AttributeModifier<ComponentAttrib
     if (!isNil(this.css?.height)) {
       instance.height(this.css?.height)
     }
+    if (!isNil(this.css?.marginTop) || !isNil(this.css?.marginBottom) || !isNil(this.css?.marginLeft) || !isNil(this.css?.marginRight)) {
+      instance.margin({
+        top: this.css.marginTop || 0,
+        left: this.css.marginLeft || 0,
+        right: this.css.marginRight || 0,
+        bottom: this.css.marginBottom || 0,
+      })
+    }
   }
 }
 
 export class ApplyStyleModifier implements AttributeModifier<ComponentAttribute> {
   private css: CSSProperties
 
+  private initBackgroundColor?: ResourceColor
+  backgroundColor(color: ResourceColor) {
+    this.initBackgroundColor = color
+    return this
+  }
+
+  private initBorderRadius?: Length | BorderRadiuses | LocalizedBorderRadiuses
+  borderRadius(radius: Length | BorderRadiuses | LocalizedBorderRadiuses) {
+    this.initBorderRadius = radius
+    return this
+  }
+
   constructor(configCss: CSSProperties) {
-    this.css = configCss
+    this.css = configCss ?? {}
   }
 
   applyNormalAttribute(instance: ComponentAttribute): void {
-    if (this.css?.backgroundColor) {
-      instance.backgroundColor(this.css.backgroundColor)
+    const backgroundColor = this.css?.backgroundColor ?? this.initBackgroundColor;
+    if (!isNil(backgroundColor)) {
+      instance.backgroundColor(backgroundColor)
     }
+
     if (!isNil(this.css?.borderRadius)) {
       instance.borderRadius(this.css.borderRadius)
+    } else if (!isNil(this.initBorderRadius)) {
+      instance.borderRadius(this.initBorderRadius)
+    }
+
+    if (!isNil(this.css.border) && typeof this.css.border === 'string') {
+      const settingBorder = parseBorder(this.css.border)
+      instance.borderWidth(settingBorder.width)
+      instance.borderStyle(settingBorder.style)
+      instance.borderColor(settingBorder.color)
+    }
+    if ([this.css.borderTop, this.css.borderBottom, this.css.borderLeft, this.css.borderRight].every(item => !isNil(item) && typeof item === 'string')) {
+
     }
   }
 }
 
 export class ApplyFontStyleModifier implements AttributeModifier<TextAttribute> {
   private css: CSSProperties
+
   private initFontColor?: ResourceColor
-  private initFontSize?: number | string | Resource
-
-  constructor(configCss: CSSProperties) {
-    this.css = configCss
-  }
-
   fontColor(color: ResourceColor) {
     this.initFontColor = color
     return this
   }
 
+  private initFontSize?: number | string | Resource
   fontSize(size: number | string | Resource) {
     this.initFontSize = size
     return this
+  }
+
+  private initFontWeight?: number | FontWeight | string
+  fontWeight(size: number | FontWeight | string) {
+    this.initFontWeight = size
+    return this
+  }
+
+  constructor(configCss: CSSProperties) {
+    this.css = configCss ?? {}
   }
 
   applyNormalAttribute(instance: TextAttribute): void {
@@ -74,9 +114,53 @@ export class ApplyFontStyleModifier implements AttributeModifier<TextAttribute> 
     if (fontSize) {
       instance.fontSize(fontSize + 'vp')
     }
+
+    const fontWeight = this.css?.fontWeight ?? this.initFontWeight
+    if (fontWeight) {
+      instance.fontWeight(fontWeight)
+    }
   }
 }
-`
+
+
+interface BorderRsult {
+  width: number
+  style: BorderStyle
+  color: string
+}
+function parseBorder(borderStr: string): BorderRsult {
+  const match = borderStr.match(/^(\d+\w+)\s+(solid|dashed|dotted)\s+(.+)$/);
+
+  if (!match) {
+    throw new Error('Invalid border string');
+  }
+
+  let style: BorderStyle = BorderStyle.Solid
+  switch (match[2]) {
+    case 'solid': {
+      style = BorderStyle.Solid
+      break
+    }
+    case 'dashed': {
+      style = BorderStyle.Dashed
+      break
+    }
+    case 'dotted': {
+      style = BorderStyle.Dotted
+      break
+    }
+    default: {
+      style = BorderStyle.Solid
+      break
+    }
+  }
+
+  return {
+    width: parseFloat(match[1]),
+    style,
+    color: match[3]
+  };
+}`
 }
 
 // view/Button.ets
@@ -118,7 +202,7 @@ interface Inputs {
 }
 
 interface Outputs {
-  onClick: (value: string) => void
+  onClick?: (value: string) => void
 }
 
 @ComponentV2
@@ -155,7 +239,7 @@ export default struct Mybricks_Button {
       right: 14
     })
     .onClick(() => {
-      this.outputs?.onClick(this.data.text)
+      this.outputs?.onClick?.(this.data.text)
     })
     .attributeModifier(new ApplyStyleModifier(this.styles['.mybricks-button']))
     .attributeModifier(
@@ -204,7 +288,7 @@ interface Inputs {
 }
 
 interface Outputs {
-  onClick: (src: string) => void,
+  onClick?: (src: string) => void,
   onLoad?: (src: string) => void,
   onError?: (src: string) => void
 }
@@ -237,7 +321,7 @@ export default struct Mybricks_Image {
           this.outputs?.onError?.(this.data.src || "")
         })
     }.onClick(() => {
-      this.outputs?.onClick(this.data.src || "")
+      this.outputs?.onClick?.(this.data.src || "")
     })
     .attributeModifier(
       new ApplyRootStyleModifier(this.styles['root'])
@@ -264,7 +348,7 @@ export class MyBricksButtonController {
 }
 
 interface MyBricksButtonEvents {
-  onClick: (value: string) => void;
+  onClick?: (value: string) => void;
 }
 
 @ComponentV2
@@ -325,7 +409,7 @@ export class MyBricksTextController {
 }
 
 interface MyBricksTextEvents {
-  onClick: (value: string) => void;
+  onClick?: (value: string) => void;
 }
 
 @ComponentV2
@@ -363,9 +447,9 @@ export class MyBricksImageController {
 }
 
 interface MyBricksImageEvents {
-  onClick: (value: string) => void;
-  onLoad: (value: string) => void;
-  onError: (value: string) => void;
+  onClick?: (value: string) => void;
+  onLoad?: (value: string) => void;
+  onError?: (value: string) => void;
 }
 
 @ComponentV2
@@ -494,7 +578,7 @@ interface Inputs {
 }
 
 interface Outputs {
-  onClick: (value: string) => void
+  onClick?: (value: string) => void
 }
 
 @ComponentV2
