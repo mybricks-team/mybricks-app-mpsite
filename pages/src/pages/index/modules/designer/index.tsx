@@ -29,6 +29,7 @@ import { sleep, isDesignFilePlatform } from "@/utils";
 import { CompileType } from "@/types";
 import { DESIGNER_STATIC_PATH } from "../../../../constants";
 import { ExclamationCircleFilled, CheckCircleFilled } from "@ant-design/icons";
+import hmdownloadtmp from "./hmdownloadtmp";
 
 // message.success(
 //  "保存成功",
@@ -1169,6 +1170,12 @@ const Designer = ({ appData }) => {
       version: string;
       description: string;
     }) => {
+      if (type === CompileType.harmony) {
+        const toJson = await contentModel.toJSON({ withDiagrams: true });
+        hmdownloadtmp(toJson);
+        return;
+      }
+
       if (pageModel?.publishLoading) {
         return;
       }

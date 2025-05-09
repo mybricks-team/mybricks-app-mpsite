@@ -936,9 +936,9 @@ class Content {
   };
 
   /** 将每个页面的toJson与全局toJson合并还原成之前完整的toJson */
-  toJSON = async () => {
+  toJSON = async (props?) => {
     console.log("[toJSON] start");
-    const toJson = cloneDeep(this.designerRef.current?.toJSON());
+    const toJson = cloneDeep(this.designerRef.current?.toJSON(props));
 
     const { json: desnJson } = this.designerRef.current?.dump?.(true);
     const { updatedPageAry, deletedPageAry } = desnJson;
