@@ -1170,11 +1170,11 @@ const Designer = ({ appData }) => {
       version: string;
       description: string;
     }) => {
-      if (type === CompileType.harmony) {
-        const toJson = await contentModel.toJSON({ withDiagrams: true });
-        hmdownloadtmp(toJson);
-        return;
-      }
+      // if (type === CompileType.harmony) {
+      //   const toJson = await contentModel.toJSON({ withDiagrams: true });
+      //   hmdownloadtmp(toJson);
+      //   return;
+      // }
 
       if (pageModel?.publishLoading) {
         return;
@@ -1182,7 +1182,8 @@ const Designer = ({ appData }) => {
       await showPublishLoading();
 
       try {
-        const toJson = await contentModel.toJSON();
+        const isHarmony = type === CompileType.harmony
+        const toJson = await contentModel.toJSON(isHarmony ? { withDiagrams: true } : null);
 
         let comlibs = [...ctx.comlibs];
         if (window.__DEBUG_COMLIB__) {
@@ -1238,6 +1239,7 @@ const Designer = ({ appData }) => {
               services: toJson.services,
               serviceFxUrl: pageModel.appConfig.serviceFxUrl,
               database: pageModel.appConfig.datasource,
+              toJson: isHarmony ? toJson : undefined
             },
           },
           withCredentials: false,

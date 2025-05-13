@@ -30,6 +30,7 @@
     "@mybricks/color-picker": "^1.0.9",
     "@mybricks/rocker-commons": "^0.0.2",
     "@mybricks/sdk-for-app": "^1.0.55",
+    "@mybricks/to-code-react": "0.0.5-next.23",
     "@nestjs/common": "^8.0.0",
     "@nestjs/core": "^8.0.0",
     "@nestjs/platform-express": "^8.0.0",

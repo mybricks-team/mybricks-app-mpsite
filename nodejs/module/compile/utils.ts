@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import * as fse from 'fs-extra';
-import * as AdmZip from 'adm-zip';
+import AdmZip from 'adm-zip';
 import axios from "axios";
 import * as path from "path";
 import * as crypto from "crypto";

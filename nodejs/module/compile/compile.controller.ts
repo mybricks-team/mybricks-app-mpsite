@@ -29,7 +29,7 @@ import {
 } from "./utils";
 import { publishPush } from "./push";
 import { Logger } from "@mybricks/rocker-commons";
-import { compilerH5, compilerMiniapp, compilerHarmony } from "./compiler";
+import { compilerH5, compilerMiniapp, compilerHarmony, compilerHarmony2  } from "./compiler";
 import { CompileType } from "./compiler/types";
 import { getNextVersion } from "../tools/analysis";
 import axios from "axios";
@@ -518,11 +518,11 @@ export default class CompileController {
 
       await fse.ensureDir(projectPath);
       await fse.emptyDir(projectPath);
-      await unzipToDirectory(getTemplatePath(type), projectPath)
+      // await unzipToDirectory(getTemplatePath(type), projectPath)
 
       Logger.info("[compile] init harmony template start");
 
-      await compilerHarmony(
+      await compilerHarmony2(
         {
           data,
           projectPath,
