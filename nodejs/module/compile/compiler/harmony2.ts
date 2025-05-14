@@ -10,6 +10,30 @@ class HarmonyCompiler extends BaseCompiler {
   };
 }
 
+const handleEntryCode = (template: string, {
+  tabbarScenes,
+  normalScenes,
+  entryPagePath,
+  tabbarConfig
+}) => {
+  const allImports = Array.from(new Set([...tabbarScenes, ...normalScenes]))
+    .map(path => `import Page_${path} from './Page_${path}';`)
+    .join('\n')
+  const generateRoutes = (paths) => paths
+    .map((path, i) => `${i === 0 ? 'if' : '\t\telse if'} (path === '${path}') {\n\t\t\tPage_${path}()\n\t\t}`)
+    .join('\n');
+  const renderMainScenes = generateRoutes(Array.from(new Set([entryPagePath, ...tabbarScenes])))
+  const renderScenes = generateRoutes(normalScenes)
+
+
+  return template
+    .replace("$r('app.config.imports')", allImports)
+    .replace("$r('app.config.mainScenes')", renderMainScenes)
+    .replace("$r('app.config.scenes')", renderScenes)
+    .replace("$r('app.config.tabbar')", JSON.stringify(tabbarConfig, null, 2))
+    .replace("$r('app.config.entry')", JSON.stringify(entryPagePath))
+}
+
 const handlePageCode = (page: ReturnType<typeof toHarmonyCode>[0]) => {
   page.importManager.addImport({
     packageName: "../utils",
@@ -107,7 +131,7 @@ export const compilerHarmony2 = async (
   })
 
   // 入口场景
-  const entryPagePath: string = data.appConfig?.entryPagePath;
+  const entryPagePath: string = data.appConfig?.entryPagePath?.split('/')[1];
 
   // tabbar场景
   const tabbarScenes: string[] = data.appConfig.pages.filter(p => 
@@ -122,6 +146,20 @@ export const compilerHarmony2 = async (
       (b) => b?.pagePath === p
     )
   ).map(p => p.split('/')[1])
+
+  const entryPath = path.join(projectPath, "./pages/Index.ets");
+  await fse.copy(path.join(__dirname, "./hm/pages/Index.ets"), entryPath);
+  
+  let entryFileContent = await fse.readFile(entryPath, 'utf-8')
+
+  entryFileContent = handleEntryCode(entryFileContent, {
+    normalScenes,
+    tabbarScenes,
+    tabbarConfig,
+    entryPagePath
+  })
+
+  await fse.writeFile(entryPath, entryFileContent, 'utf-8')
 
 
   /**
