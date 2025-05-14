@@ -7,14 +7,17 @@ export interface TabBarConfig {
   normalIconPath: string
   selectedTextStyle: Record<string, string | number>,
   normalTextStyle: Record<string, string | number>,
+  normalIconStyle: Record<string, string | number>,
 }
+
+export type TabBarJson = Record<string, string | number | boolean | ESObject>
 
 @ObservedV2
 export class AppRouter {
   navPathStack: NavPathStack = new NavPathStack();
   routerStack: Array<string> = new Array();
 
-  tabList: TabBarConfig[] = []
+  tabList: Array<TabBarConfig> = []
 
   @Trace activeTabIndex?: number = 0
 
@@ -22,14 +25,14 @@ export class AppRouter {
 
   pageParams?: Map<string, UnknownJson | undefined> = new Map()
 
-  public registTabbar (configList: TabBarConfig[]) {
-    this.tabList = configList
+  public registTabbar (configList: Array<TabBarJson>) {
+    this.tabList = configList as Array<TabBarConfig>
     return this
   }
 
   public registEntryPage(name: string) {
     if (this.hasTabs()) {
-      this.activeTabIndex = this.tabList.findIndex(t => t.id === name)
+      this.activeTabIndex = this.tabList.findIndex(t => t?.id === name)
     } else {
       this.entryPageId = name
     }
@@ -40,7 +43,7 @@ export class AppRouter {
   }
 
   public isTabbarPage (name: string) {
-    return this.tabList.some(item => item.id === name)
+    return this.tabList.some(item => item?.id === name)
   }
 
   public getParams(name: string) {

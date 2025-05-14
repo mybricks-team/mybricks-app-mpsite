@@ -41,7 +41,7 @@ struct EntryView {
               }, (item: TabBarConfig) => item.id)
             }
             .scrollable(false)
-            .barHeight('42lpx')
+            .barHeight(42)
             .padding({
               bottom: appWindow.bottomBarHeight // 底部安全距离
             })
@@ -76,8 +76,8 @@ function renderTabItems (item: TabBarConfig, index: number) {
   Column() {
     if (item.normalIconPath && item.selectedIconPath) {
       Image(index === appRouter.activeTabIndex ? item.selectedIconPath : item.normalIconPath)
-        .width('22lpx')
-        .height('22lpx')
+        .width(22)
+        .height(22)
         .objectFit(ImageFit.Contain)
       Text(item.text)
         .fontColor(index === appRouter.activeTabIndex ? item.selectedTextStyle?.color : item.normalTextStyle?.color)
