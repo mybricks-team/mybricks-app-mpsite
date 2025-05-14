@@ -157,6 +157,13 @@ export const compilerHarmony2 = async (
     )
   ).map(p => p.split('/')[1])
 
+  // 弹窗也写入普通场景判断中
+  data.toJson.scenes.forEach((scene) => {
+    if (scene.type === "popup") {
+      normalScenes.push(scene.id)
+    }
+  })
+
   const entryPath = path.join(projectPath, "./pages/Index.ets");
   await fse.copy(path.join(__dirname, "./hm/pages/Index.ets"), entryPath, { overwrite: true });
   
