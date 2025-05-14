@@ -61,4 +61,13 @@ export const COMPONENT_META = {
     },
     componentName: "myBricks_toString",
   },
+  "mybricks.taro._muilt-inputJs": {
+    // 导入方式
+    dependencyImport: {
+      packageName: COMPONENT_PACKAGE_NAME,
+      dependencyNames: ["myBricks_javascript"],
+      importType: "named",
+    },
+    componentName: "myBricks_javascript",
+  },
 };

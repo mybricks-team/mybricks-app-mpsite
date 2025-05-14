@@ -122,7 +122,7 @@ const jsCodeCollector = () => {
 
 /** 根据Json生成所有页面的Js，并按引用删除数据 */
 export const getAllModulesJsCode = async (pages, plugins, options = {}) => {
-  const { isH5 } = options;
+  const { isH5, isHarmony } = options;
   let allModules = ``;
 
   //解析「连接器」插件并生成到 modules
@@ -182,7 +182,7 @@ export const getAllModulesJsCode = async (pages, plugins, options = {}) => {
             comModules['${key}'] = _execJs(js_${key});
             `;
 
-          if (!isH5 && pageId) {
+          if (!isH5 && !isHarmony && pageId) {
             // 小程序环境且属于某一个页面的话，需要将js文件分到每一个页面自己的文件下
             if (!pagesJsCode[pageId]) {
               pagesJsCode[pageId] = JS_HEADER;
@@ -280,6 +280,11 @@ export const getAllModulesJsCode = async (pages, plugins, options = {}) => {
       all,
     };
     return result;
+  } else if (isHarmony) {
+    let result = {
+      all: encodeURIComponent(allModules),
+    };
+    return result
   } else {
     const all = encodeURIComponent(
       await TerserMinify(await babelScript(allModules))

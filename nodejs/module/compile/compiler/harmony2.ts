@@ -36,6 +36,41 @@ export const compilerHarmony2 = async (
 
   // await fse.copy(indexPath, target, { overwrite: true })
 
+  // 写入搭建Js
+  const jsCodePath = path.join(projectPath, "codes.js");
+  await fse.ensureFile(jsCodePath)
+  await fse.writeFile(jsCodePath, `export default (function(comModules) {
+    ${decodeURIComponent(data.allModules?.all)};
+    return comModules;
+  })({})`, { encoding: "utf8" })
+
+  // tabbar配置
+  const tabbarConfig = (data.tabBarJson ?? []).map(item => {
+    const { pagePath, ...others } = item
+    return {
+      id: item.pagePath.split('/')[1],
+      ...others,
+    }
+  })
+
+  // 入口场景
+  const entryPagePath: string = data.appConfig?.entryPagePath;
+
+  // tabbar场景
+  const tabbarScenes: string[] = data.appConfig.pages.filter(p => 
+    (data.tabBarJson || []).some(
+      (b) => b?.pagePath === p
+    )
+  ).map(p => p.split('/')[1])
+
+  // 普通场景
+  const normalScenes: string[] = data.appConfig.pages.filter(p => 
+    !(data.tabBarJson || []).some(
+      (b) => b?.pagePath === p
+    )
+  ).map(p => p.split('/')[1])
+
+
   /**
    * [TODO]
    * 1. js计算，写文件

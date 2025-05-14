@@ -13,7 +13,7 @@ import API from "@mybricks/sdk-for-app/api";
 import { previewModel } from "./pop-overs";
 import styles from "./index.less";
 import { writeLocalProject, supportFSAccess } from "./readwrite-to-local";
-import { getH5Json, getMiniappJson } from "./get-compile-json";
+import { getH5Json, getMiniappJson, getHarmonyJson } from "./get-compile-json";
 import { handlePublishErrCode, showCompileSuccess } from "./../publishModal";
 import {
   showH5PublishSuccessModal,
@@ -1201,28 +1201,40 @@ const Designer = ({ appData }) => {
           }
         }
 
-        const json = await getMiniappJson({
-          toJson: {
-            ...toJson,
-            tabbar: window.__tabbar__.get(),
-          },
-          ci: {
-            appid: pageModel.wxConfig.appid,
-            privateKey: decodeURIComponent(pageModel.wxConfig.privateKey || ""),
-            type: "miniProgram",
-            version,
-            desc: description,
-          },
-          status: {
-            projectId: pageModel.sdk.projectId,
-            fileId: pageModel.fileId,
-            apiEnv: "prod",
-            ...pageModel.appConfig,
-            appid: pageModel.wxConfig.appid,
-            appsecret: pageModel.wxConfig.appsecret,
-          },
-          comlibs: comlibs,
-        });
+        let json: any
+
+        if (type === CompileType.harmony) {
+          json = await getHarmonyJson({
+            toJson: {
+              ...toJson,
+              tabbar: window.__tabbar__.get(),
+            },
+            comlibs: comlibs,
+          })
+        } else {
+          json = await getMiniappJson({
+            toJson: {
+              ...toJson,
+              tabbar: window.__tabbar__.get(),
+            },
+            ci: {
+              appid: pageModel.wxConfig.appid,
+              privateKey: decodeURIComponent(pageModel.wxConfig.privateKey || ""),
+              type: "miniProgram",
+              version,
+              desc: description,
+            },
+            status: {
+              projectId: pageModel.sdk.projectId,
+              fileId: pageModel.fileId,
+              apiEnv: "prod",
+              ...pageModel.appConfig,
+              appid: pageModel.wxConfig.appid,
+              appsecret: pageModel.wxConfig.appsecret,
+            },
+            comlibs: comlibs,
+          })
+        }
 
         const url = type === CompileType.harmony ? "/api/compile/harmony/compile" : "/api/compile/miniapp/compile"
 
@@ -1268,10 +1280,10 @@ const Designer = ({ appData }) => {
         //     content: "已构建至本地文件夹",
         //   });
         // } else {
-          download({
-            type,
-            backEndProjectPath: data?.data?.backEndProjectPath,
-          })
+          // download({
+          //   type,
+          //   backEndProjectPath: data?.data?.backEndProjectPath,
+          // })
           // showCompileSuccess({
           //   type,
           //   onDownload: () =>
