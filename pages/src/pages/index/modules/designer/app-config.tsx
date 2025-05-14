@@ -745,24 +745,26 @@ export default function ({
               },
             ],
           },
-          {
-            type: "normal",
-            title: "网页",
-            template: {
-              namespace: "mybricks.taro.systemWebview",
-              deletable: false,
-              asRoot: true,
-            },
-            inputs: [
-              {
-                id: "open",
-                title: "打开",
-                schema: {
-                  type: "object",
-                },
+          ...(isDesignFilePlatform('harmony') ? [] : [
+            {
+              type: "normal",
+              title: "网页",
+              template: {
+                namespace: "mybricks.taro.systemWebview",
+                deletable: false,
+                asRoot: true,
               },
-            ],
-          },
+              inputs: [
+                {
+                  id: "open",
+                  title: "打开",
+                  schema: {
+                    type: "object",
+                  },
+                },
+              ],
+            },
+          ]),
         ],
       },
       nav: {
