@@ -42,7 +42,7 @@ interface ItemParamsInputValues {
 }
 
 export interface SlotsParams_item {
-  name: string,
+  id: string,
   inputValues: ItemParamsInputValues
 }
 
@@ -81,7 +81,7 @@ export default struct Mybricks_Container_List {
         ForEach(this.dataSource, (item: DataSourceItem, index) => {
           ListItem() {
             this.slots({
-              name: 'item',
+              id: 'item',
               inputValues: {
                 itemData: item,
                 index

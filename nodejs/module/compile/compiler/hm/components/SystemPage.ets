@@ -26,7 +26,7 @@ interface Outputs {
 
 
 export interface SlotsParams_content {
-  name: string,
+  id: string,
 }
 export interface SlotsParams {
   item: SlotsParams_content
@@ -42,7 +42,7 @@ export default struct Mybricks_System_Page {
   @Param inputs?: Inputs = undefined;
   @Param outputs?: Outputs = undefined;
 
-  @BuilderParam slots: (name: SlotsParams_content) => void = emptySlot;
+  @BuilderParam slots: (id: SlotsParams_content) => void = emptySlot;
 
   aboutToAppear(): void {
 
@@ -51,7 +51,7 @@ export default struct Mybricks_System_Page {
   build() {
     Column() {
       this.slots({
-        name: 'content'
+        id: 'content'
       })
     }.backgroundColor(this.data?.background)
     .alignItems(HorizontalAlign.Start)
