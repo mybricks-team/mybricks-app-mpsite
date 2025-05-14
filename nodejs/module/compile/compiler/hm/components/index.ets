@@ -3,6 +3,7 @@ import BasicSystemPage, { DataType as SystemPageDataType, Data as SystemPageData
 import BasicText, { DataType as TextDataType, Data as TextData } from "./Text";
 import BasicImage, { DataType as ImageDataType, Data as ImageData } from "./Image";
 import BasicList, { DataType as ListDataType, Data as ListData } from "./List"
+import BasicPopup, { DataType as PopupDataType, Data as PopupData } from "./Popup"
 import basicCodes from "./codes";
 
 import { inputs, inputs2 } from "./mybricks"
@@ -132,19 +133,15 @@ export const MyBricksTextController = () => {
   return inputs2({}, true) as MyBricksTextControllerType
 }
 
-interface MyBricksTextEvents {
-  onClick: (value: string) => void;
+class MyBricksTextEvents {
+  onClick = (value: MyBricks.EventValue) => {}
 }
 
 @ComponentV2
 export struct MyBricksText {
   @Param controller: MyBricksTextControllerType = MyBricksTextController();
   @Param @Require data: TextDataType;
-  @Param events: MyBricksTextEvents = {
-    onClick: (value: string): void => {
-      console.log("[MyBricks] - Function not implemented.");
-    }
-  }
+  @Param events: MyBricksTextEvents = new MyBricksTextEvents()
   @Param styles: Styles = {};
 
   build() {
@@ -228,6 +225,40 @@ export struct MyBricksContainerList {
     })
   }
 }
+
+/** 弹窗 */
+export class MyBricksPopupEvents {
+  onClose = (value: MyBricks.EventValue) => {}
+  onClickOverlay = (value: MyBricks.EventValue) => {}
+}
+
+interface MyBricksPopupControllerType {
+
+}
+export const MyBricksPopupController = () => {
+  return inputs2({}, true) as MyBricksPopupControllerType
+}
+
+@ComponentV2
+export struct MyBricksPopup {
+  @Param controller: MyBricksPopupControllerType = MyBricksPopupController();
+  @Param @Require data: PopupDataType;
+  @Param events: MyBricksPopupEvents = new MyBricksPopupEvents()
+  @Param styles: Styles = {};
+
+  @BuilderParam slots : (params: MyBricks.SlotParams) => void = Slot;
+
+  build() {
+    BasicPopup({
+      data: new PopupData(this.data),
+      inputs: inputs2(this),
+      outputs: this.events,
+      styles: this.styles,
+      slots: this.slots,
+    })
+  }
+}
+
 
 /** JS计算 */
 const codes: MyBricks.Codes = Object.keys(basicCodes).reduce((pre, key) => {

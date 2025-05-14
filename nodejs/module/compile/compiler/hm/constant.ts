@@ -58,6 +58,17 @@ export const COMPONENT_META = {
       importType: "named",
     },
   },
+  "mybricks.taro.popup": {
+    dependencyImport: {
+      packageName: COMPONENT_PACKAGE_NAME,
+      dependencyNames: [
+        "MyBricksPopup",
+        "MyBricksPopupController",
+      ],
+      importType: "named",
+    },
+    componentName: "MyBricksPopup",
+  }
 
 
   // "mybricks.taro._toString": {
