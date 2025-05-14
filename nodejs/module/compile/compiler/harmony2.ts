@@ -10,6 +10,49 @@ class HarmonyCompiler extends BaseCompiler {
   };
 }
 
+const handlePageCode = (page: ReturnType<typeof toHarmonyCode>[0]) => {
+  page.importManager.addImport({
+    packageName: "../utils",
+    dependencyNames: ["AppCommonHeader"],
+    importType: "named",
+  });
+  return `${page.importManager.toCode()}
+
+  @ComponentV2
+  export default struct Page {
+    build() {
+      NavDestination() {
+        AppCommonHeader()
+        Index()
+      }
+      .hideTitleBar(true)
+    }
+  }
+
+  ${page.content}
+  `;
+}
+
+const handlePopupCode = (page: ReturnType<typeof toHarmonyCode>[0]) => {
+  return `${page.importManager.toCode()}
+  
+      @ComponentV2
+      export default struct Page {
+        build() {
+          NavDestination() {
+            Index()
+          }
+          .hideTitleBar(true)
+          .hideBackButton(true)
+          .mode(NavDestinationMode.DIALOG)
+          .systemTransition(NavigationSystemTransitionType.NONE)
+        }
+      }
+  
+      ${page.content}
+      `;
+}
+
 export const compilerHarmony2 = async (
   { data, projectPath, projectName, fileName, depModules, origin, type }: any,
   { Logger }
@@ -24,11 +67,21 @@ export const compilerHarmony2 = async (
     },
   });
 
-  pageCode.forEach(({ path: relativePath, content }) => {
-    fse.outputFileSync(path.join(projectPath, relativePath), content, { encoding: "utf8" })
-  })
+  pageCode.forEach((page) => {
+    let content = "";
+    if (page.type === "ignore") {
+      // 不做特殊处理，一般是固定模版代码
+      content = page.content;
+    } else if (page.type === "normal") {
+      // 页面
+      content = handlePageCode(page);
+    } else if (page.type === "popup") {
+      // 弹窗
+      content = handlePopupCode(page);
+    }
 
-  const componentPath = path.join(__dirname, "./hm/components");
+    fse.outputFileSync(path.join(projectPath, page.path), content, { encoding: "utf8" })
+  });
 
   await fse.copy(path.join(__dirname, "./hm/components"), path.join(projectPath, "components"))
   await fse.copy(path.join(__dirname, "./hm/types"), path.join(projectPath, "types"))
