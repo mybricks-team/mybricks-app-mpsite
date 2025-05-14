@@ -13,7 +13,7 @@ class HarmonyCompiler extends BaseCompiler {
 const handleEntryCode = (template: string, {
   tabbarScenes,
   normalScenes,
-  entryPagePath,
+  entryPageId,
   tabbarConfig
 }) => {
   const allImports = Array.from(new Set([...tabbarScenes, ...normalScenes]))
@@ -22,7 +22,7 @@ const handleEntryCode = (template: string, {
   const generateRoutes = (paths) => paths
     .map((path, i) => `${i === 0 ? 'if' : '\t\telse if'} (path === '${path}') {\n\t\t\tPage_${path}()\n\t\t}`)
     .join('\n');
-  const renderMainScenes = generateRoutes(Array.from(new Set([entryPagePath, ...tabbarScenes])))
+  const renderMainScenes = generateRoutes(Array.from(new Set([entryPageId, ...tabbarScenes])))
   const renderScenes = generateRoutes(normalScenes)
 
 
@@ -31,10 +31,15 @@ const handleEntryCode = (template: string, {
     .replace("$r('app.config.mainScenes')", renderMainScenes)
     .replace("$r('app.config.scenes')", renderScenes)
     .replace("$r('app.config.tabbar')", JSON.stringify(tabbarConfig, null, 2))
-    .replace("$r('app.config.entry')", JSON.stringify(entryPagePath))
+    .replace("$r('app.config.entry')", JSON.stringify(entryPageId))
 }
 
-const handlePageCode = (page: ReturnType<typeof toHarmonyCode>[0]) => {
+const handlePageCode = (page: ReturnType<typeof toHarmonyCode>[0], {
+  disableScroll = false,
+  navigationBarBackgroundColor,
+  navigationBarTextStyle,
+  navigationBarTitleText
+}) => {
   page.importManager.addImport({
     packageName: "../utils",
     dependencyNames: ["AppCommonHeader"],
@@ -46,7 +51,11 @@ const handlePageCode = (page: ReturnType<typeof toHarmonyCode>[0]) => {
   export default struct Page {
     build() {
       NavDestination() {
-        AppCommonHeader()
+        AppCommonHeader({
+          title: ${JSON.stringify(navigationBarTitleText)},
+          titleColor: ${JSON.stringify(navigationBarTextStyle)},
+          barBackgroundColor: ${JSON.stringify(navigationBarBackgroundColor)}
+        })
         Index()
       }
       .hideTitleBar(true)
@@ -97,8 +106,9 @@ export const compilerHarmony2 = async (
       // 不做特殊处理，一般是固定模版代码
       content = page.content;
     } else if (page.type === "normal") {
+      const { pageConfig } = data.pages.find(p => p.id === page.pageId) ?? {}
       // 页面
-      content = handlePageCode(page);
+      content = handlePageCode(page, pageConfig);
     } else if (page.type === "popup") {
       // 弹窗
       content = handlePopupCode(page);
@@ -131,7 +141,7 @@ export const compilerHarmony2 = async (
   })
 
   // 入口场景
-  const entryPagePath: string = data.appConfig?.entryPagePath?.split('/')[1];
+  const entryPageId: string = data.appConfig?.entryPagePath?.split('/')[1];
 
   // tabbar场景
   const tabbarScenes: string[] = data.appConfig.pages.filter(p => 
@@ -156,19 +166,8 @@ export const compilerHarmony2 = async (
     normalScenes,
     tabbarScenes,
     tabbarConfig,
-    entryPagePath
+    entryPageId
   })
-
   await fse.writeFile(entryPath, entryFileContent, 'utf-8')
-
-
-  /**
-   * [TODO]
-   * 1. js计算，写文件
-   * 2. 拼 EntryView 模版
-   * 
-   * page文件名 Page_{场景ID}.ets
-   */
-
 }
 
