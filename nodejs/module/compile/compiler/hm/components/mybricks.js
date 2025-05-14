@@ -1,5 +1,5 @@
-const log = (type, ...args) => {
-  console.log(`[MyBricks - ${type}]`, ...args)
+const log = (...args) => {
+  console.log(`[MyBricks]`, ...args)
 }
 
 /** 数据流 */
@@ -216,6 +216,7 @@ export const inputs = (fn, props) => {
     data: props.data,
     inputs,
     outputs,
+    logger: log,
   })
 
   const isJsMultipleInputs = props.inputs[0]
@@ -241,7 +242,7 @@ export const inputs = (fn, props) => {
         args.forEach((value, index) => {
           if (value?.subscribe) {
             value.subscribe((value) => {
-              valueAry[componentProps.inputs[index]] = value
+              valueAry[props.inputs[index]] = value
               if (Object.keys(valueAry).length === length) {
                 createReactiveInputHandler(controller, valueAry, rels)
                 // 触发输入后清除
@@ -249,7 +250,7 @@ export const inputs = (fn, props) => {
               }
             })
           } else {
-            valueAry[componentProps.inputs[index]] = value
+            valueAry[props.inputs[index]] = value
             if (Object.keys(valueAry).length === length) {
               createReactiveInputHandler(controller, valueAry, rels)
               // 触发输入后清除

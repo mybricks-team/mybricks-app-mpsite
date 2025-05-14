@@ -3,8 +3,9 @@ import BasicSystemPage, { DataType as SystemPageDataType, Data as SystemPageData
 import BasicText, { DataType as TextDataType, Data as TextData } from "./Text";
 import BasicImage, { DataType as ImageDataType, Data as ImageData } from "./Image";
 import BasicList, { DataType as ListDataType, Data as ListData } from "./List"
+import basicCodes from "./codes";
 
-import { inputs2 } from "./mybricks";
+import { inputs, inputs2 } from "./mybricks"
 
 type Style = Record<string, string | number>;
 type Styles = Record<string, Style>;
@@ -123,8 +124,12 @@ export struct MyBricksSystemPage {
 }
 
 // -- 文本 --
-export class MyBricksTextController {
-  value: (text: string) => void = () => {};
+interface MyBricksTextControllerType {
+  value: (value: MyBricks.EventValue) => void;
+}
+
+export const MyBricksTextController = () => {
+  return inputs2({}, true) as MyBricksTextControllerType
 }
 
 interface MyBricksTextEvents {
@@ -133,7 +138,7 @@ interface MyBricksTextEvents {
 
 @ComponentV2
 export struct MyBricksText {
-  @Param controller: MyBricksTextController = new MyBricksTextController();
+  @Param controller: MyBricksTextControllerType = MyBricksTextController();
   @Param @Require data: TextDataType;
   @Param events: MyBricksTextEvents = {
     onClick: (value: string): void => {
@@ -145,44 +150,40 @@ export struct MyBricksText {
   build() {
     BasicText({
       data: new TextData(this.data),
-      inputs: {
-        value: (fn) => {
-          this.controller.value = (text) => {
-            fn(text)
-          };
-        }
-      },
-      outputs: {
-        onClick: this.events.onClick
-      },
+      inputs: inputs2(this),
+      outputs: this.events,
       styles: this.styles
     })
   }
 }
 
 // -- 图片 --
-export class MyBricksImageController {
-  setSrc: (text: string) => void = () => {};
+interface MyBricksImageControllerType {
+  setSrc: (text: MyBricks.EventValue) => void;
+}
+
+export const MyBricksImageController = () => {
+  return inputs2({}, true) as MyBricksImageControllerType
 }
 
 interface MyBricksImageEvents {
-  onClick: (value: string) => void;
-  onLoad: (value: string) => void;
-  onError: (value: string) => void;
+  onClick: (value: MyBricks.EventValue) => void;
+  onLoad: (value: MyBricks.EventValue) => void;
+  onError: (value: MyBricks.EventValue) => void;
 }
 
 @ComponentV2
 export struct MyBricksImage {
-  @Param controller: MyBricksImageController = new MyBricksImageController();
+  @Param controller: MyBricksImageControllerType = MyBricksImageController();
   @Param @Require data: ImageDataType;
   @Param events: MyBricksImageEvents = {
-    onClick: (value: string): void => {
+    onClick: (value: MyBricks.EventValue): void => {
       console.log("[MyBricks] - Function not implemented.");
     },
-    onLoad: (value: string): void => {
+    onLoad: (value: MyBricks.EventValue): void => {
       console.log("[MyBricks] - Function not implemented.");
     },
-    onError: (value: string): void => {
+    onError: (value: MyBricks.EventValue): void => {
       console.log("[MyBricks] - Function not implemented.");
     }
   }
@@ -191,18 +192,8 @@ export struct MyBricksImage {
   build() {
     BasicImage({
       data: new ImageData(this.data),
-      inputs: {
-        setSrc: (fn) => {
-          this.controller.setSrc = (text) => {
-            fn(text)
-          };
-        }
-      },
-      outputs: {
-        onClick: this.events.onClick,
-        onLoad: this.events.onLoad,
-        onError: this.events.onError,
-      },
+      inputs: inputs2(this),
+      outputs: this.events,
       styles: this.styles
     })
   }
@@ -211,11 +202,6 @@ export struct MyBricksImage {
 
 
 // -- 列表 --
-// export class MyBricksListController {
-//   addDataSource = (value: MyBricks.EventValue) => {};
-//   refreshDataSource = (value: MyBricks.EventValue) => {};
-// }
-
 interface MyBricksContainerListControllerType {
   addDataSource: (value: MyBricks.EventValue) => void;
   refreshDataSource: (value: MyBricks.EventValue) => void;
@@ -241,4 +227,16 @@ export struct MyBricksContainerList {
       slots: this.slots
     })
   }
+}
+
+/** JS计算 */
+const codes: MyBricks.Codes = Object.keys(basicCodes).reduce((pre, key) => {
+  pre[key] = (props: MyBricks.JSParams): MyBricks.JSReturn => {
+    return inputs(basicCodes[key], props);
+  }
+  return pre
+}, {} as MyBricks.Codes)
+
+export {
+  codes
 }

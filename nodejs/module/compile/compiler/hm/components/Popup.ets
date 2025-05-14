@@ -43,7 +43,7 @@ interface _EnvCurrentScenes {
 
 
 export interface SlotsParams_content {
-  name: string,
+  id: string,
   style?: CSSProperties
 }
 
@@ -85,7 +85,7 @@ export default struct Mybricks_Popup {
             Column() {
               Text('我是测试文本')
               this.slots({
-                name: 'content'
+                id: 'content'
               })
             }
             .attributeModifier(
@@ -98,7 +98,7 @@ export default struct Mybricks_Popup {
             Column() {
               Text('我是测试文本')
               this.slots({
-                name: 'content'
+                id: 'content'
               })
             }
             .attributeModifier(
@@ -111,7 +111,7 @@ export default struct Mybricks_Popup {
             Column() {
               Text('我是测试文本')
               this.slots({
-                name: 'content'
+                id: 'content'
               })
             }
             .attributeModifier(

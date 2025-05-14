@@ -51,23 +51,22 @@ export const COMPONENT_META = {
     },
     componentName: "MyBricksContainerList",
   },
-
-  "mybricks.taro._toString": {
-    // 导入方式
-    dependencyImport: {
-      packageName: COMPONENT_PACKAGE_NAME,
-      dependencyNames: ["myBricks_toString"],
-      importType: "named",
-    },
-    componentName: "myBricks_toString",
-  },
   "mybricks.taro._muilt-inputJs": {
-    // 导入方式
     dependencyImport: {
       packageName: COMPONENT_PACKAGE_NAME,
-      dependencyNames: ["myBricks_javascript"],
+      dependencyNames: ["codes"],
       importType: "named",
     },
-    componentName: "myBricks_javascript",
   },
+
+
+  // "mybricks.taro._toString": {
+  //   // 导入方式
+  //   dependencyImport: {
+  //     packageName: COMPONENT_PACKAGE_NAME,
+  //     dependencyNames: ["myBricks_toString"],
+  //     importType: "named",
+  //   },
+  //   componentName: "myBricks_toString",
+  // },
 };
