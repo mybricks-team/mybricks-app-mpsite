@@ -3,6 +3,7 @@ import { ApplyRootStyleModifier, ApplyStyleModifier, CSSProperties } from './sty
 type PopupPosition = 'center' | 'top' | 'bottom' | 'left' | 'right'
 
 export interface DataType {
+  layout?: CSSProperties
   position: PopupPosition
   maskClose?: boolean
   visibleClose?: boolean
@@ -11,6 +12,7 @@ export interface DataType {
 
 @ObservedV2
 export class Data implements DataType {
+  @Trace layout?: CSSProperties = {}
   @Trace position: PopupPosition = 'center'
   @Trace maskClose?: boolean
   @Trace visibleClose?: boolean
