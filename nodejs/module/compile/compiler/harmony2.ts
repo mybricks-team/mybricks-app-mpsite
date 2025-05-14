@@ -100,6 +100,16 @@ export const compilerHarmony2 = async (
     },
   });
 
+  // 目标项目路径
+  const targetAppPath = path.join(projectPath, "Application");
+
+  // 拷贝项目
+  await fse.copy(path.join(__dirname, "./hm/Application"), targetAppPath, { overwrite: true })
+
+  // est路径
+  const targetEtsPath = path.join(targetAppPath, "entry/src/main/ets");
+
+
   pageCode.forEach((page) => {
     let content = "";
     if (page.type === "ignore") {
@@ -114,17 +124,17 @@ export const compilerHarmony2 = async (
       content = handlePopupCode(page);
     }
 
-    fse.outputFileSync(path.join(projectPath, page.path), content, { encoding: "utf8" })
+    fse.outputFileSync(path.join(targetEtsPath, page.path), content, { encoding: "utf8" })
   });
 
-  await fse.copy(path.join(__dirname, "./hm/components"), path.join(projectPath, "components"), { overwrite: true })
-  await fse.copy(path.join(__dirname, "./hm/types"), path.join(projectPath, "types"), { overwrite: true })
-  await fse.copy(path.join(__dirname, "./hm/utils"), path.join(projectPath, "utils"), { overwrite: true })
+  // await fse.copy(path.join(__dirname, "./hm/components"), path.join(projectPath, "components"), { overwrite: true })
+  // await fse.copy(path.join(__dirname, "./hm/types"), path.join(projectPath, "types"), { overwrite: true })
+  // await fse.copy(path.join(__dirname, "./hm/utils"), path.join(projectPath, "utils"), { overwrite: true })
 
   // await fse.copy(indexPath, target, { overwrite: true })
 
   // 写入搭建Js
-  const jsCodePath = path.join(projectPath, "components/codes.js");
+  const jsCodePath = path.join(targetEtsPath, "components/codes.js");
   await fse.ensureFile(jsCodePath)
   await fse.writeFile(jsCodePath, `export default (function(comModules) {
     ${decodeURIComponent(data.allModules?.all)};
@@ -164,8 +174,8 @@ export const compilerHarmony2 = async (
     }
   })
 
-  const entryPath = path.join(projectPath, "./pages/Index.ets");
-  await fse.copy(path.join(__dirname, "./hm/pages/Index.ets"), entryPath, { overwrite: true });
+  const entryPath = path.join(targetEtsPath, "./pages/Index.ets");
+  await fse.copy(path.join(__dirname, "./hm/Application/entry/src/main/ets/pages/Index.ets"), entryPath, { overwrite: true });
   
   let entryFileContent = await fse.readFile(entryPath, 'utf-8')
 
