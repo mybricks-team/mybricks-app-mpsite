@@ -228,7 +228,6 @@ export struct MyBricksContainerList {
 
 /** 弹窗 */
 export class MyBricksPopupEvents {
-  onClose = (value: MyBricks.EventValue) => {}
   onClickOverlay = (value: MyBricks.EventValue) => {}
 }
 

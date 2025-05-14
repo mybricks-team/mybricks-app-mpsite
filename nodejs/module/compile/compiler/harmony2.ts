@@ -117,14 +117,14 @@ export const compilerHarmony2 = async (
     fse.outputFileSync(path.join(projectPath, page.path), content, { encoding: "utf8" })
   });
 
-  await fse.copy(path.join(__dirname, "./hm/components"), path.join(projectPath, "components"))
-  await fse.copy(path.join(__dirname, "./hm/types"), path.join(projectPath, "types"))
-  await fse.copy(path.join(__dirname, "./hm/utils"), path.join(projectPath, "utils"))
+  await fse.copy(path.join(__dirname, "./hm/components"), path.join(projectPath, "components"), { overwrite: true })
+  await fse.copy(path.join(__dirname, "./hm/types"), path.join(projectPath, "types"), { overwrite: true })
+  await fse.copy(path.join(__dirname, "./hm/utils"), path.join(projectPath, "utils"), { overwrite: true })
 
   // await fse.copy(indexPath, target, { overwrite: true })
 
   // 写入搭建Js
-  const jsCodePath = path.join(projectPath, "codes.js");
+  const jsCodePath = path.join(projectPath, "components/codes.js");
   await fse.ensureFile(jsCodePath)
   await fse.writeFile(jsCodePath, `export default (function(comModules) {
     ${decodeURIComponent(data.allModules?.all)};
@@ -158,7 +158,7 @@ export const compilerHarmony2 = async (
   ).map(p => p.split('/')[1])
 
   const entryPath = path.join(projectPath, "./pages/Index.ets");
-  await fse.copy(path.join(__dirname, "./hm/pages/Index.ets"), entryPath);
+  await fse.copy(path.join(__dirname, "./hm/pages/Index.ets"), entryPath, { overwrite: true });
   
   let entryFileContent = await fse.readFile(entryPath, 'utf-8')
 
