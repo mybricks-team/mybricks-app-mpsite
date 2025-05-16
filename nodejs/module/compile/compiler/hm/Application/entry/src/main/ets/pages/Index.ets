@@ -76,20 +76,20 @@ function renderTabItems (item: TabBarConfig, index: number) {
   Column() {
     if (item.normalIconPath && item.selectedIconPath) {
       Image(index === appRouter.activeTabIndex ? item.selectedIconPath : item.normalIconPath)
-        .width(22)
-        .height(22)
+        .width(index === appRouter.activeTabIndex ? parseInt(String(item.selectedTextStyle?.width ?? 22))  : parseInt(String(item.normalIconStyle?.width ?? 22)))
+        .height(index === appRouter.activeTabIndex ? parseInt(String(item.selectedTextStyle?.height ?? 22))  : parseInt(String(item.normalIconStyle?.height ?? 22)))
         .objectFit(ImageFit.Contain)
       Text(item.text)
         .fontColor(index === appRouter.activeTabIndex ? item.selectedTextStyle?.color : item.normalTextStyle?.color)
-        .fontSize(12)
-        .fontWeight(index === appRouter.activeTabIndex ? 500 : 400)
+        .fontSize(index === appRouter.activeTabIndex ? (item.selectedTextStyle?.fontSize ?? 12) : (item.normalTextStyle?.fontSize ?? 12))
+        .fontWeight(index === appRouter.activeTabIndex ? (item.selectedTextStyle.fontWeight ?? 500) : (item.normalTextStyle.fontWeight ?? 400))
         .maxLines(1)
         .textOverflow({ overflow: TextOverflow.Ellipsis })
     } else {
       Text(item.text)
         .fontColor(index === appRouter.activeTabIndex ? item.selectedTextStyle?.color : item.normalTextStyle?.color)
-        .fontSize(16)
-        .fontWeight(index === appRouter.activeTabIndex ? 500 : 400)
+        .fontSize(index === appRouter.activeTabIndex ? (item.selectedTextStyle?.fontSize ?? 12) : (item.normalTextStyle?.fontSize ?? 12))
+        .fontWeight(index === appRouter.activeTabIndex ? (item.selectedTextStyle.fontWeight ?? 500) : (item.normalTextStyle.fontWeight ?? 400))
         .maxLines(1)
         .textOverflow({ overflow: TextOverflow.Ellipsis })
     }
@@ -97,6 +97,8 @@ function renderTabItems (item: TabBarConfig, index: number) {
   .width("100%")
   .height("100%")
   .justifyContent(FlexAlign.SpaceBetween)
+  .backgroundColor(index === appRouter.activeTabIndex ? item.selectedBackgroundStyle?.backgroundColor : item.normalBackgroundStyle?.backgroundColor)
+  .borderRadius(index === appRouter.activeTabIndex ? item.selectedBackgroundStyle?.borderRadius : item.normalBackgroundStyle?.borderRadius)
 }
 
 /** TODO: 闪屏启动页 */

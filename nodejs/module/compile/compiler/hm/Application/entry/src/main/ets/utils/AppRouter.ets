@@ -8,6 +8,8 @@ export interface TabBarConfig {
   selectedTextStyle: Record<string, string | number>,
   normalTextStyle: Record<string, string | number>,
   normalIconStyle: Record<string, string | number>,
+  selectedBackgroundStyle: Record<string, string | number>,
+  normalBackgroundStyle: Record<string, string | number>,
 }
 
 export type TabBarJson = Record<string, string | number | boolean | ESObject>

@@ -144,3 +144,31 @@ export struct AppCommonHeader {
   }
 }
 
+
+@Builder function emptySlot() {}
+
+@ComponentV2
+export struct AppCustomHeader {
+  @Param barHeight: number = 40
+  @Param barBackgroundColor: string = '#464646'
+
+  @BuilderParam content: () => void = emptySlot;
+
+  aboutToAppear(): void {
+    window.getLastWindow(getContext()).then(win => {
+      win.setWindowSystemBarProperties({
+        // 设置状态栏文本颜色为黑色
+        statusBarContentColor: '#000000'
+      })
+    })
+  }
+
+  build() {
+    Column(){
+      this.content()
+    }
+    .width('100%')
+    .padding({ top: appWindow.statusBarHeight })
+  }
+}
+

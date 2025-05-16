@@ -16,7 +16,7 @@ import {
   mybricks_harmony_containerList_Data,
   mybricks_harmony_containerBasic as basic_mybricks_harmony_containerBasic,
   mybricks_harmony_containerBasic_Data
-} from "@ohos/mybricks-comlib-harmony-normal"
+} from "./../../comlib/index"
 import basicCodes from "./codes";
 
 import { inputs, inputs2 } from "./mybricks"

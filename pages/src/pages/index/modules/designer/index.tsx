@@ -1280,10 +1280,10 @@ const Designer = ({ appData }) => {
         //     content: "已构建至本地文件夹",
         //   });
         // } else {
-        download({
-          type,
-          backEndProjectPath: data?.data?.backEndProjectPath,
-        })
+        // download({
+        //   type,
+        //   backEndProjectPath: data?.data?.backEndProjectPath,
+        // })
           // showCompileSuccess({
           //   type,
           //   onDownload: () =>
