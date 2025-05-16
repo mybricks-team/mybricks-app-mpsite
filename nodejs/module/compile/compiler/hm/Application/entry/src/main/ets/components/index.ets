@@ -1,9 +1,22 @@
-import BasicButton, { DataType as ButtonDataType, Data as ButtonData } from "./Button";
-import BasicSystemPage, { DataType as SystemPageDataType, Data as SystemPageData } from "./SystemPage";
-import BasicText, { DataType as TextDataType, Data as TextData } from "./Text";
-import BasicImage, { DataType as ImageDataType, Data as ImageData } from "./Image";
-import BasicList, { DataType as ListDataType, Data as ListData } from "./List"
-import BasicPopup, { DataType as PopupDataType, Data as PopupData } from "./Popup"
+import {
+  mybricks_harmony__showToast as basic_mybricks_harmony__showToast,
+  mybricks_harmony_popup as basic_mybricks_harmony_popup,
+  mybricks_harmony_popup_Data,
+  mybricks_harmony_systemPage as basic_mybricks_harmony_systemPage,
+  mybricks_harmony_systemPage_Data,
+  mybricks_harmony_systemWebview as basic_mybricks_harmony_systemWebview,
+  mybricks_Harmony_SystemWebview_Data,
+  mybricks_harmony_button as bacis_mybricks_harmony_button,
+  mybricks_harmony_button_Data,
+  mybricks_harmony_text as basic_mybricks_harmony_text,
+  mybricks_harmony_text_Data,
+  mybricks_harmony_image as basic_mybricks_harmony_image,
+  mybricks_harmony_image_Data,
+  mybricks_harmony_containerList as basic_mybricks_harmony_containerList,
+  mybricks_harmony_containerList_Data,
+  mybricks_harmony_containerBasic as basic_mybricks_harmony_containerBasic,
+  mybricks_harmony_containerBasic_Data
+} from "@ohos/mybricks-comlib-harmony-normal"
 import basicCodes from "./codes";
 
 import { inputs, inputs2 } from "./mybricks"
@@ -19,7 +32,6 @@ class MyBricksColumnModifier implements AttributeModifier<ColumnAttribute> {
   }
 
   applyNormalAttribute(instance: ColumnAttribute): void {
-    console.log("[MyBricks - MyBricksColumnModifier]", JSON.stringify(this.style))
     const style = this.style;
     // width
     instance.width(style.width);
@@ -55,43 +67,36 @@ class MyBricksColumnModifier implements AttributeModifier<ColumnAttribute> {
 
 @Builder function Slot(params: MyBricks.SlotParams) {}
 
-interface MyBricksButtonControllerButtonTextRelOutputs {
-  buttonTextDone: MyBricks.EventValue;
+export const Controller = () => {
+  return inputs2({}, true) as MyBricks.Controller
 }
 
-// 出码生成各组件的Events
-export class MyBricksButtonEvents {
-  onClick = (value: MyBricks.EventValue) => {}
+
+/** _showToast */
+export const mybricks_harmony__showToast = (props: MyBricks.JSParams): (...values: MyBricks.EventValue) => Record<string, MyBricks.EventValue> => {
+  return inputs(basic_mybricks_harmony__showToast, props);
 }
 
-interface MyBricksButtonControllerType {
-  buttonText: (value: MyBricks.EventValue) => MyBricksButtonControllerButtonTextRelOutputs;
-  // 内置的显示隐藏逻辑
-  show: (value: MyBricks.EventValue) => void;
-  hide: (value: MyBricks.EventValue) => void;
-  showOrHide: (value: MyBricks.EventValue) => void;
-}
-export const MyBricksButtonController = () => {
-  return inputs2({}, true) as MyBricksButtonControllerType
-}
-
+/** systemPage */
 @ComponentV2
-export struct MyBricksButton {
-  @Param controller: MyBricksButtonControllerType = MyBricksButtonController();
-  @Param @Require data: ButtonDataType;
-  @Param events: MyBricksButtonEvents = new MyBricksButtonEvents();
+export struct mybricks_harmony_systemPage {
+  @Param controller: MyBricks.Controller = Controller();
+  @Param @Require data: MyBricks.Data
+  @Param events: MyBricks.Events = {}
   @Param styles: Styles = {};
   @Local columnVisibility: Visibility = Visibility.Visible;
+  @BuilderParam slots : (params: MyBricks.SlotParams) => void = Slot;
 
   myBricksColumnModifier = new MyBricksColumnModifier(this.styles.root)
 
   build() {
     Column() {
-      BasicButton({
-        data: new ButtonData(this.data),
+      basic_mybricks_harmony_systemPage({
+        data: new mybricks_harmony_systemPage_Data(this.data),
         inputs: inputs2(this),
         outputs: this.events,
-        styles: this.styles
+        styles: this.styles,
+        slots: this.slots,
       })
     }
     .attributeModifier(this.myBricksColumnModifier)
@@ -100,161 +105,193 @@ export struct MyBricksButton {
 }
 
 
-// -- 页面 --
-interface MyBricksSystemPageControllerType {
-
-}
-export const MyBricksSystemPageController = () => {
-  return inputs2({}, true) as MyBricksSystemPageControllerType
-}
-
+/** popup */
 @ComponentV2
-export struct MyBricksSystemPage {
-  @Param controller: MyBricksSystemPageControllerType = MyBricksSystemPageController();
-  @Param @Require data: SystemPageDataType;
+export struct mybricks_harmony_popup {
+  @Param controller: MyBricks.Controller = Controller();
+  @Param @Require data: MyBricks.Data
+  @Param events: MyBricks.Events = {}
   @Param styles: Styles = {};
-
+  @Local columnVisibility: Visibility = Visibility.Visible;
   @BuilderParam slots : (params: MyBricks.SlotParams) => void = Slot;
 
-  build() {
-    BasicSystemPage({
-      data: new SystemPageData(this.data),
-      slots: this.slots
-    })
-  }
-}
-
-// -- 文本 --
-interface MyBricksTextControllerType {
-  value: (value: MyBricks.EventValue) => void;
-}
-
-export const MyBricksTextController = () => {
-  return inputs2({}, true) as MyBricksTextControllerType
-}
-
-class MyBricksTextEvents {
-  onClick = (value: MyBricks.EventValue) => {}
-}
-
-@ComponentV2
-export struct MyBricksText {
-  @Param controller: MyBricksTextControllerType = MyBricksTextController();
-  @Param @Require data: TextDataType;
-  @Param events: MyBricksTextEvents = new MyBricksTextEvents()
-  @Param styles: Styles = {};
+  myBricksColumnModifier = new MyBricksColumnModifier(this.styles.root)
 
   build() {
-    BasicText({
-      data: new TextData(this.data),
-      inputs: inputs2(this),
-      outputs: this.events,
-      styles: this.styles
-    })
-  }
-}
-
-// -- 图片 --
-interface MyBricksImageControllerType {
-  setSrc: (text: MyBricks.EventValue) => void;
-}
-
-export const MyBricksImageController = () => {
-  return inputs2({}, true) as MyBricksImageControllerType
-}
-
-interface MyBricksImageEvents {
-  onClick: (value: MyBricks.EventValue) => void;
-  onLoad: (value: MyBricks.EventValue) => void;
-  onError: (value: MyBricks.EventValue) => void;
-}
-
-@ComponentV2
-export struct MyBricksImage {
-  @Param controller: MyBricksImageControllerType = MyBricksImageController();
-  @Param @Require data: ImageDataType;
-  @Param events: MyBricksImageEvents = {
-    onClick: (value: MyBricks.EventValue): void => {
-      console.log("[MyBricks] - Function not implemented.");
-    },
-    onLoad: (value: MyBricks.EventValue): void => {
-      console.log("[MyBricks] - Function not implemented.");
-    },
-    onError: (value: MyBricks.EventValue): void => {
-      console.log("[MyBricks] - Function not implemented.");
+    Column() {
+      basic_mybricks_harmony_popup({
+        data: new mybricks_harmony_popup_Data(this.data),
+        inputs: inputs2(this),
+        outputs: this.events,
+        styles: this.styles,
+        slots: this.slots,
+      })
     }
+    .attributeModifier(this.myBricksColumnModifier)
+    .visibility(this.columnVisibility)
   }
+}
+
+
+/** systemWebview */
+@ComponentV2
+export struct mybricks_harmony_systemWebview {
+  @Param controller: MyBricks.Controller = Controller();
+  @Param @Require data: MyBricks.Data
+  @Param events: MyBricks.Events = {}
   @Param styles: Styles = {};
+  @Local columnVisibility: Visibility = Visibility.Visible;
+
+  myBricksColumnModifier = new MyBricksColumnModifier(this.styles.root)
 
   build() {
-    BasicImage({
-      data: new ImageData(this.data),
-      inputs: inputs2(this),
-      outputs: this.events,
-      styles: this.styles
-    })
+    Column() {
+      basic_mybricks_harmony_systemWebview({
+        data: new mybricks_Harmony_SystemWebview_Data(this.data),
+        inputs: inputs2(this),
+        outputs: this.events,
+      })
+    }
+    .attributeModifier(this.myBricksColumnModifier)
+    .visibility(this.columnVisibility)
+
   }
 }
 
 
-
-// -- 列表 --
-interface MyBricksContainerListControllerType {
-  addDataSource: (value: MyBricks.EventValue) => void;
-  refreshDataSource: (value: MyBricks.EventValue) => void;
-}
-
-export const MyBricksContainerListController = () => {
-  return inputs2({}, true) as MyBricksContainerListControllerType
-}
-
+/** button */
 @ComponentV2
-export struct MyBricksContainerList {
-  @Param controller: MyBricksContainerListControllerType = MyBricksContainerListController();
-  @Param @Require data: ListDataType;
+export struct mybricks_harmony_button {
+  @Param controller: MyBricks.Controller = Controller();
+  @Param @Require data: MyBricks.Data
+  @Param events: MyBricks.Events = {}
   @Param styles: Styles = {};
+  @Local columnVisibility: Visibility = Visibility.Visible;
 
+  myBricksColumnModifier = new MyBricksColumnModifier(this.styles.root)
+
+  build() {
+    Column() {
+      bacis_mybricks_harmony_button({
+        data: new mybricks_harmony_button_Data(this.data),
+        inputs: inputs2(this),
+        outputs: this.events,
+        styles: this.styles
+      })
+    }
+    .attributeModifier(this.myBricksColumnModifier)
+    .visibility(this.columnVisibility)
+
+  }
+}
+
+
+/** text */
+@ComponentV2
+export struct mybricks_harmony_text {
+  @Param controller: MyBricks.Controller = Controller();
+  @Param @Require data: MyBricks.Data
+  @Param events: MyBricks.Events = {}
+  @Param styles: Styles = {};
+  @Local columnVisibility: Visibility = Visibility.Visible;
+
+  myBricksColumnModifier = new MyBricksColumnModifier(this.styles.root)
+
+  build() {
+    Column() {
+      basic_mybricks_harmony_text({
+        data: new mybricks_harmony_text_Data(this.data),
+        inputs: inputs2(this),
+        outputs: this.events,
+        styles: this.styles
+      })
+    }
+    .attributeModifier(this.myBricksColumnModifier)
+    .visibility(this.columnVisibility)
+
+  }
+}
+
+
+/** image */
+@ComponentV2
+export struct mybricks_harmony_image {
+  @Param controller: MyBricks.Controller = Controller();
+  @Param @Require data: MyBricks.Data
+  @Param events: MyBricks.Events = {}
+  @Param styles: Styles = {};
+  @Local columnVisibility: Visibility = Visibility.Visible;
+
+  myBricksColumnModifier = new MyBricksColumnModifier(this.styles.root)
+
+  build() {
+    Column() {
+      basic_mybricks_harmony_image({
+        data: new mybricks_harmony_image_Data(this.data),
+        inputs: inputs2(this),
+        outputs: this.events,
+        styles: this.styles
+      })
+    }
+    .attributeModifier(this.myBricksColumnModifier)
+    .visibility(this.columnVisibility)
+
+  }
+}
+
+
+/** containerList */
+@ComponentV2
+export struct mybricks_harmony_containerList {
+  @Param controller: MyBricks.Controller = Controller();
+  @Param @Require data: MyBricks.Data
+  @Param events: MyBricks.Events = {}
+  @Param styles: Styles = {};
+  @Local columnVisibility: Visibility = Visibility.Visible;
   @BuilderParam slots : (params: MyBricks.SlotParams) => void = Slot;
 
+  myBricksColumnModifier = new MyBricksColumnModifier(this.styles.root)
+
   build() {
-    BasicList({
-      data: new ListData(this.data),
-      inputs: inputs2(this),
-      styles: this.styles,
-      slots: this.slots
-    })
+    Column() {
+      basic_mybricks_harmony_containerList({
+        data: new mybricks_harmony_containerList_Data(this.data),
+        inputs: inputs2(this),
+        outputs: this.events,
+        styles: this.styles,
+        slots: this.slots,
+      })
+    }
+    .attributeModifier(this.myBricksColumnModifier)
+    .visibility(this.columnVisibility)
   }
 }
 
-/** 弹窗 */
-export class MyBricksPopupEvents {
-  onClickOverlay = (value: MyBricks.EventValue) => {}
-}
 
-interface MyBricksPopupControllerType {
-
-}
-export const MyBricksPopupController = () => {
-  return inputs2({}, true) as MyBricksPopupControllerType
-}
-
+/** containerBasic */
 @ComponentV2
-export struct MyBricksPopup {
-  @Param controller: MyBricksPopupControllerType = MyBricksPopupController();
-  @Param @Require data: PopupDataType;
-  @Param events: MyBricksPopupEvents = new MyBricksPopupEvents()
+export struct mybricks_harmony_containerBasic {
+  @Param controller: MyBricks.Controller = Controller();
+  @Param @Require data: MyBricks.Data
+  @Param events: MyBricks.Events = {}
   @Param styles: Styles = {};
-
+  @Local columnVisibility: Visibility = Visibility.Visible;
   @BuilderParam slots : (params: MyBricks.SlotParams) => void = Slot;
 
+  myBricksColumnModifier = new MyBricksColumnModifier(this.styles.root)
+
   build() {
-    BasicPopup({
-      data: new PopupData(this.data),
-      inputs: inputs2(this),
-      outputs: this.events,
-      styles: this.styles,
-      slots: this.slots,
-    })
+    Column() {
+      basic_mybricks_harmony_containerBasic({
+        data: new mybricks_harmony_containerBasic_Data(this.data),
+        inputs: inputs2(this),
+        outputs: this.events,
+        styles: this.styles,
+        slots: this.slots,
+      })
+    }
+    .attributeModifier(this.myBricksColumnModifier)
+    .visibility(this.columnVisibility)
   }
 }
 

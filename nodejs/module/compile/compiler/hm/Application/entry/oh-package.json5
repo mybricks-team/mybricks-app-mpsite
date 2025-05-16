@@ -5,6 +5,8 @@
   "main": "",
   "author": "",
   "license": "",
-  "dependencies": {}
+  "dependencies": {
+    "@ohos/mybricks-comlib-harmony-normal": "../comlib"
+  }
 }
 

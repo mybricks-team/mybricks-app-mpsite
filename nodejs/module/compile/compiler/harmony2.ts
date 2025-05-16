@@ -2,7 +2,7 @@ import toHarmonyCode from "@mybricks/to-code-react/dist/cjs/toHarmonyCode"
 import * as path from "path";
 import * as fse from "fs-extra";
 import { BaseCompiler } from "./base";
-import { COMPONENT_META } from "./hm/constant";
+import { COMPONENT_PACKAGE_NAME } from "./hm/constant";
 
 class HarmonyCompiler extends BaseCompiler {
   validateData = (data) => {
@@ -95,8 +95,33 @@ export const compilerHarmony2 = async (
   compiler.validateData(data);
 
   const pageCode = toHarmonyCode(data.toJson, {
-    getComponentMetaByNamespace(namespace) {
-      return COMPONENT_META[namespace];
+    getComponentMetaByNamespace(namespace, config) {
+      if (namespace === "mybricks.harmony._muilt-inputJs") {
+        return {
+          dependencyImport: {
+            packageName: COMPONENT_PACKAGE_NAME,
+            dependencyNames: ["codes"],
+            importType: "named",
+          },
+          componentName: "codes"
+        };
+      }
+  
+      const componentName = namespace.replace(/\./g, "_");
+      const dependencyNames = [componentName];
+  
+      if (config.type === "ui") {
+        dependencyNames.push("Controller");
+      }
+  
+      return {
+        dependencyImport: {
+          packageName: COMPONENT_PACKAGE_NAME,
+          dependencyNames,
+          importType: "named",
+        },
+        componentName: componentName,
+      };
     },
   });
 

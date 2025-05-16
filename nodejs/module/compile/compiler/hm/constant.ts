@@ -1,5 +1,5 @@
 // 组件导入路径
-const COMPONENT_PACKAGE_NAME = "../components"
+export const COMPONENT_PACKAGE_NAME = "../components"
 
 // [TODO] 自动生成
 export const COMPONENT_META = {
