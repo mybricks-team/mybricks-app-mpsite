@@ -1,4 +1,4 @@
-import { appRouter, TabBarConfig, initAppWindow, appWindow } from '../utils'
+import { appRouter, TabBarConfig, initAppWindow, appWindow, parseRadius } from '../utils'
 
 $r('app.config.imports')
 
@@ -96,9 +96,13 @@ function renderTabItems (item: TabBarConfig, index: number) {
   }
   .width("100%")
   .height("100%")
+  .padding({
+    top: 6,
+    bottom: 6
+  })
   .justifyContent(FlexAlign.SpaceBetween)
   .backgroundColor(index === appRouter.activeTabIndex ? item.selectedBackgroundStyle?.backgroundColor : item.normalBackgroundStyle?.backgroundColor)
-  .borderRadius(index === appRouter.activeTabIndex ? item.selectedBackgroundStyle?.borderRadius : item.normalBackgroundStyle?.borderRadius)
+  .borderRadius(parseRadius(index === appRouter.activeTabIndex ? item.selectedBackgroundStyle?.borderRadius : item.normalBackgroundStyle?.borderRadius))
 }
 
 /** TODO: 闪屏启动页 */
