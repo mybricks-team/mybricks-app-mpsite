@@ -165,7 +165,8 @@ export const getAllModulesJsCode = async (pages, plugins, options = {}) => {
         //解析新版「JS计算」并生成到 modules
         if (
           jsonComs[key].def.namespace === "mybricks.taro._muilt-inputJs" ||
-          jsonComs[key].def.namespace === "mybricks.core-comlib.js-ai"
+          jsonComs[key].def.namespace === "mybricks.core-comlib.js-ai" ||
+          jsonComs[key].def.namespace === "mybricks.harmony._muilt-inputJs"
         ) {
 
           let realJsCode =

@@ -1,4 +1,5 @@
 // import cloneDeep from "lodash/cloneDeep";
+import { COMPONENT_NAMESPACE } from "@/constants";
 import { getAllModulesJsCode, getPageCssCode } from "../getAllModules";
 // import { transformToJSON, transformSingleToJSON } from '../json-util'
 import { Css, getComsFromPageJson } from "./utils";
@@ -98,7 +99,7 @@ export class BaseJson {
         return isPageScene(item);
       })
       .forEach((item) => {
-        const systemPageComData = findCom(item, "mybricks.taro.systemPage")
+        const systemPageComData = findCom(item, COMPONENT_NAMESPACE.systemPage)
           ?.model?.data;
 
         if (!systemPageComData) {
@@ -128,11 +129,11 @@ export class BaseJson {
             /**
              * start
              */
-            let config = findCom(item, "mybricks.taro.systemPage")?.model?.data;
+            let config = findCom(item, COMPONENT_NAMESPACE.systemPage)?.model?.data;
 
             // 网页页面可能没有这个组件，需要从 systemWebview 中获取
             if (!config) {
-              config = findCom(item, "mybricks.taro.systemWebview")?.model
+              config = findCom(item, COMPONENT_NAMESPACE.systemWebview)?.model
                 ?.data;
             }
 
@@ -486,7 +487,7 @@ function deleteUnuseDataFromPage(pageToJson) {
   Object.keys(jsonComs).forEach((key) => {
     let value = jsonComs[key];
 
-    if (value.def.namespace === "mybricks.taro.systemPage") {
+    if (value.def.namespace === COMPONENT_NAMESPACE.systemPage) {
       value.model.data.tabBar = value.model.data.tabBar.map((tab) => {
         delete tab.selectedIconPath;
         delete tab.normalIconPath;

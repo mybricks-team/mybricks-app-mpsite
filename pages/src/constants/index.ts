@@ -22,8 +22,30 @@ export const MP_BASIC_COM_LIB = {
 export const HARMONY_COM_LIB = {
   id: 'default',
   namespace: 'mybricks.normal-harmony.taro',
-  editJs: "./public/comlibs/comlib-harmony-normal/0.0.1/edit.js",
+  // editJs: "./public/comlibs/comlib-harmony-normal/0.0.1/edit.js",
+  editJs: "https://127.0.0.1:8000/libEdt.js",
   version: '0.0.1',
+}
+
+export const COMPONENT_NAMESPACE = {
+  get systemPage () {
+    if (window.__PLATFORM__ === 'harmony') {
+      return 'mybricks.harmony.systemPage'
+    }
+    return 'mybricks.taro.systemPage'
+  },
+  get systemWebview () {
+    if (window.__PLATFORM__ === 'harmony') {
+      return 'mybricks.harmony.systemWebview'
+    }
+    return 'mybricks.taro.systemWebview'
+  },
+  get popup () {
+    if (window.__PLATFORM__ === 'harmony') {
+      return 'mybricks.harmony.popup'
+    }
+    return 'mybricks.taro.popup'
+  }
 }
 
 export const LOCAL_EDITOR_ASSETS = {

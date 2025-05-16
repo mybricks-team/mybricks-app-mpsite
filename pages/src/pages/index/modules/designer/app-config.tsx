@@ -16,7 +16,7 @@ import versionPlugin from "mybricks-plugin-version";
 import { editorAppenderFn } from "./editorAppender";
 
 import { showAIPageModal, MobilePrompts, MobileDefinitions } from '@mybricks/sdk-for-ai'
-import { LOCAL_EDITOR_ASSETS } from "@/constants";
+import { COMPONENT_NAMESPACE, LOCAL_EDITOR_ASSETS } from "@/constants";
 import { MpConfig, CompileConfig } from "./custom-configs";
 import { getAiEncryptData } from "./utils/get-ai-encrypt-data";
 import extendsConfig from "./configs/extends";
@@ -692,7 +692,7 @@ export default function ({
             type: "normal",
             title: `${getPageTitlePrefix()}标签页`,
             template: {
-              namespace: "mybricks.taro.systemPage",
+              namespace: COMPONENT_NAMESPACE.systemPage,
               deletable: false,
               asRoot: true,
             },
@@ -710,7 +710,7 @@ export default function ({
             type: "normal",
             title: `${getPageTitlePrefix()}页面`,
             template: {
-              namespace: "mybricks.taro.systemPage",
+              namespace: COMPONENT_NAMESPACE.systemPage,
               deletable: false,
               asRoot: true,
               data: {
@@ -731,7 +731,7 @@ export default function ({
             type: "popup",
             title: "对话框",
             template: {
-              namespace: "mybricks.taro.popup",
+              namespace: COMPONENT_NAMESPACE.popup,
               deletable: false,
               asRoot: true,
             },
@@ -745,26 +745,24 @@ export default function ({
               },
             ],
           },
-          ...(isDesignFilePlatform('harmony') ? [] : [
-            {
-              type: "normal",
-              title: "网页",
-              template: {
-                namespace: "mybricks.taro.systemWebview",
-                deletable: false,
-                asRoot: true,
-              },
-              inputs: [
-                {
-                  id: "open",
-                  title: "打开",
-                  schema: {
-                    type: "object",
-                  },
-                },
-              ],
+          {
+            type: "normal",
+            title: "网页",
+            template: {
+              namespace: COMPONENT_NAMESPACE.systemWebview,
+              deletable: false,
+              asRoot: true,
             },
-          ]),
+            inputs: [
+              {
+                id: "open",
+                title: "打开",
+                schema: {
+                  type: "object",
+                },
+              },
+            ],
+          },
         ],
       },
       nav: {
