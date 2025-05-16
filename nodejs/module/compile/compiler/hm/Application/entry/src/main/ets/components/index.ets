@@ -92,7 +92,7 @@ export struct mybricks_harmony_systemPage {
   build() {
     Column() {
       basic_mybricks_harmony_systemPage({
-        data: new mybricks_harmony_systemPage_Data(this.data),
+        data: new mybricks_harmony_systemPage_Data(this.data as MyBricks.Data),
         inputs: inputs2(this),
         outputs: this.events,
         styles: this.styles,
@@ -120,7 +120,7 @@ export struct mybricks_harmony_popup {
   build() {
     Column() {
       basic_mybricks_harmony_popup({
-        data: new mybricks_harmony_popup_Data(this.data),
+        data: new mybricks_harmony_popup_Data(this.data as MyBricks.Data),
         inputs: inputs2(this),
         outputs: this.events,
         styles: this.styles,
@@ -147,7 +147,7 @@ export struct mybricks_harmony_systemWebview {
   build() {
     Column() {
       basic_mybricks_harmony_systemWebview({
-        data: new mybricks_Harmony_SystemWebview_Data(this.data),
+        data: new mybricks_Harmony_SystemWebview_Data(this.data as MyBricks.Data),
         inputs: inputs2(this),
         outputs: this.events,
       })
@@ -173,7 +173,7 @@ export struct mybricks_harmony_button {
   build() {
     Column() {
       bacis_mybricks_harmony_button({
-        data: new mybricks_harmony_button_Data(this.data),
+        data: new mybricks_harmony_button_Data(this.data as MyBricks.Data),
         inputs: inputs2(this),
         outputs: this.events,
         styles: this.styles
@@ -200,7 +200,7 @@ export struct mybricks_harmony_text {
   build() {
     Column() {
       basic_mybricks_harmony_text({
-        data: new mybricks_harmony_text_Data(this.data),
+        data: new mybricks_harmony_text_Data(this.data as MyBricks.Data),
         inputs: inputs2(this),
         outputs: this.events,
         styles: this.styles
@@ -227,7 +227,7 @@ export struct mybricks_harmony_image {
   build() {
     Column() {
       basic_mybricks_harmony_image({
-        data: new mybricks_harmony_image_Data(this.data),
+        data: new mybricks_harmony_image_Data(this.data as MyBricks.Data),
         inputs: inputs2(this),
         outputs: this.events,
         styles: this.styles
@@ -255,7 +255,7 @@ export struct mybricks_harmony_containerList {
   build() {
     Column() {
       basic_mybricks_harmony_containerList({
-        data: new mybricks_harmony_containerList_Data(this.data),
+        data: new mybricks_harmony_containerList_Data(this.data as MyBricks.Data),
         inputs: inputs2(this),
         outputs: this.events,
         styles: this.styles,
@@ -283,7 +283,7 @@ export struct mybricks_harmony_containerBasic {
   build() {
     Column() {
       basic_mybricks_harmony_containerBasic({
-        data: new mybricks_harmony_containerBasic_Data(this.data),
+        data: new mybricks_harmony_containerBasic_Data(this.data as MyBricks.Data),
         inputs: inputs2(this),
         outputs: this.events,
         styles: this.styles,
