@@ -48,6 +48,16 @@ class MyBricksColumnModifier implements AttributeModifier<ColumnAttribute> {
       bottom: style.marginBottom,
       left: style.marginLeft
     })
+    // paddingTop
+    // paddingRight
+    // paddingBottom
+    // paddingLeft
+    instance.padding({
+      top: style.paddingTop,
+      right: style.paddingRight,
+      bottom: style.paddingBottom,
+      left: style.paddingLeft
+    })
     // flex
     if (typeof style.flex === "number") {
       instance.flexGrow(style.flex as number)
