@@ -98,7 +98,7 @@ export const mybricks_harmony__showToast = (props: MyBricks.JSParams): (...value
 
 /** systemPage */
 @ComponentV2
-export struct mybricks_harmony_systemPage {
+export struct Mybricks_harmony_systemPage {
   @Param controller: MyBricks.Controller = Controller();
   @Param @Require data: MyBricks.Data
   @Param events: MyBricks.Events = {}
@@ -126,7 +126,7 @@ export struct mybricks_harmony_systemPage {
 
 /** popup */
 @ComponentV2
-export struct mybricks_harmony_popup {
+export struct Mybricks_harmony_popup {
   @Param controller: MyBricks.Controller = Controller();
   @Param @Require data: MyBricks.Data
   @Param events: MyBricks.Events = {}
@@ -155,7 +155,7 @@ export struct mybricks_harmony_popup {
 
 /** systemWebview */
 @ComponentV2
-export struct mybricks_harmony_systemWebview {
+export struct Mybricks_harmony_systemWebview {
   @Param controller: MyBricks.Controller = Controller();
   @Param @Require data: MyBricks.Data
   @Param events: MyBricks.Events = {}
@@ -181,7 +181,7 @@ export struct mybricks_harmony_systemWebview {
 
 /** button */
 @ComponentV2
-export struct mybricks_harmony_button {
+export struct Mybricks_harmony_button {
   @Param controller: MyBricks.Controller = Controller();
   @Param @Require data: MyBricks.Data
   @Param events: MyBricks.Events = {}
@@ -208,7 +208,7 @@ export struct mybricks_harmony_button {
 
 /** text */
 @ComponentV2
-export struct mybricks_harmony_text {
+export struct Mybricks_harmony_text {
   @Param controller: MyBricks.Controller = Controller();
   @Param @Require data: MyBricks.Data
   @Param events: MyBricks.Events = {}
@@ -235,7 +235,7 @@ export struct mybricks_harmony_text {
 
 /** image */
 @ComponentV2
-export struct mybricks_harmony_image {
+export struct Mybricks_harmony_image {
   @Param controller: MyBricks.Controller = Controller();
   @Param @Require data: MyBricks.Data
   @Param events: MyBricks.Events = {}
@@ -262,7 +262,7 @@ export struct mybricks_harmony_image {
 
 /** containerList */
 @ComponentV2
-export struct mybricks_harmony_containerList {
+export struct Mybricks_harmony_containerList {
   @Param controller: MyBricks.Controller = Controller();
   @Param @Require data: MyBricks.Data
   @Param events: MyBricks.Events = {}
@@ -290,7 +290,7 @@ export struct mybricks_harmony_containerList {
 
 /** containerBasic */
 @ComponentV2
-export struct mybricks_harmony_containerBasic {
+export struct Mybricks_harmony_containerBasic {
   @Param controller: MyBricks.Controller = Controller();
   @Param @Require data: MyBricks.Data
   @Param events: MyBricks.Events = {}

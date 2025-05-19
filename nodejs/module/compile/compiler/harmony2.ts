@@ -148,10 +148,13 @@ export const compilerHarmony2 = async (
         };
       }
   
-      const componentName = namespace.replace(/\./g, "_");
+      let componentName = namespace.replace(/\./g, "_");
       const dependencyNames = [componentName];
   
       if (config.type === "ui") {
+        // UI组件首字母大写，需引入控制器初始化函数Controller
+        componentName = componentName[0].toUpperCase() + componentName.slice(1);
+        dependencyNames[0] = componentName;
         dependencyNames.push("Controller");
       }
   
