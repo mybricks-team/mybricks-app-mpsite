@@ -4,11 +4,11 @@ import * as fse from "fs-extra";
 import { BaseCompiler } from "./base";
 import { COMPONENT_PACKAGE_NAME } from "./hm/constant";
 
-class HarmonyCompiler extends BaseCompiler {
-  validateData = (data) => {
-    this.transformData({ data });
-  };
-}
+// class HarmonyCompiler extends BaseCompiler {
+//   validateData = (data) => {
+//     this.transformData({ data });
+//   };
+// }
 
 const handleEntryCode = (template: string, {
   tabbarScenes,
@@ -131,9 +131,9 @@ export const compilerHarmony2 = async (
   { data, projectPath, projectName, fileName, depModules, origin, type }: any,
   { Logger }
 ) => {
-  const compiler = new HarmonyCompiler({ projectPath });
+  // const compiler = new HarmonyCompiler({ projectPath });
   // 校验data合法性
-  compiler.validateData(data);
+  // compiler.validateData(data);
 
   const pageCode = toHarmonyCode(data.toJson, {
     getComponentMetaByNamespace(namespace, config) {
@@ -217,21 +217,21 @@ export const compilerHarmony2 = async (
   })
 
   // 入口场景
-  const entryPageId: string = data.appConfig?.entryPagePath?.split('/')[1];
+  const entryPageId: string = data.entryPageId;
 
   // tabbar场景
-  const tabbarScenes: string[] = data.appConfig.pages.filter(p => 
+  const tabbarScenes: string[] = data.pages.filter(p => 
     (data.tabBarJson || []).some(
-      (b) => b?.pagePath === p
+      (b) => b?.id === p?.id
     )
-  ).map(p => p.split('/')[1])
+  ).map(p => p.id)
 
   // 普通场景
-  const normalScenes: string[] = data.appConfig.pages.filter(p => 
+  const normalScenes: string[] = data.pages.filter(p => 
     !(data.tabBarJson || []).some(
-      (b) => b?.pagePath === p
+      (b) => b?.id === p?.id
     )
-  ).map(p => p.split('/')[1])
+  ).map(p => p.id)
 
   // 弹窗也写入普通场景判断中
   data.toJson.scenes.forEach((scene) => {

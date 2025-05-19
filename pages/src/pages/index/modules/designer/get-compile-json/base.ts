@@ -2,7 +2,7 @@
 import { COMPONENT_NAMESPACE } from "@/constants";
 import { getAllModulesJsCode, getPageCssCode } from "../getAllModules";
 // import { transformToJSON, transformSingleToJSON } from '../json-util'
-import { Css, getComsFromPageJson } from "./utils";
+import { Css, findComFromToJson, rgbaToHex, isPageScene } from "./utils";
 import { transformToJSON } from "@mybricks/render-utils";
 import axios from "axios";
 
@@ -99,7 +99,7 @@ export class BaseJson {
         return isPageScene(item);
       })
       .forEach((item) => {
-        const systemPageComData = findCom(item, COMPONENT_NAMESPACE.systemPage)
+        const systemPageComData = findComFromToJson(item, COMPONENT_NAMESPACE.systemPage)
           ?.model?.data;
 
         if (!systemPageComData) {
@@ -129,11 +129,11 @@ export class BaseJson {
             /**
              * start
              */
-            let config = findCom(item, COMPONENT_NAMESPACE.systemPage)?.model?.data;
+            let config = findComFromToJson(item, COMPONENT_NAMESPACE.systemPage)?.model?.data;
 
             // 网页页面可能没有这个组件，需要从 systemWebview 中获取
             if (!config) {
-              config = findCom(item, COMPONENT_NAMESPACE.systemWebview)?.model
+              config = findComFromToJson(item, COMPONENT_NAMESPACE.systemWebview)?.model
                 ?.data;
             }
 
@@ -301,7 +301,7 @@ function getAppConfig(toJson, status) {
   //   return item.id === "main";
   // });
 
-  // const config = findCom(tabBarPageToJson, "mybricks.taro.systemPage").model
+  // const config = findComFromToJson(tabBarPageToJson, "mybricks.taro.systemPage").model
   //   .data;
 
   // let tabBar = config.tabBar.filter((item) => {
@@ -395,26 +395,26 @@ function getAppConfig(toJson, status) {
   let isContainGetLocation = false;
 
   toJson.scenes.forEach((scene) => {
-    if (findCom(scene, "mybricks.taro._chooseLocation")) {
+    if (findComFromToJson(scene, "mybricks.taro._chooseLocation")) {
       isContainChooseLocation = true;
     }
-    if (findCom(scene, "mybricks.taro._get-location")) {
+    if (findComFromToJson(scene, "mybricks.taro._get-location")) {
       isContainGetLocation = true;
     }
-    if (findCom(scene, "mybricks.taro._open-location")) {
+    if (findComFromToJson(scene, "mybricks.taro._open-location")) {
       isContainGetLocation = true;
     }
   });
 
   // 全局 Fx 中是否有用到特殊组件
   toJson.global.fxFrames.forEach((fx) => {
-    if (findCom(fx, "mybricks.taro._chooseLocation")) {
+    if (findComFromToJson(fx, "mybricks.taro._chooseLocation")) {
       isContainChooseLocation = true;
     }
-    if (findCom(fx, "mybricks.taro._get-location")) {
+    if (findComFromToJson(fx, "mybricks.taro._get-location")) {
       isContainGetLocation = true;
     }
-    if (findCom(fx, "mybricks.taro._open-location")) {
+    if (findComFromToJson(fx, "mybricks.taro._open-location")) {
       isContainGetLocation = true;
     }
   });
@@ -446,40 +446,6 @@ function getAppConfig(toJson, status) {
   }
 
   return result;
-}
-
-function findCom(pageToJson, namespace) {
-  pageToJson = cloneDeep(pageToJson);
-
-  if (!pageToJson.coms) {
-    console.log(pageToJson);
-  }
-
-  return Object.values(pageToJson.coms).find((item) => {
-    return item.def.namespace.toLowerCase() === namespace.toLowerCase();
-  });
-}
-
-function rgbaToHex(rgbaStr) {
-  if (rgbaStr.startsWith("rgba") === false) {
-    return rgbaStr;
-  }
-
-  let rgba = rgbaStr.slice(5, -1).split(",");
-  let r = parseInt(rgba[0]);
-  let g = parseInt(rgba[1]);
-  let b = parseInt(rgba[2]);
-  let a = parseFloat(rgba[3]);
-  let hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
-  if (a === 1) {
-    return hex;
-  }
-  return (
-    hex +
-    Math.round(a * 255)
-      .toString(16)
-      .padStart(2, "0")
-  );
 }
 
 function deleteUnuseDataFromPage(pageToJson) {
@@ -638,7 +604,7 @@ function getTabbarJson(toJson) {
   //   return item.id === "main";
   // });
 
-  // const config = findCom(tabBarPageToJson, "mybricks.taro.systemPage").model
+  // const config = findComFromToJson(tabBarPageToJson, "mybricks.taro.systemPage").model
   //   .data;
 
   // let tabBar = config.tabBar.filter((item) => {
@@ -702,30 +668,4 @@ function getDepModules(comlibs, useF2ForTaro) {
       },
     ];
   }
-}
-
-function isPageScene(sceneToJson) {
-  // 为了兼容 spa 导为 mpa 时，引擎把 popup 类型转为了 normal 类型
-  // 需要额外判断，如果包含了 mybricks.taro.popup 组件，则过滤
-  if (
-    sceneToJson.deps.some((dep) => {
-      return dep.namespace === "mybricks.taro.popup";
-    })
-  ) {
-    // console.log("包含了 mybricks.taro.popup 组件", sceneToJson);
-    return false;
-  }
-
-  return (
-    !isPopupScene(sceneToJson) &&
-    !isModuleScene(sceneToJson) &&
-    sceneToJson.id !== "tabbar"
-  );
-}
-
-function isPopupScene(sceneToJson) {
-  return sceneToJson.type === "popup";
-}
-function isModuleScene(sceneToJson) {
-  return sceneToJson.type === "module";
 }

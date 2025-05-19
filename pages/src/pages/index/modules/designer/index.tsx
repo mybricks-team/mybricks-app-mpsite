@@ -1207,7 +1207,6 @@ const Designer = ({ appData }) => {
           json = await getHarmonyJson({
             toJson: {
               ...toJson,
-              tabbar: window.__tabbar__.get(),
             },
             comlibs: comlibs,
           })
