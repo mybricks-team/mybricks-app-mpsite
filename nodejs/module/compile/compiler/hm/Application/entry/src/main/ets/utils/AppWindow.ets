@@ -150,7 +150,7 @@ export struct AppCommonHeader {
 @ComponentV2
 export struct AppCustomHeader {
   @Param barHeight: number = 40
-  @Param barBackgroundColor: string = '#464646'
+  @Param barBackgroundColor: string = '#ffffff'
 
   @BuilderParam content: () => void = emptySlot;
 
@@ -168,7 +168,7 @@ export struct AppCustomHeader {
       this.content()
     }
     .width('100%')
-    .padding({ top: appWindow.statusBarHeight })
+    .height(appWindow.statusBarHeight)
   }
 }
 

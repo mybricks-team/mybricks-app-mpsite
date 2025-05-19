@@ -33,7 +33,7 @@ export interface SlotsParams {
 @Builder function emptySlot(params: SlotsParams) {}
 
 @ComponentV2
-export default struct Mybricks_Container_List {
+export default struct Mybricks_Container_Basic {
   @Param data: Data = new Data({});
   @Param styles: Record<string, CSSProperties> = {}
   @Param inputs?: Inputs = undefined;

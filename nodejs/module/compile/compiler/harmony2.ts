@@ -38,32 +38,73 @@ const handlePageCode = (page: ReturnType<typeof toHarmonyCode>[0], {
   disableScroll = false,
   navigationBarBackgroundColor,
   navigationBarTextStyle,
-  navigationBarTitleText
+  navigationBarTitleText,
+  navigationStyle = 'default'
 }) => {
   page.importManager.addImport({
     packageName: "../utils",
-    dependencyNames: ["AppCommonHeader"],
+    dependencyNames: ["AppCommonHeader", "AppCustomHeader"],
     importType: "named",
   });
-  return `${page.importManager.toCode()}
 
-  @ComponentV2
-  export default struct Page {
-    build() {
-      NavDestination() {
-        AppCommonHeader({
-          title: ${JSON.stringify(navigationBarTitleText)},
-          titleColor: ${JSON.stringify(navigationBarTextStyle)},
-          barBackgroundColor: ${JSON.stringify(navigationBarBackgroundColor)}
-        })
-        Index()
-      }
-      .hideTitleBar(true)
+  console.log('navigationStyle', navigationStyle)
+
+  switch (navigationStyle) {
+    case 'default': {
+      return `${page.importManager.toCode()}
+
+@ComponentV2
+export default struct Page {
+  build() {
+    NavDestination() {
+      AppCommonHeader({
+        title: ${JSON.stringify(navigationBarTitleText)},
+        titleColor: ${JSON.stringify(navigationBarTextStyle)},
+        barBackgroundColor: ${JSON.stringify(navigationBarBackgroundColor)},
+      })
+      Index()
+    }
+    .hideTitleBar(true)
+  }
+}
+
+${page.content}
+`;
+    }
+    case 'custom': {
+      return `${page.importManager.toCode()}
+
+@ComponentV2
+export default struct Page {
+  build() {
+    NavDestination() {
+      AppCustomHeader({})
+      Index()
+    }
+    .hideTitleBar(true)
+  }
+}
+
+${page.content}
+`;
+    }
+    case 'none': {
+      return `${page.importManager.toCode()}
+
+@ComponentV2
+export default struct Page {
+  build() {
+    NavDestination() {
+      Index()
+    }
+    .hideTitleBar(true)
+  }
+}
+
+${page.content}
+`;
     }
   }
-
-  ${page.content}
-  `;
 }
 
 const handlePopupCode = (page: ReturnType<typeof toHarmonyCode>[0]) => {
