@@ -1,3 +1,4 @@
+import { appRouter } from "../utils"
 import {
   mybricks_harmony__showToast as basic_mybricks_harmony__showToast,
   mybricks_harmony_popup as basic_mybricks_harmony_popup,
@@ -67,6 +68,14 @@ class MyBricksColumnModifier implements AttributeModifier<ColumnAttribute> {
 
 @Builder function Slot(params: MyBricks.SlotParams) {}
 
+const _env: MyBricks._Env = {
+  currentScenes: {
+    close: () => {
+      appRouter.pop()
+    }
+  }
+}
+
 export const Controller = () => {
   return inputs2({}, true) as MyBricks.Controller
 }
@@ -120,6 +129,7 @@ export struct mybricks_harmony_popup {
   build() {
     Column() {
       basic_mybricks_harmony_popup({
+        _env,
         data: new mybricks_harmony_popup_Data(this.data as MyBricks.Any),
         inputs: inputs2(this),
         outputs: this.events,
