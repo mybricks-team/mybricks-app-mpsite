@@ -4,11 +4,18 @@ import * as fse from "fs-extra";
 import { BaseCompiler } from "./base";
 import { COMPONENT_PACKAGE_NAME } from "./hm/constant";
 
-// class HarmonyCompiler extends BaseCompiler {
-//   validateData = (data) => {
-//     this.transformData({ data });
-//   };
-// }
+function convertNamespaceToComponentName(namespace: string) {
+  return namespace
+    .split(".")
+    .map((text) => {
+      if (text.toUpperCase() === "MYBRICKS") {
+        return "MyBricks";
+      } else {
+        return text[0].toUpperCase() + text.slice(1);
+      }
+    })
+    .join("");
+}
 
 const handleEntryCode = (template: string, {
   tabbarScenes,
@@ -139,10 +146,6 @@ export const compilerHarmony2 = async (
   { data, projectPath, projectName, fileName, depModules, origin, type }: any,
   { Logger }
 ) => {
-  // const compiler = new HarmonyCompiler({ projectPath });
-  // 校验data合法性
-  // compiler.validateData(data);
-
   const pageCode = toHarmonyCode(data.toJson, {
     getComponentMetaByNamespace(namespace, config) {
       if (namespace === "mybricks.harmony._muilt-inputJs") {
@@ -155,15 +158,16 @@ export const compilerHarmony2 = async (
           componentName: "codes"
         };
       }
-  
-      let componentName = namespace.replace(/\./g, "_");
-      const dependencyNames = [componentName];
+
+      const componentName = convertNamespaceToComponentName(namespace);
+      const dependencyNames: string[] = [];
   
       if (config.type === "ui") {
-        // UI组件首字母大写，需引入控制器初始化函数Controller
-        componentName = componentName[0].toUpperCase() + componentName.slice(1);
-        dependencyNames[0] = componentName;
-        dependencyNames.push("Controller");
+        dependencyNames.push(componentName, "Controller");
+      } else {
+        dependencyNames.push(
+          componentName[0].toLowerCase() + componentName.slice(1),
+        );
       }
   
       return {

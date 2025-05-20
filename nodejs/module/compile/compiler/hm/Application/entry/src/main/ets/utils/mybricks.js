@@ -73,7 +73,7 @@ const createReactiveInputHandler = (input, value, rels) => {
 }
 
 // UI
-export const inputs2 = (that, init = false) => {
+export const createInputsHandle = (that, init = false) => {
   if (init) {
     /** 注册的输入 */
     const _inputEvents = {}
@@ -172,7 +172,7 @@ export const inputs2 = (that, init = false) => {
 }
 
 // JS
-export const inputs = (fn, props) => {
+export const createJSHandle = (fn, props) => {
   let controller
 
   const inputs = new Proxy({}, {
@@ -275,6 +275,15 @@ export const inputs = (fn, props) => {
   }
 
   return exe;
+}
+
+// 事件
+export const createEventsHandle = (events) => {
+  return new Proxy(events, {
+    get(target, key) {
+      return target[key] || (() => {})
+    }
+  })
 }
 
 // 场景打开、输出

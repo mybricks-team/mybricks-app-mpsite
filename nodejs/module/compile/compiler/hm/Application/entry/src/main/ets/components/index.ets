@@ -1,26 +1,26 @@
 import { appRouter } from "../utils"
 import {
-  mybricks_harmony__showToast as basic_mybricks_harmony__showToast,
-  mybricks_harmony_popup as basic_mybricks_harmony_popup,
+  mybricks_harmony__showToast as basicMyBricksHarmony_showToast,
+  mybricks_harmony_popup as BasicMyBricksHarmonyPopup,
   mybricks_harmony_popup_Data,
-  mybricks_harmony_systemPage as basic_mybricks_harmony_systemPage,
+  mybricks_harmony_systemPage as BasicMyBricksHarmonySystemPage,
   mybricks_harmony_systemPage_Data,
-  mybricks_harmony_systemWebview as basic_mybricks_harmony_systemWebview,
+  mybricks_harmony_systemWebview as BasicMyBricksHarmonySystemWebview,
   mybricks_Harmony_SystemWebview_Data,
-  mybricks_harmony_button as bacis_mybricks_harmony_button,
+  mybricks_harmony_button as BacisMyBricksHarmonyButton,
   mybricks_harmony_button_Data,
-  mybricks_harmony_text as basic_mybricks_harmony_text,
+  mybricks_harmony_text as BasicMyBricksHarmonyText,
   mybricks_harmony_text_Data,
-  mybricks_harmony_image as basic_mybricks_harmony_image,
+  mybricks_harmony_image as BasicMyBricksHarmonyImage,
   mybricks_harmony_image_Data,
-  mybricks_harmony_containerList as basic_mybricks_harmony_containerList,
+  mybricks_harmony_containerList as BasicMyBricksHarmonyContainerList,
   mybricks_harmony_containerList_Data,
-  mybricks_harmony_containerBasic as basic_mybricks_harmony_containerBasic,
+  mybricks_harmony_containerBasic as BasicMyBricksHarmonyContainerBasic,
   mybricks_harmony_containerBasic_Data
 } from "./../../comlib/index"
 import basicCodes from "./codes";
 
-import { inputs, inputs2, Page } from "../utils/mybricks"
+import { createJSHandle, createInputsHandle, createEventsHandle, Page } from "../utils/mybricks"
 
 type Style = Record<string, string | number>;
 type Styles = Record<string, Style>;
@@ -87,20 +87,20 @@ const _env: MyBricks._Env = {
 }
 
 export const Controller = () => {
-  return inputs2({}, true) as MyBricks.Controller
+  return createInputsHandle({}, true) as MyBricks.Controller
 }
 
 /** 场景打开、输出 */
 export const page = new Page(appRouter);
 
 /** _showToast */
-export const mybricks_harmony__showToast = (props: MyBricks.JSParams): (...values: MyBricks.EventValue) => Record<string, MyBricks.EventValue> => {
-  return inputs(basic_mybricks_harmony__showToast, props);
+export const myBricksHarmony_showToast = (props: MyBricks.JSParams): (...values: MyBricks.EventValue) => Record<string, MyBricks.EventValue> => {
+  return createJSHandle(basicMyBricksHarmony_showToast, props);
 }
 
 /** systemPage */
 @ComponentV2
-export struct Mybricks_harmony_systemPage {
+export struct MyBricksHarmonySystemPage {
   @Param controller: MyBricks.Controller = Controller();
   @Param @Require data: MyBricks.Data
   @Param events: MyBricks.Events = {}
@@ -112,10 +112,10 @@ export struct Mybricks_harmony_systemPage {
 
   build() {
     Column() {
-      basic_mybricks_harmony_systemPage({
+      BasicMyBricksHarmonySystemPage({
         data: new mybricks_harmony_systemPage_Data(this.data as MyBricks.Any),
-        inputs: inputs2(this),
-        outputs: this.events,
+        inputs: createInputsHandle(this),
+        outputs: createEventsHandle(this.events),
         styles: this.styles,
         slots: this.slots,
       })
@@ -128,7 +128,7 @@ export struct Mybricks_harmony_systemPage {
 
 /** popup */
 @ComponentV2
-export struct Mybricks_harmony_popup {
+export struct MyBricksHarmonyPopup {
   @Param controller: MyBricks.Controller = Controller();
   @Param @Require data: MyBricks.Data
   @Param events: MyBricks.Events = {}
@@ -140,11 +140,11 @@ export struct Mybricks_harmony_popup {
 
   build() {
     Column() {
-      basic_mybricks_harmony_popup({
+      BasicMyBricksHarmonyPopup({
         _env,
         data: new mybricks_harmony_popup_Data(this.data as MyBricks.Any),
-        inputs: inputs2(this),
-        outputs: this.events,
+        inputs: createInputsHandle(this),
+        outputs: createEventsHandle(this.events),
         styles: this.styles,
         slots: this.slots,
       })
@@ -157,7 +157,7 @@ export struct Mybricks_harmony_popup {
 
 /** systemWebview */
 @ComponentV2
-export struct Mybricks_harmony_systemWebview {
+export struct MyBricksHarmonySystemWebview {
   @Param controller: MyBricks.Controller = Controller();
   @Param @Require data: MyBricks.Data
   @Param events: MyBricks.Events = {}
@@ -168,10 +168,10 @@ export struct Mybricks_harmony_systemWebview {
 
   build() {
     Column() {
-      basic_mybricks_harmony_systemWebview({
+      BasicMyBricksHarmonySystemWebview({
         data: new mybricks_Harmony_SystemWebview_Data(this.data as MyBricks.Any),
-        inputs: inputs2(this),
-        outputs: this.events,
+        inputs: createInputsHandle(this),
+        outputs: createEventsHandle(this.events),
       })
     }
     .attributeModifier(this.myBricksColumnModifier)
@@ -183,7 +183,7 @@ export struct Mybricks_harmony_systemWebview {
 
 /** button */
 @ComponentV2
-export struct Mybricks_harmony_button {
+export struct MyBricksHarmonyButton {
   @Param controller: MyBricks.Controller = Controller();
   @Param @Require data: MyBricks.Data
   @Param events: MyBricks.Events = {}
@@ -194,10 +194,10 @@ export struct Mybricks_harmony_button {
 
   build() {
     Column() {
-      bacis_mybricks_harmony_button({
+      BacisMyBricksHarmonyButton({
         data: new mybricks_harmony_button_Data(this.data as MyBricks.Any),
-        inputs: inputs2(this),
-        outputs: this.events,
+        inputs: createInputsHandle(this),
+        outputs: createEventsHandle(this.events),
         styles: this.styles
       })
     }
@@ -210,7 +210,7 @@ export struct Mybricks_harmony_button {
 
 /** text */
 @ComponentV2
-export struct Mybricks_harmony_text {
+export struct MyBricksHarmonyText {
   @Param controller: MyBricks.Controller = Controller();
   @Param @Require data: MyBricks.Data
   @Param events: MyBricks.Events = {}
@@ -221,10 +221,10 @@ export struct Mybricks_harmony_text {
 
   build() {
     Column() {
-      basic_mybricks_harmony_text({
+      BasicMyBricksHarmonyText({
         data: new mybricks_harmony_text_Data(this.data as MyBricks.Any),
-        inputs: inputs2(this),
-        outputs: this.events,
+        inputs: createInputsHandle(this),
+        outputs: createEventsHandle(this.events),
         styles: this.styles
       })
     }
@@ -237,7 +237,7 @@ export struct Mybricks_harmony_text {
 
 /** image */
 @ComponentV2
-export struct Mybricks_harmony_image {
+export struct MyBricksHarmonyImage {
   @Param controller: MyBricks.Controller = Controller();
   @Param @Require data: MyBricks.Data
   @Param events: MyBricks.Events = {}
@@ -248,10 +248,10 @@ export struct Mybricks_harmony_image {
 
   build() {
     Column() {
-      basic_mybricks_harmony_image({
+      BasicMyBricksHarmonyImage({
         data: new mybricks_harmony_image_Data(this.data as MyBricks.Any),
-        inputs: inputs2(this),
-        outputs: this.events,
+        inputs: createInputsHandle(this),
+        outputs: createEventsHandle(this.events),
         styles: this.styles
       })
     }
@@ -264,7 +264,7 @@ export struct Mybricks_harmony_image {
 
 /** containerList */
 @ComponentV2
-export struct Mybricks_harmony_containerList {
+export struct MyBricksHarmonyContainerList {
   @Param controller: MyBricks.Controller = Controller();
   @Param @Require data: MyBricks.Data
   @Param events: MyBricks.Events = {}
@@ -276,10 +276,10 @@ export struct Mybricks_harmony_containerList {
 
   build() {
     Column() {
-      basic_mybricks_harmony_containerList({
+      BasicMyBricksHarmonyContainerList({
         data: new mybricks_harmony_containerList_Data(this.data as MyBricks.Any),
-        inputs: inputs2(this),
-        outputs: this.events,
+        inputs: createInputsHandle(this),
+        outputs: createEventsHandle(this.events),
         styles: this.styles,
         slots: this.slots,
       })
@@ -292,7 +292,7 @@ export struct Mybricks_harmony_containerList {
 
 /** containerBasic */
 @ComponentV2
-export struct Mybricks_harmony_containerBasic {
+export struct MyBricksHarmonyContainerBasic {
   @Param controller: MyBricks.Controller = Controller();
   @Param @Require data: MyBricks.Data
   @Param events: MyBricks.Events = {}
@@ -304,10 +304,10 @@ export struct Mybricks_harmony_containerBasic {
 
   build() {
     Column() {
-      basic_mybricks_harmony_containerBasic({
+      BasicMyBricksHarmonyContainerBasic({
         data: new mybricks_harmony_containerBasic_Data(this.data as MyBricks.Any),
-        inputs: inputs2(this),
-        outputs: this.events,
+        inputs: createInputsHandle(this),
+        outputs: createEventsHandle(this.events),
         styles: this.styles,
         slots: this.slots,
       })
@@ -321,7 +321,7 @@ export struct Mybricks_harmony_containerBasic {
 /** JS计算 */
 const codes: MyBricks.Codes = Object.keys(basicCodes).reduce((pre, key) => {
   pre[key] = (props: MyBricks.JSParams): MyBricks.JSReturn => {
-    return inputs(basicCodes[key], props);
+    return createJSHandle(basicCodes[key], props);
   }
   return pre
 }, {} as MyBricks.Codes)
