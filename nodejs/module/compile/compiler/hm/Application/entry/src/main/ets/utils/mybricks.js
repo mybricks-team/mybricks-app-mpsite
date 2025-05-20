@@ -298,6 +298,14 @@ export class Page {
     this.appRouter = appRouter
   }
 
+  /** 获取当前页面入参 */
+  getParams(name) {
+    const params = this.appRouter.getParams(name)
+    const subject = new Subject()
+    subject.next(params?.value)
+    return subject
+  }
+
   /** 打开 */
   open(name, value) {
     const controller = pageController()

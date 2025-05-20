@@ -13,16 +13,16 @@ import { COMPONENT_PACKAGE_NAME } from "./hm/constant";
 const handleEntryCode = (template: string, {
   tabbarScenes,
   normalScenes,
-  entryPageId,
+  entryScene,
   tabbarConfig
 }) => {
   const allImports = Array.from(new Set([...tabbarScenes, ...normalScenes]))
-    .map(path => `import Page_${path} from './Page_${path}';`)
+    .map(scene => `// ${scene.title} \nimport Page_${scene.id} from './Page_${scene.id}';`)
     .join('\n')
-  const generateRoutes = (paths) => paths
-    .map((path, i) => `${i === 0 ? 'if' : '\t\telse if'} (path === '${path}') {\n\t\t\tPage_${path}()\n\t\t}`)
+  const generateRoutes = (scenes) => scenes
+    .map((scene, i) => `${i === 0 ? 'if' : '\t\telse if'} (path === '${scene.id}') {\n\t\t\tPage_${scene.id}()\n\t\t}`)
     .join('\n');
-  const renderMainScenes = generateRoutes(Array.from(new Set([entryPageId, ...tabbarScenes])))
+  const renderMainScenes = generateRoutes(Array.from(new Set([entryScene, ...tabbarScenes])))
   const renderScenes = generateRoutes(normalScenes)
 
 
@@ -31,7 +31,7 @@ const handleEntryCode = (template: string, {
     .replace("$r('app.config.mainScenes')", renderMainScenes)
     .replace("$r('app.config.scenes')", renderScenes)
     .replace("$r('app.config.tabbar')", JSON.stringify(tabbarConfig, null, 2))
-    .replace("$r('app.config.entry')", JSON.stringify(entryPageId))
+    .replace("$r('app.config.entry')", JSON.stringify(entryScene.id))
 }
 
 const handlePageCode = (page: ReturnType<typeof toHarmonyCode>[0], {
@@ -41,18 +41,18 @@ const handlePageCode = (page: ReturnType<typeof toHarmonyCode>[0], {
   navigationBarTitleText,
   navigationStyle = 'default'
 }) => {
-  page.importManager.addImport({
-    packageName: "../utils",
-    dependencyNames: ["AppCommonHeader", "AppCustomHeader"],
-    importType: "named",
-  });
-
   console.log('navigationStyle', navigationStyle)
 
   switch (navigationStyle) {
     case 'default': {
+      page.importManager.addImport({
+        packageName: "../utils",
+        dependencyNames: ["AppCommonHeader"],
+        importType: "named",
+      });
       return `${page.importManager.toCode()}
 
+/** ${page.meta.title} */
 @ComponentV2
 export default struct Page {
   build() {
@@ -72,8 +72,14 @@ ${page.content}
 `;
     }
     case 'custom': {
+      page.importManager.addImport({
+        packageName: "../utils",
+        dependencyNames: ["AppCustomHeader"],
+        importType: "named",
+      });
       return `${page.importManager.toCode()}
 
+/** ${page.meta.title} */
 @ComponentV2
 export default struct Page {
   build() {
@@ -91,6 +97,7 @@ ${page.content}
     case 'none': {
       return `${page.importManager.toCode()}
 
+/** ${page.meta.title} */
 @ComponentV2
 export default struct Page {
   build() {
@@ -109,7 +116,8 @@ ${page.content}
 
 const handlePopupCode = (page: ReturnType<typeof toHarmonyCode>[0]) => {
   return `${page.importManager.toCode()}
-  
+
+      /** ${page.meta.title} */
       @ComponentV2
       export default struct Page {
         build() {
@@ -178,14 +186,19 @@ export const compilerHarmony2 = async (
   // est路径
   const targetEtsPath = path.join(targetAppPath, "entry/src/main/ets");
 
+  const sceneMap = {};
 
   pageCode.forEach((page) => {
+    if (page.meta) {
+      sceneMap[page.meta.id] = page.meta;
+    }
+
     let content = "";
     if (page.type === "ignore") {
       // 不做特殊处理，一般是固定模版代码
       content = page.content;
     } else if (page.type === "normal") {
-      const { pageConfig } = data.pages.find(p => p.id === page.pageId) ?? {}
+      const { pageConfig } = data.pages.find(p => p.id === page.meta?.id) ?? {}
       // 页面
       content = handlePageCode(page, pageConfig);
     } else if (page.type === "popup") {
@@ -195,12 +208,6 @@ export const compilerHarmony2 = async (
 
     fse.outputFileSync(path.join(targetEtsPath, page.path), content, { encoding: "utf8" })
   });
-
-  // await fse.copy(path.join(__dirname, "./hm/components"), path.join(projectPath, "components"), { overwrite: true })
-  // await fse.copy(path.join(__dirname, "./hm/types"), path.join(projectPath, "types"), { overwrite: true })
-  // await fse.copy(path.join(__dirname, "./hm/utils"), path.join(projectPath, "utils"), { overwrite: true })
-
-  // await fse.copy(indexPath, target, { overwrite: true })
 
   // 写入搭建Js
   const jsCodePath = path.join(targetEtsPath, "components/codes.js");
@@ -220,26 +227,30 @@ export const compilerHarmony2 = async (
   })
 
   // 入口场景
-  const entryPageId: string = data.entryPageId;
+  const entryScene = sceneMap[data.entryPageId]
 
   // tabbar场景
   const tabbarScenes: string[] = data.pages.filter(p => 
     (data.tabBarJson || []).some(
       (b) => b?.id === p?.id
     )
-  ).map(p => p.id)
+  ).map(p => {
+    return sceneMap[p.id]
+  })
 
   // 普通场景
   const normalScenes: string[] = data.pages.filter(p => 
     !(data.tabBarJson || []).some(
       (b) => b?.id === p?.id
     )
-  ).map(p => p.id)
+  ).map(p => {
+    return sceneMap[p.id]
+  })
 
   // 弹窗也写入普通场景判断中
   data.toJson.scenes.forEach((scene) => {
     if (scene.type === "popup") {
-      normalScenes.push(scene.id)
+      normalScenes.push(sceneMap[scene.id])
     }
   })
 
@@ -252,7 +263,7 @@ export const compilerHarmony2 = async (
     normalScenes,
     tabbarScenes,
     tabbarConfig,
-    entryPageId
+    entryScene
   })
   await fse.writeFile(entryPath, entryFileContent, 'utf-8')
 }
