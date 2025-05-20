@@ -276,3 +276,59 @@ export const inputs = (fn, props) => {
 
   return exe;
 }
+
+// 场景打开、输出
+export const pageController = () => {
+  return new Proxy({
+    commit: new Subject(),
+    cancel: new Subject(),
+    apply: new Subject(),
+    close: new Subject(),
+  }, {
+    get(target, key) {
+      return target[key]
+    }
+  })
+}
+
+export class Page {
+  appRouter
+
+  constructor(appRouter) {
+    this.appRouter = appRouter
+  }
+
+  /** 打开 */
+  open(name, value) {
+    const controller = pageController()
+    this.appRouter.push(name, { value, controller })
+    return controller
+  }
+
+  /** 确定 */
+  commit(name, value) {
+    const params = this.appRouter.getParams(name)
+    params.controller.commit.next(value)
+    this.appRouter.pop()
+  }
+
+  /** 取消 */
+  cancel(name, value) {
+    const params = this.appRouter.getParams(name)
+    params.controller.cancel.next(value)
+    this.appRouter.pop()
+  }
+
+  /** 应用，不关闭 */
+  apply(name, value) {
+    const params = this.appRouter.getParams(name)
+    params.controller.apply.next(value)
+  }
+
+  /** 关闭 */
+  close(name, value) {
+    const params = this.appRouter.getParams(name)
+    params.controller.close.next(value)
+    this.appRouter.pop()
+  }
+}

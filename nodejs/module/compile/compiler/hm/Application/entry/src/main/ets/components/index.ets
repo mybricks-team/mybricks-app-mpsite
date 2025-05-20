@@ -20,7 +20,7 @@ import {
 } from "./../../comlib/index"
 import basicCodes from "./codes";
 
-import { inputs, inputs2 } from "./mybricks"
+import { inputs, inputs2, Page } from "../utils/mybricks"
 
 type Style = Record<string, string | number>;
 type Styles = Record<string, Style>;
@@ -90,6 +90,8 @@ export const Controller = () => {
   return inputs2({}, true) as MyBricks.Controller
 }
 
+/** 场景打开、输出 */
+export const page = new Page(appRouter);
 
 /** _showToast */
 export const mybricks_harmony__showToast = (props: MyBricks.JSParams): (...values: MyBricks.EventValue) => Record<string, MyBricks.EventValue> => {
