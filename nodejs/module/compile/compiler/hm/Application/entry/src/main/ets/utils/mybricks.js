@@ -318,7 +318,15 @@ export class Page {
   /** 打开 */
   open(name, value) {
     const controller = pageController()
-    this.appRouter.push(name, { value, controller })
+
+    if (value?.subscribe) {
+      value.subscribe((value) => {
+        this.appRouter.push(name, { value, controller })
+      })
+    } else {
+      this.appRouter.push(name, { value, controller })
+    }
+
     return controller
   }
 
