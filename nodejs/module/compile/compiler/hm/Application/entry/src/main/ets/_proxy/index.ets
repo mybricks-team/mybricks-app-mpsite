@@ -21,7 +21,7 @@ import {
   mybricks_harmony_formInput_Data,
   mybricks_harmony_formPassword as BasicMyBricksHarmonyFormPassword,
   mybricks_harmony_formPassword_Data
-} from "./../../comlib/Index"
+} from "./../../comlib/index"
 import basicCodes from "./codes";
 import { createJSHandle, createInputsHandle, createEventsHandle, Page } from "../utils/mybricks"
 import { MyBricks } from "../utils/types"
