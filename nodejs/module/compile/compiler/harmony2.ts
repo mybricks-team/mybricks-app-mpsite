@@ -207,16 +207,14 @@ const compilerHarmonyApplication = async (params, config) => {
         };
       }
 
-      const componentName = convertNamespaceToComponentName(namespace);
+      let componentName = convertNamespaceToComponentName(namespace);
       const dependencyNames: string[] = [];
-  
-      if (config.type === "ui") {
-        dependencyNames.push(componentName);
-      } else {
-        dependencyNames.push(
-          componentName[0].toLowerCase() + componentName.slice(1),
-        );
+
+      if (config.type === "js") {
+        componentName = componentName[0].toLowerCase() + componentName.slice(1);
       }
+
+      dependencyNames.push(componentName);
   
       return {
         dependencyImport: {
