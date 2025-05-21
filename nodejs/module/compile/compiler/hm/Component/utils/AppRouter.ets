@@ -6,7 +6,6 @@ export interface TabBarConfig {
   selectedIconPath: string
   normalIconPath: string
   selectedTextStyle: Record<string, string | number>,
-  selectedIconStyle: Record<string, string | number>,
   normalTextStyle: Record<string, string | number>,
   normalIconStyle: Record<string, string | number>,
   selectedBackgroundStyle: Record<string, string | number>,
@@ -23,8 +22,8 @@ export class AppRouter {
   tabList: Array<TabBarConfig> = []
 
   @Trace activeTabIndex?: number = 0
+
   @Trace entryPageId?: string
-  @Trace entryMode?: 'tab' | 'page' = 'tab'
 
   pageParams?: Map<string, UnknownJson | undefined> = new Map()
 
@@ -34,12 +33,9 @@ export class AppRouter {
   }
 
   public registEntryPage(name: string) {
-    const targetIndex = this.tabList.findIndex(t => t?.id === name)
-    if (this.hasTabs() && targetIndex > -1) {
-      this.entryMode = 'tab'
-      this.activeTabIndex = targetIndex
+    if (this.hasTabs()) {
+      this.activeTabIndex = this.tabList.findIndex(t => t?.id === name)
     } else {
-      this.entryMode = 'page'
       this.entryPageId = name
     }
   }

@@ -1182,7 +1182,7 @@ const Designer = ({ appData }) => {
       await showPublishLoading();
 
       try {
-        const isHarmony = type === CompileType.harmony
+        const isHarmony = [CompileType.harmonyComponent, CompileType.harmonyApplication].includes(type)
         const toJson = await contentModel.toJSON(isHarmony ? { withDiagrams: true } : null);
 
         let comlibs = [...ctx.comlibs];
@@ -1203,7 +1203,7 @@ const Designer = ({ appData }) => {
 
         let json: any
 
-        if (type === CompileType.harmony) {
+        if (isHarmony) {
           json = await getHarmonyJson({
             toJson: {
               ...toJson,
@@ -1235,7 +1235,7 @@ const Designer = ({ appData }) => {
           })
         }
 
-        const url = type === CompileType.harmony ? "/api/compile/harmony/compile" : "/api/compile/miniapp/compile"
+        const url = isHarmony ? "/api/compile/harmony/compile" : "/api/compile/miniapp/compile"
 
         const res = await axios({
           url,

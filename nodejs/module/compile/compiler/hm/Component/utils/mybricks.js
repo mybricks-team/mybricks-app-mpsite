@@ -73,7 +73,7 @@ const createReactiveInputHandler = (input, value, rels) => {
 }
 
 // UI
-export const inputs2 = (that, init = false) => {
+export const createInputsHandle = (that, init = false) => {
   if (init) {
     /** 注册的输入 */
     const _inputEvents = {}
@@ -172,7 +172,7 @@ export const inputs2 = (that, init = false) => {
 }
 
 // JS
-export const inputs = (fn, props) => {
+export const createJSHandle = (fn, props) => {
   let controller
 
   const inputs = new Proxy({}, {
@@ -275,4 +275,85 @@ export const inputs = (fn, props) => {
   }
 
   return exe;
+}
+
+// 事件
+export const createEventsHandle = (events) => {
+  return new Proxy(events, {
+    get(target, key) {
+      return target[key] || (() => {})
+    }
+  })
+}
+
+// 场景打开、输出
+export const pageController = () => {
+  return new Proxy({
+    commit: new Subject(),
+    cancel: new Subject(),
+    apply: new Subject(),
+    close: new Subject(),
+  }, {
+    get(target, key) {
+      return target[key]
+    }
+  })
+}
+
+export class Page {
+  appRouter
+
+  constructor(appRouter) {
+    this.appRouter = appRouter
+  }
+
+  /** 获取当前页面入参 */
+  getParams(name) {
+    const params = this.appRouter.getParams(name)
+    const subject = new Subject()
+    subject.next(params?.value)
+    return subject
+  }
+
+  /** 打开 */
+  open(name, value) {
+    const controller = pageController()
+
+    if (value?.subscribe) {
+      value.subscribe((value) => {
+        this.appRouter.push(name, { value, controller })
+      })
+    } else {
+      this.appRouter.push(name, { value, controller })
+    }
+
+    return controller
+  }
+
+  /** 确定 */
+  commit(name, value) {
+    const params = this.appRouter.getParams(name)
+    params.controller.commit.next(value)
+    this.appRouter.pop()
+  }
+
+  /** 取消 */
+  cancel(name, value) {
+    const params = this.appRouter.getParams(name)
+    params.controller.cancel.next(value)
+    this.appRouter.pop()
+  }
+
+  /** 应用，不关闭 */
+  apply(name, value) {
+    const params = this.appRouter.getParams(name)
+    params.controller.apply.next(value)
+  }
+
+  /** 关闭 */
+  close(name, value) {
+    const params = this.appRouter.getParams(name)
+    params.controller.close.next(value)
+    this.appRouter.pop()
+  }
 }

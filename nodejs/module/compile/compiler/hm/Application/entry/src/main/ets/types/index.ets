@@ -1,1 +1,0 @@
-export type UnknownJson = Record<string, string | number | boolean | Object> | string | number | boolean

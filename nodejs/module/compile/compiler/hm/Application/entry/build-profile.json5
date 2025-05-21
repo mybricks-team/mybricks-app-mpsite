@@ -2,9 +2,7 @@
   "apiType": "stageMode",
   "buildOption": {
     "arkOptions": {
-      "types": [
-        "./src/main/ets/lib"
-      ]
+      "types": []
     }
   },
   "buildOptionSet": [

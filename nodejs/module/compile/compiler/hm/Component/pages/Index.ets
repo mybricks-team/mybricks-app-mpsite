@@ -1,4 +1,4 @@
-import { appRouter, TabBarConfig, initAppWindow, closeAppWindow, appWindow, parseRadius } from '../utils'
+import { appRouter, TabBarConfig, initAppWindow, appWindow, parseRadius } from '../utils'
 
 $r('app.config.imports')
 
@@ -27,15 +27,11 @@ export default struct EntryView {
     appRouter.registTabbar($r('app.config.tabbar')).registEntryPage($r('app.config.entry'))
   }
 
-  aboutToDisappear(): void {
-    closeAppWindow()
-  }
-
   build() {
     Stack() {
       Navigation(appRouter.navPathStack) {
         if (this.shouldShowHome) {
-          if (appRouter.entryMode === 'tab') {
+          if (appRouter.hasTabs()) {
             Tabs({ index: appRouter.activeTabIndex, barPosition: BarPosition.End }) {
               ForEach(appRouter.tabList, (item: TabBarConfig, index: number) => {
                 TabContent() {
@@ -45,7 +41,7 @@ export default struct EntryView {
               }, (item: TabBarConfig) => item.id)
             }
             .scrollable(false)
-            .barHeight(54)
+            .barHeight(42)
             .padding({
               bottom: appWindow.bottomBarHeight // 底部安全距离
             })
@@ -79,33 +75,16 @@ export default struct EntryView {
 function renderTabItems (item: TabBarConfig, index: number) {
   Column() {
     if (item.normalIconPath && item.selectedIconPath) {
-      Column() {
-        Image(index === appRouter.activeTabIndex ? item.selectedIconPath : item.normalIconPath)
-          .width(index === appRouter.activeTabIndex ? parseInt(String(item.selectedIconStyle?.width ?? 22))  : parseInt(String(item.normalIconStyle?.width ?? 22)))
-          .height(index === appRouter.activeTabIndex ? parseInt(String(item.selectedIconStyle?.height ?? 22))  : parseInt(String(item.normalIconStyle?.height ?? 22)))
-          .objectFit(ImageFit.Contain)
-          .align(Alignment.Center)
-          .position({
-            bottom: 0,
-            left: '50%',
-          })
-          .translate({
-            x: '-50%'
-          })
-      }
-        .width('100%')
-        .height('auto')
-        .flexGrow(1)
-        .clip(false)
+      Image(index === appRouter.activeTabIndex ? item.selectedIconPath : item.normalIconPath)
+        .width(index === appRouter.activeTabIndex ? parseInt(String(item.selectedTextStyle?.width ?? 22))  : parseInt(String(item.normalIconStyle?.width ?? 22)))
+        .height(index === appRouter.activeTabIndex ? parseInt(String(item.selectedTextStyle?.height ?? 22))  : parseInt(String(item.normalIconStyle?.height ?? 22)))
+        .objectFit(ImageFit.Contain)
       Text(item.text)
         .fontColor(index === appRouter.activeTabIndex ? item.selectedTextStyle?.color : item.normalTextStyle?.color)
         .fontSize(index === appRouter.activeTabIndex ? (item.selectedTextStyle?.fontSize ?? 12) : (item.normalTextStyle?.fontSize ?? 12))
         .fontWeight(index === appRouter.activeTabIndex ? (item.selectedTextStyle.fontWeight ?? 500) : (item.normalTextStyle.fontWeight ?? 400))
         .maxLines(1)
         .textOverflow({ overflow: TextOverflow.Ellipsis })
-        .margin({
-          top: 6
-        })
     } else {
       Text(item.text)
         .fontColor(index === appRouter.activeTabIndex ? item.selectedTextStyle?.color : item.normalTextStyle?.color)
@@ -121,7 +100,7 @@ function renderTabItems (item: TabBarConfig, index: number) {
     top: 6,
     bottom: 6
   })
-  .justifyContent(FlexAlign.End)
+  .justifyContent(FlexAlign.SpaceBetween)
   .backgroundColor(index === appRouter.activeTabIndex ? item.selectedBackgroundStyle?.backgroundColor : item.normalBackgroundStyle?.backgroundColor)
   .borderRadius(parseRadius(index === appRouter.activeTabIndex ? item.selectedBackgroundStyle?.borderRadius : item.normalBackgroundStyle?.borderRadius))
 }
