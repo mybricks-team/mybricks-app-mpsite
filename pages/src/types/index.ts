@@ -15,5 +15,7 @@ export enum CompileType {
   alipay = 'alipay',
   dd = 'dd',
   miniprogram = 'miniprogram',
-  harmony = 'harmony'
+  harmony = 'harmony',
+  harmonyComponent = 'harmonyComponent',
+  harmonyApplication = 'harmonyApplication'
 }

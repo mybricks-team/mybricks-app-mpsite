@@ -19,8 +19,8 @@ import {
   mybricks_harmony_containerBasic_Data
 } from "./../../comlib/index"
 import basicCodes from "./codes";
-
 import { createJSHandle, createInputsHandle, createEventsHandle, Page } from "../utils/mybricks"
+import { MyBricks } from "../utils/types"
 
 type Style = Record<string, string | number>;
 type Styles = Record<string, Style>;

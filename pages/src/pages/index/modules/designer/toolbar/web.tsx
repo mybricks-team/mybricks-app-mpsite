@@ -21,7 +21,7 @@ import css from "./web.less";
 
 import help from "./icons/help"
 
-import { showDownloadConfig } from "./model/downloadModel"
+import { showDownloadConfig, showHarmonyDownloadConfig } from "./model/downloadModel"
 
 interface PublishParams {
   type: string;
@@ -142,9 +142,10 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
         // description: description,
       });
     } else if (CompileType.harmony === selectType) {
-      onCompile?.({
-        type: selectType,
-      })
+      // onCompile?.({
+      //   type: selectType,
+      // })
+      showHarmonyDownloadConfig({ onCompile })
     } else {
       showDownloadConfig({ onCompile })
     }
