@@ -1,4 +1,4 @@
-import { ApplyRootStyleModifier, ApplyStyleModifier, ApplyFontStyleModifier, CSSProperties } from './styles/getDesignStyle'
+import { ApplyRootStyleModifier, ApplyStyleModifier, ApplyFontStyleModifier, CSSProperties } from './utils/GetDesignStyle'
 
 @Extend(Image) function aspectFit() {
   .objectFit(ImageFit.Contain)
@@ -6,6 +6,7 @@ import { ApplyRootStyleModifier, ApplyStyleModifier, ApplyFontStyleModifier, CSS
 
 @Extend(Image) function cover() {
   .objectFit(ImageFit.Cover)
+  .overlay('Cover', { align: Alignment.Bottom, offset: { x: 0, y: 0 } })
 }
 
 export interface DataType {
@@ -38,7 +39,7 @@ interface Outputs {
 }
 
 @ComponentV2
-export default struct Mybricks_Image {
+export default struct MyBricksImage {
   @Param data: Data = new Data({});
   @Param styles: Record<string, CSSProperties> = {}
   @Param inputs?: Inputs = undefined;
@@ -52,20 +53,20 @@ export default struct Mybricks_Image {
 
   build() {
     Column() {
-      if (this.data?.mode === 'aspectFit') {
-        Image(this.data?.svgPolyfill || this.data?.src)
+      if (this.data.mode === 'aspectFit') {
+        Image(this.data.svgPolyfill || this.data.src)
           .attributeModifier(
             new ApplyStyleModifier(this.styles['.mybricks-image'])
           )
           .width('100%')
           .height('100%')
           .onFinish(() => {
-            this.outputs?.onLoad?.(this.data?.src || '')
+            this.outputs?.onLoad?.(this.data.src || '')
           })
           .onError(() => {
             this.outputs?.onError?.('error')
           }).aspectFit()
-      } else if (this.data?.mode === 'cover') {
+      } else if (this.data.mode === 'aspectFit') {
         Image(this.data.svgPolyfill || this.data.src)
           .attributeModifier(
             new ApplyStyleModifier(this.styles['.mybricks-image'])
@@ -78,19 +79,6 @@ export default struct Mybricks_Image {
           .onError(() => {
             this.outputs?.onError?.('error')
           }).cover()
-      } else {
-        Image(this.data?.svgPolyfill || this.data?.src)
-          .attributeModifier(
-            new ApplyStyleModifier(this.styles['.mybricks-image'])
-          )
-          .width('100%')
-          .height('100%')
-          .onFinish(() => {
-            this.outputs?.onLoad?.(this.data.src || '')
-          })
-          .onError(() => {
-            this.outputs?.onError?.('error')
-          })
       }
 
     }.onClick(() => {

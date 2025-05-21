@@ -2,53 +2,53 @@ import { ApplyRootStyleModifier, ApplyStyleModifier, ApplyFontStyleModifier, CSS
 
 export interface DataType {
   text: string
+  mode?: 'qrcode' | 'barcode'
 }
 
 @ObservedV2
 export class Data implements DataType {
   @Trace text: string
+  @Trace mode: 'qrcode' | 'barcode'
 
   constructor(config: DataType) {
     this.text = config.text
+    this.mode = config?.mode ?? 'qrcode'
   }
 }
 
 interface Inputs {
-  value: (fn: (text: string) => void) => void
+  Text: (fn: (text: string) => void) => void
 }
 
 interface Outputs {
-  onClick: (value: string) => void
+
 }
 
 @ComponentV2
-export default struct MyBricksText {
+export default struct MyBricksQrcode {
   @Param data: Data = new Data({
-    text: '文本内容'
+    text: '初始二维码内容'
   });
   @Param styles: Record<string, CSSProperties> = {}
   @Param inputs?: Inputs = undefined;
   @Param outputs?: Outputs = undefined;
 
   aboutToAppear(): void {
-    this.inputs?.value((text) => {
+    this.inputs?.Text((text) => {
       this.data.text = text;
     })
   }
 
   build() {
     Column() {
-      Text(this.data.text)
-        .wordBreak(WordBreak.BREAK_WORD)
-        .attributeModifier(
-          new ApplyFontStyleModifier(this.styles['.mybricks-text'])
-            .fontSize(14)
-            .fontColor('#333333')
-        )
+      QRCode(this.data.text)
+        .width('100%')
+        .height('100%')
+        .color(Color.Black)
+        .backgroundColor(Color.White)
     }
-    .attributeModifier(
-      new ApplyStyleModifier(this.styles['.mybricks-text'])
-    )
+    .justifyContent(FlexAlign.Center)
+    .alignItems(HorizontalAlign.Center)
     .attributeModifier(
       new ApplyRootStyleModifier(this.styles['root'])
     )

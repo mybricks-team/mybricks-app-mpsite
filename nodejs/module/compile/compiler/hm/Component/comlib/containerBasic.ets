@@ -1,4 +1,4 @@
-import { ApplyRootStyleModifier, ApplyStyleModifier, ApplyFontStyleModifier, CSSProperties } from './styles/getDesignStyle'
+import { ApplyRootStyleModifier, ApplyStyleModifier, ApplyFontStyleModifier, CSSProperties } from './utils/GetDesignStyle'
 import { AnyType } from './types'
 
 export interface DataType {
@@ -10,9 +10,7 @@ export class Data implements DataType {
   @Trace layout?: CSSProperties
 
   constructor(config: DataType) {
-    if (config.layout !== undefined) {
-      this.layout = config.layout
-    }
+    this.layout = config?.layout ?? {}
   }
 }
 
@@ -33,7 +31,7 @@ export interface SlotsParams {
 @Builder function emptySlot(params: SlotsParams) {}
 
 @ComponentV2
-export default struct Mybricks_Container_Basic {
+export default struct MyBricksContainerBasic {
   @Param data: Data = new Data({});
   @Param styles: Record<string, CSSProperties> = {}
   @Param inputs?: Inputs = undefined;
