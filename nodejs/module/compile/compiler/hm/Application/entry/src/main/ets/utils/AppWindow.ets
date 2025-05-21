@@ -23,6 +23,14 @@ export function initAppWindow () {
   })
 }
 
+export function closeAppWindow () {
+  // 沉浸模式相关
+  window.getLastWindow(getContext()).then(win => {
+    // 关闭所有页面的沉浸式模式（关闭全屏模式）
+    win.setWindowLayoutFullScreen(false)
+  })
+}
+
 interface RgbRes {
   r: number,
   g: number,
@@ -73,7 +81,6 @@ const calculateBrightness = (color: string) => {
 
 @ComponentV2
 export struct AppCommonHeader {
-  @Param fontColor?: string = 'white'
   @Param barHeight: number = 40
   @Param titleColor: string = '#ffffff'
   @Param barBackgroundColor: string = '#464646'
@@ -144,31 +151,24 @@ export struct AppCommonHeader {
   }
 }
 
-
-@Builder function emptySlot() {}
-
 @ComponentV2
 export struct AppCustomHeader {
   @Param barHeight: number = 40
-  @Param barBackgroundColor: string = '#ffffff'
-
-  @BuilderParam content: () => void = emptySlot;
+  @Param titleColor: string = '#ffffff'
+  @Param barBackgroundColor: string = '#464646'
 
   aboutToAppear(): void {
     window.getLastWindow(getContext()).then(win => {
       win.setWindowSystemBarProperties({
-        // 设置状态栏文本颜色为黑色
-        statusBarContentColor: '#000000'
+        // 设置状态栏文本颜色为白色
+        statusBarContentColor: calculateBrightness(this.barBackgroundColor) > 0.5 ? '#000000' : '#ffffff'
       })
     })
   }
 
   build() {
-    Column(){
-      this.content()
-    }
-    .width('100%')
-    .height(appWindow.statusBarHeight)
+    Column()
+      .height(this.barHeight)
+      .backgroundColor(this.barBackgroundColor)
   }
 }
-

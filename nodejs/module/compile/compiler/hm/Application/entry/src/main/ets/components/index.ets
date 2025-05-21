@@ -16,8 +16,12 @@ import {
   mybricks_harmony_containerList as basic_mybricks_harmony_containerList,
   mybricks_harmony_containerList_Data,
   mybricks_harmony_containerBasic as basic_mybricks_harmony_containerBasic,
-  mybricks_harmony_containerBasic_Data
-} from "./../../comlib/index"
+  mybricks_harmony_containerBasic_Data,
+  mybricks_harmony_formInput as basic_mybricks_harmony_formInput,
+  mybricks_harmony_formInput_Data,
+  mybricks_harmony_formPassword as basic_mybricks_harmony_formPassword,
+  mybricks_harmony_formPassword_Data
+} from "./../../comlib/Index"
 import basicCodes from "./codes";
 
 import { inputs, inputs2 } from "./mybricks"
@@ -308,6 +312,58 @@ export struct mybricks_harmony_containerBasic {
         outputs: this.events,
         styles: this.styles,
         slots: this.slots,
+      })
+    }
+    .attributeModifier(this.myBricksColumnModifier)
+    .visibility(this.columnVisibility)
+  }
+}
+
+/** formInput */
+@ComponentV2
+export struct mybricks_harmony_formInput {
+  @Param controller: MyBricks.Controller = Controller();
+  @Param @Require data: MyBricks.Data
+  @Param events: MyBricks.Events = {}
+  @Param styles: Styles = {};
+  @Local columnVisibility: Visibility = Visibility.Visible;
+  @BuilderParam slots : (params: MyBricks.SlotParams) => void = Slot;
+
+  myBricksColumnModifier = new MyBricksColumnModifier(this.styles.root)
+
+  build() {
+    Column() {
+      basic_mybricks_harmony_formInput({
+        data: new mybricks_harmony_formInput_Data(this.data as MyBricks.Any),
+        inputs: inputs2(this),
+        outputs: this.events,
+        styles: this.styles,
+      })
+    }
+    .attributeModifier(this.myBricksColumnModifier)
+    .visibility(this.columnVisibility)
+  }
+}
+
+/** formPassword */
+@ComponentV2
+export struct mybricks_harmony_formPassword {
+  @Param controller: MyBricks.Controller = Controller();
+  @Param @Require data: MyBricks.Data
+  @Param events: MyBricks.Events = {}
+  @Param styles: Styles = {};
+  @Local columnVisibility: Visibility = Visibility.Visible;
+  @BuilderParam slots : (params: MyBricks.SlotParams) => void = Slot;
+
+  myBricksColumnModifier = new MyBricksColumnModifier(this.styles.root)
+
+  build() {
+    Column() {
+      basic_mybricks_harmony_formPassword({
+        data: new mybricks_harmony_formPassword_Data(this.data as MyBricks.Any),
+        inputs: inputs2(this),
+        outputs: this.events,
+        styles: this.styles,
       })
     }
     .attributeModifier(this.myBricksColumnModifier)

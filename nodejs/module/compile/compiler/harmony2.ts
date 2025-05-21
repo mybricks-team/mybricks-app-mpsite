@@ -36,8 +36,8 @@ const handleEntryCode = (template: string, {
 
 const handlePageCode = (page: ReturnType<typeof toHarmonyCode>[0], {
   disableScroll = false,
-  navigationBarBackgroundColor,
-  navigationBarTextStyle,
+  statusBarStyle,
+  navigationBarStyle,
   navigationBarTitleText,
   navigationStyle = 'default'
 }) => {
@@ -46,8 +46,6 @@ const handlePageCode = (page: ReturnType<typeof toHarmonyCode>[0], {
     dependencyNames: ["AppCommonHeader", "AppCustomHeader"],
     importType: "named",
   });
-
-  console.log('navigationStyle', navigationStyle)
 
   switch (navigationStyle) {
     case 'default': {
@@ -59,8 +57,8 @@ export default struct Page {
     NavDestination() {
       AppCommonHeader({
         title: ${JSON.stringify(navigationBarTitleText)},
-        titleColor: ${JSON.stringify(navigationBarTextStyle)},
-        barBackgroundColor: ${JSON.stringify(navigationBarBackgroundColor)},
+        titleColor: ${JSON.stringify(navigationBarStyle?.color)},
+        barBackgroundColor: ${JSON.stringify(navigationBarStyle?.backgroundColor)},
       })
       Index()
     }
@@ -78,7 +76,10 @@ ${page.content}
 export default struct Page {
   build() {
     NavDestination() {
-      AppCustomHeader({})
+      AppCustomHeader({
+        titleColor: ${JSON.stringify(navigationBarStyle?.color)},
+        barBackgroundColor: ${JSON.stringify(navigationBarStyle?.backgroundColor)},
+      })
       Index()
     }
     .hideTitleBar(true)

@@ -135,13 +135,30 @@ export class ApplyStyleModifier implements AttributeModifier<ComponentAttribute>
       paddingRight = parseFloat(configPaddings[1])
       paddingBottom = parseFloat(configPaddings[2])
       paddingLeft = parseFloat(configPaddings[3])
+      instance.padding({
+        left: paddingLeft,
+        right: paddingRight,
+        top: paddingTop,
+        bottom: paddingBottom
+      })
+    } else if (configPaddings.length === 2) {
+      const paddingTB = parseFloat(configPaddings[0])
+      const paddingLR = parseFloat(configPaddings[1])
+      instance.padding({
+        left: paddingLR,
+        right: paddingLR,
+        top: paddingTB,
+        bottom: paddingTB
+      })
+    } else if (configPaddings.length === 1) {
+      const paddingValue = parseFloat(configPaddings[0])
+      instance.padding({
+        left: paddingValue,
+        right: paddingValue,
+        top: paddingValue,
+        bottom: paddingValue
+      })
     }
-    instance.padding({
-      left: paddingLeft,
-      right: paddingRight,
-      top: paddingTop,
-      bottom: paddingBottom
-    })
 
     const backgroundSize = this.css?.backgroundSize ?? this.initBackgroundSize;
     if (!isNil(backgroundSize)) {
@@ -202,7 +219,7 @@ export class ApplyFontStyleModifier implements AttributeModifier<TextAttribute> 
     if (color) {
       instance.fontColor(color)
     }
-    const fontSize = this.css?.fontSize ?? this.initFontSize
+    const fontSize = this.css?.fontSize ? parseFloat(this.css?.fontSize as string) : this.initFontSize
     if (fontSize) {
       instance.fontSize(fontSize + 'vp')
     }

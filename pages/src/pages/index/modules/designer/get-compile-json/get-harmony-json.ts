@@ -76,24 +76,25 @@ export class GetHarmonyJson {
               config = findComFromToJson(item, COMPONENT_NAMESPACE.systemWebview)?.model?.data;
             }
 
-            switch (config.useNavigationStyle) {
+            switch (config.navigationStyle) {
               case "default":
                 pageConfig.navigationStyle = "default";
-                pageConfig.navigationBarBackgroundColor = rgbaToHex(
-                  config.navigationBarBackgroundColor
-                );
-                pageConfig.navigationBarTextStyle = config.navigationBarTextStyle;
+                pageConfig.navigationBarStyle = config.navigationBarStyle;
+                pageConfig.statusBarStyle = config.statusBarStyleStyle;
                 pageConfig.navigationBarTitleText = config.navigationBarTitleText;
                 pageConfig.disableScroll = config.disableScroll;
                 pageConfig.homeButton = config.homeButton;
                 break;
               case "custom":
                 pageConfig.navigationStyle = "custom";
+                pageConfig.navigationBarStyle = config.navigationBarStyle;
+                pageConfig.statusBarStyle = config.statusBarStyleStyle;
                 pageConfig.disableScroll = config.disableScroll;
                 pageConfig.homeButton = config.homeButton;
                 break;
               case "none":
                 pageConfig.navigationStyle = "none";
+                pageConfig.statusBarStyle = config.statusBarStyleStyle;
                 break;
             }
             /**
