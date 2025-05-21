@@ -55,6 +55,13 @@ const handlePageCode = (page: ReturnType<typeof toHarmonyCode>[0], {
       importType: "named",
     });
   }
+  if (page.content.includes("controller:")) {
+    page.importManager.addImport({
+      packageName: "../_proxy",
+      dependencyNames: ["Controller"],
+      importType: "named",
+    });
+  }
 
   switch (navigationStyle) {
     case 'default': {
@@ -135,6 +142,13 @@ const handlePopupCode = (page: ReturnType<typeof toHarmonyCode>[0]) => {
       importType: "named",
     });
   }
+  if (page.content.includes("controller:")) {
+    page.importManager.addImport({
+      packageName: "../_proxy",
+      dependencyNames: ["Controller"],
+      importType: "named",
+    });
+  }
   return `${page.importManager.toCode()}
 
       /** ${page.meta.title} */
@@ -189,7 +203,7 @@ const compilerHarmonyApplication = async (params, config) => {
       const dependencyNames: string[] = [];
   
       if (config.type === "ui") {
-        dependencyNames.push(componentName, "Controller");
+        dependencyNames.push(componentName);
       } else {
         dependencyNames.push(
           componentName[0].toLowerCase() + componentName.slice(1),
@@ -319,7 +333,7 @@ const compilerHarmonyComponent = async (params, config) => {
       const dependencyNames: string[] = [];
   
       if (config.type === "ui") {
-        dependencyNames.push(componentName, "Controller");
+        dependencyNames.push(componentName);
       } else {
         dependencyNames.push(
           componentName[0].toLowerCase() + componentName.slice(1),
