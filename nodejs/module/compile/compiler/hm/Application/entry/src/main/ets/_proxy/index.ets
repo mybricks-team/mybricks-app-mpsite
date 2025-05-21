@@ -20,7 +20,9 @@ import {
   mybricks_harmony_formInput as BasicMyBricksHarmonyFormInput,
   mybricks_harmony_formInput_Data,
   mybricks_harmony_formPassword as BasicMyBricksHarmonyFormPassword,
-  mybricks_harmony_formPassword_Data
+  mybricks_harmony_formPassword_Data,
+  mybricks_harmony_smsInput as BasicMyBricksHarmonySmsInput,
+  mybricks_harmony_smsInput_Data
 } from "./../../comlib/index"
 import basicCodes from "./codes";
 import { createJSHandle, createInputsHandle, createEventsHandle, Page } from "../utils/mybricks"
@@ -373,6 +375,31 @@ export struct MyBricksHarmonyFormPassword {
   }
 }
 
+/** smsInput */
+@ComponentV2
+export struct MyBricksHarmonySmsInput {
+  @Param controller: MyBricks.Controller = Controller();
+  @Param @Require data: MyBricks.Data
+  @Param events: MyBricks.Events = {}
+  @Param styles: Styles = {};
+  @Local columnVisibility: Visibility = Visibility.Visible;
+  @BuilderParam slots : (params: MyBricks.SlotParams) => void = Slot;
+
+  myBricksColumnModifier = new MyBricksColumnModifier(this.styles.root)
+
+  build() {
+    Column() {
+      BasicMyBricksHarmonySmsInput({
+        data: new mybricks_harmony_smsInput_Data(this.data as MyBricks.Any),
+        inputs: createInputsHandle(this),
+        outputs: createEventsHandle(this.events),
+        styles: this.styles,
+      })
+    }
+    .attributeModifier(this.myBricksColumnModifier)
+    .visibility(this.columnVisibility)
+  }
+}
 
 /** JS计算 */
 const codes: MyBricks.Codes = Object.keys(basicCodes).reduce((pre, key) => {

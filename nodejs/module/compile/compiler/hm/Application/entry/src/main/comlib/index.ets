@@ -2,7 +2,7 @@ export {
   default as mybricks_harmony__showToast,
   DataType as mybricks_harmony__showToast_DataType,
   Data as mybricks_harmony__showToast_Data
-} from './_ShowToast'
+} from './_showToast'
 
 export {
   default as mybricks_harmony_systemPage,
@@ -14,7 +14,7 @@ export {
   default as mybricks_harmony_popup,
   DataType as mybricks_harmony_popup_DataType,
   Data as mybricks_harmony_popup_Data
-} from './PopUp'
+} from './popup'
 
 export {
   default as mybricks_harmony_systemWebview,
@@ -26,31 +26,31 @@ export {
   default as mybricks_harmony_button,
   DataType as mybricks_harmony_button_DataType,
   Data as mybricks_harmony_button_Data
-} from './Button'
+} from './button'
 
 export {
   default as mybricks_harmony_text,
   DataType as mybricks_harmony_text_DataType,
   Data as mybricks_harmony_text_Data
-} from './Text'
+} from './text'
 
 export {
   default as mybricks_harmony_image,
   DataType as mybricks_harmony_image_DataType,
   Data as mybricks_harmony_image_Data
-} from './Image'
+} from './image'
 
 export {
   default as mybricks_harmony_containerList,
   DataType as mybricks_harmony_containerList_DataType,
   Data as mybricks_harmony_containerList_Data,
-} from './ContainerList'
+} from './containerList'
 
 export {
   default as mybricks_harmony_containerBasic,
   DataType as mybricks_harmony_containerBasic_DataType,
   Data as mybricks_harmony_containerBasic_Data,
-} from './ContainerBasic'
+} from './containerBasic'
 
 export {
   default as mybricks_harmony_tabs,
@@ -81,3 +81,9 @@ export {
   DataType as mybricks_harmony_qrcode_DataType,
   Data as mybricks_harmony_qrcode_Data,
 } from './QrCode'
+
+export {
+  default as mybricks_harmony_smsInput,
+  DataType as mybricks_harmony_smsInput_DataType,
+  Data as mybricks_harmony_smsInput_Data,
+} from './SmsInput'
