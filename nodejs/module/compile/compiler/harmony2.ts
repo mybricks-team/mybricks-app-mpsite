@@ -49,11 +49,6 @@ const handlePageCode = (page: ReturnType<typeof toHarmonyCode>[0], {
   navigationBarTitleText,
   navigationStyle = 'default'
 }) => {
-  page.importManager.addImport({
-    packageName: "../utils",
-    dependencyNames: ["AppCommonHeader", "AppCustomHeader"],
-    importType: "named",
-  });
   if (page.content.includes("MyBricks.")) {
     page.importManager.addImport({
       packageName: "../utils/types",
