@@ -193,6 +193,7 @@ export default struct SmsInput {
       TextInput({ text: this.code.join('') })
         .width(0)
         .height(0)
+        .backgroundColor(Color.Transparent)
         .maxLength(4)
         .type(InputType.Number)
         .key('sms-code-input')
