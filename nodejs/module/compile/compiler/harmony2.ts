@@ -3,6 +3,7 @@ import * as path from "path";
 import * as fse from "fs-extra";
 import { BaseCompiler } from "./base";
 import { COMPONENT_PACKAGE_NAME } from "./hm/constant";
+import { pinyin } from "./pinyin";
 
 function convertNamespaceToComponentName(namespace: string) {
   return namespace
@@ -24,10 +25,10 @@ const handleEntryCode = (template: string, {
   tabbarConfig
 }) => {
   const allImports = Array.from(new Set([...tabbarScenes, ...normalScenes]))
-    .map(scene => `// ${scene.title} \nimport Page_${scene.id} from './Page_${scene.id}';`)
+    .map(scene => `// ${scene.title} \nimport Page_${toPinyin(scene.title)} from './Page_${toPinyin(scene.title)}';`)
     .join('\n')
   const generateRoutes = (scenes) => scenes
-    .map((scene, i) => `${i === 0 ? 'if' : '\t\telse if'} (path === '${scene.id}') {\n\t\t\tPage_${scene.id}()\n\t\t}`)
+    .map((scene, i) => `${i === 0 ? 'if' : '\t\telse if'} (path === '${scene.id}') {\n\t\t\tPage_${toPinyin(scene.title)}()\n\t\t}`)
     .join('\n');
   const renderMainScenes = generateRoutes(Array.from(new Set([entryScene, ...tabbarScenes])))
   const renderScenes = generateRoutes(normalScenes)
@@ -190,6 +191,10 @@ export const compilerHarmony2 = async (params, config) => {
   }
 }
 
+const toPinyin = (text: string) => {
+  return pinyin.convertToPinyin(text.replace(/[^\u4e00-\u9fa5a-zA-Z0-9]+/g, '_'), "", true)
+}
+
 /** 下载应用 */
 const compilerHarmonyApplication = async (params, config) => {
   const { data, projectPath, projectName, fileName, depModules, origin, type } = params;
@@ -225,6 +230,11 @@ const compilerHarmonyApplication = async (params, config) => {
         componentName: componentName,
       };
     },
+  }).map((page) => {
+    return {
+      ...page,
+      path: `pages/Page_${toPinyin(page.meta.title)}.ets`,
+    }
   });
 
   // 目标项目路径
@@ -335,16 +345,14 @@ const compilerHarmonyComponent = async (params, config) => {
         };
       }
 
-      const componentName = convertNamespaceToComponentName(namespace);
+      let componentName = convertNamespaceToComponentName(namespace);
       const dependencyNames: string[] = [];
-  
-      if (config.type === "ui") {
-        dependencyNames.push(componentName);
-      } else {
-        dependencyNames.push(
-          componentName[0].toLowerCase() + componentName.slice(1),
-        );
+
+      if (config.type === "js") {
+        componentName = componentName[0].toLowerCase() + componentName.slice(1);
       }
+
+      dependencyNames.push(componentName);
   
       return {
         dependencyImport: {
@@ -355,6 +363,11 @@ const compilerHarmonyComponent = async (params, config) => {
         componentName: componentName,
       };
     },
+  }).map((page) => {
+    return {
+      ...page,
+      path: `pages/Page_${toPinyin(page.meta.title)}.ets`,
+    }
   });
 
   // 目标项目路径
