@@ -384,3 +384,4 @@ const codes: MyBricks.Codes = Object.keys(basicCodes).reduce((pre, key) => {
 
 export {
   codes
+}
