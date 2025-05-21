@@ -73,7 +73,6 @@ const calculateBrightness = (color: string) => {
 
 @ComponentV2
 export struct AppCommonHeader {
-  @Param fontColor?: string = 'white'
   @Param barHeight: number = 40
   @Param titleColor: string = '#ffffff'
   @Param barBackgroundColor: string = '#464646'
@@ -87,6 +86,8 @@ export struct AppCommonHeader {
       })
     })
   }
+
+  @Param onBack?: Function | null = null
 
   build() {
     Stack() {
@@ -104,36 +105,27 @@ export struct AppCommonHeader {
           .alignRules({
             middle: { anchor: "__container__", align: HorizontalAlign.Center },
           })
-        // if (this.onKeyBack) {
-        //   Image($r('app.media.ic_back'))
-        //     .height('100%')
-        //     .padding({
-        //       left: 16,
-        //       top: 11,
-        //       bottom: 11,
-        //       right: 11
-        //     })
-        //     .fillColor(this.titleColor)
-        //     .objectFit(ImageFit.Contain)
-        //     .alignRules({
-        //       left: { anchor: "__container__", align: HorizontalAlign.Start },
-        //     })
-        //     .id("i2")
-        //     .onClick(() => {
-        //       this.onKeyBack?.()
-        //     })
-        // }
-        // if (this.rightLayout) {
-        //   Row() {
-        //     this.rightLayout?.()
-        //   }
-        //   .height('100%')
-        //   .justifyContent(FlexAlign.End)
-        //   .alignRules({
-        //     right: { anchor: "__container__", align: HorizontalAlign.End },
-        //   })
-        //   .id("i3")
-        // }
+        if (!!this.onBack) {
+          Column(){
+            SymbolGlyph($r('sys.symbol.chevron_left'))
+              .fontSize(32)
+              .renderingStrategy(SymbolRenderingStrategy.SINGLE)
+              .fontColor([this.titleColor, Color.White])
+          }
+          .height('100%')
+          .width(36)
+          .padding({
+            left: 16
+          })
+          .justifyContent(FlexAlign.Center)
+          .alignItems(HorizontalAlign.Center)
+          .alignRules({
+            left: { anchor: "__container__", align: HorizontalAlign.Start },
+          })
+          .onClick(() => {
+            this.onBack?.()
+          })
+        }
       }
       .width('100%')
       .height(this.barHeight)
@@ -144,29 +136,23 @@ export struct AppCommonHeader {
   }
 }
 
-
-@Builder function emptySlot() {}
-
 @ComponentV2
 export struct AppCustomHeader {
   @Param barHeight: number = 40
+  @Param titleColor: string = '#ffffff'
   @Param barBackgroundColor: string = '#ffffff'
-
-  @BuilderParam content: () => void = emptySlot;
 
   aboutToAppear(): void {
     window.getLastWindow(getContext()).then(win => {
       win.setWindowSystemBarProperties({
-        // 设置状态栏文本颜色为黑色
-        statusBarContentColor: '#000000'
+        // 设置状态栏文本颜色为白色
+        statusBarContentColor: calculateBrightness(this.barBackgroundColor) > 0.5 ? '#000000' : '#ffffff'
       })
     })
   }
 
   build() {
-    Column(){
-      this.content()
-    }
+    Column(){}
     .width('100%')
     .height(appWindow.statusBarHeight)
   }
