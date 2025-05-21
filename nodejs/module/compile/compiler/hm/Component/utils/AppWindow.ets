@@ -23,6 +23,14 @@ export function initAppWindow () {
   })
 }
 
+export function closeAppWindow () {
+  // 沉浸模式相关
+  window.getLastWindow(getContext()).then(win => {
+    // 关闭所有页面的沉浸式模式（关闭全屏模式）
+    win.setWindowLayoutFullScreen(false)
+  })
+}
+
 interface RgbRes {
   r: number,
   g: number,
@@ -157,4 +165,3 @@ export struct AppCustomHeader {
     .height(appWindow.statusBarHeight)
   }
 }
-

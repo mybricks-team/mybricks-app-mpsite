@@ -11,7 +11,7 @@ export declare namespace MyBricks {
   type Events = Any
 
   /** 组件控制器 */
-  type Controller = Record<string, Any>
+  type Controller = Record<string, (value: EventValue) => Record<string, Any>>
 
   /** 调用插槽传参 */
   interface SlotParams {
