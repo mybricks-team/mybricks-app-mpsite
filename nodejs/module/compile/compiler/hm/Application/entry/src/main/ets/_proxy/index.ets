@@ -15,11 +15,11 @@ import {
   mybricks_harmony_image_Data,
   mybricks_harmony_containerList as BasicMyBricksHarmonyContainerList,
   mybricks_harmony_containerList_Data,
-  mybricks_harmony_containerBasic as basic_mybricks_harmony_containerBasic,
+  mybricks_harmony_containerBasic as BasicMyBricksHarmonyContainerBasic,
   mybricks_harmony_containerBasic_Data,
-  mybricks_harmony_formInput as basic_mybricks_harmony_formInput,
+  mybricks_harmony_formInput as BasicMyBricksHarmonyFormInput,
   mybricks_harmony_formInput_Data,
-  mybricks_harmony_formPassword as basic_mybricks_harmony_formPassword,
+  mybricks_harmony_formPassword as BasicMyBricksHarmonyFormPassword,
   mybricks_harmony_formPassword_Data
 } from "./../../comlib/Index"
 import basicCodes from "./codes";
@@ -323,7 +323,7 @@ export struct MyBricksHarmonyContainerBasic {
 
 /** formInput */
 @ComponentV2
-export struct mybricks_harmony_formInput {
+export struct MyBricksHarmonyFormInput {
   @Param controller: MyBricks.Controller = Controller();
   @Param @Require data: MyBricks.Data
   @Param events: MyBricks.Events = {}
@@ -335,10 +335,10 @@ export struct mybricks_harmony_formInput {
 
   build() {
     Column() {
-      basic_mybricks_harmony_formInput({
+      BasicMyBricksHarmonyFormInput({
         data: new mybricks_harmony_formInput_Data(this.data as MyBricks.Any),
-        inputs: inputs2(this),
-        outputs: this.events,
+        inputs: createInputsHandle(this),
+        outputs: createEventsHandle(this.events),
         styles: this.styles,
       })
     }
@@ -349,7 +349,7 @@ export struct mybricks_harmony_formInput {
 
 /** formPassword */
 @ComponentV2
-export struct mybricks_harmony_formPassword {
+export struct MyBricksHarmonyFormPassword {
   @Param controller: MyBricks.Controller = Controller();
   @Param @Require data: MyBricks.Data
   @Param events: MyBricks.Events = {}
@@ -361,10 +361,10 @@ export struct mybricks_harmony_formPassword {
 
   build() {
     Column() {
-      basic_mybricks_harmony_formPassword({
+      BasicMyBricksHarmonyFormPassword({
         data: new mybricks_harmony_formPassword_Data(this.data as MyBricks.Any),
-        inputs: inputs2(this),
-        outputs: this.events,
+        inputs: createInputsHandle(this),
+        outputs: createEventsHandle(this.events),
         styles: this.styles,
       })
     }
@@ -384,4 +384,3 @@ const codes: MyBricks.Codes = Object.keys(basicCodes).reduce((pre, key) => {
 
 export {
   codes
-}
