@@ -3,7 +3,7 @@ import * as path from "path";
 import * as fse from "fs-extra";
 import { BaseCompiler } from "./base";
 import { COMPONENT_PACKAGE_NAME } from "./hm/constant";
-import { pinyin } from "./pinyin";
+import { pinyin, cleanAndSplitString, firstCharToUpperCase } from "../utils";
 
 function convertNamespaceToComponentName(namespace: string) {
   return namespace
@@ -25,10 +25,10 @@ const handleEntryCode = (template: string, {
   tabbarConfig
 }) => {
   const allImports = Array.from(new Set([...tabbarScenes, ...normalScenes]))
-    .map(scene => `// ${scene.title} \nimport Page_${toPinyin(scene.title)} from './Page_${toPinyin(scene.title)}';`)
+    .map(scene => `// ${scene.title} \nimport ${generatePageFileName(scene.title)} from './${generatePageFileName(scene.title)}';`)
     .join('\n')
   const generateRoutes = (scenes) => scenes
-    .map((scene, i) => `${i === 0 ? 'if' : '\t\telse if'} (path === '${scene.id}') {\n\t\t\tPage_${toPinyin(scene.title)}()\n\t\t}`)
+    .map((scene, i) => `${i === 0 ? 'if' : '\t\telse if'} (path === '${scene.id}') {\n\t\t\t${generatePageFileName(scene.title)}()\n\t\t}`)
     .join('\n');
   const renderMainScenes = generateRoutes(Array.from(new Set([entryScene, ...tabbarScenes])))
   const renderScenes = generateRoutes(normalScenes)
@@ -58,7 +58,7 @@ const handlePageCode = (page: ReturnType<typeof toHarmonyCode>[0], {
   }
   if (page.content.includes("controller:")) {
     page.importManager.addImport({
-      packageName: "../_proxy",
+      packageName: COMPONENT_PACKAGE_NAME,
       dependencyNames: ["Controller"],
       importType: "named",
     });
@@ -148,7 +148,7 @@ const handlePopupCode = (page: ReturnType<typeof toHarmonyCode>[0]) => {
   }
   if (page.content.includes("controller:")) {
     page.importManager.addImport({
-      packageName: "../_proxy",
+      packageName: COMPONENT_PACKAGE_NAME,
       dependencyNames: ["Controller"],
       importType: "named",
     });
@@ -186,15 +186,16 @@ export const compilerHarmony2 = async (params, config) => {
   }
 }
 
-const toPinyin = (text: string) => {
-  return pinyin.convertToPinyin(text.replace(/[^\u4e00-\u9fa5a-zA-Z0-9]+/g, '_'), "", true)
+const generatePageFileName = (text: string) => {
+  const splits = cleanAndSplitString(text);
+  
+  return splits.reduce((pre, cur) => {
+    return pre + firstCharToUpperCase(pinyin.convertToPinyin(cur, "", true))
+  }, "") + "Page"
 }
 
-/** 下载应用 */
-const compilerHarmonyApplication = async (params, config) => {
-  const { data, projectPath, projectName, fileName, depModules, origin, type } = params;
-  const { Logger } = config;
-  const pageCode = toHarmonyCode(data.toJson, {
+const getPageCode = (toJson) => {
+  return toHarmonyCode(toJson, {
     getComponentMetaByNamespace(namespace, config) {
       if (namespace === "mybricks.harmony._muilt-inputJs") {
         return {
@@ -225,21 +226,36 @@ const compilerHarmonyApplication = async (params, config) => {
         componentName: componentName,
       };
     },
+    getComponentPackageName() {
+      return COMPONENT_PACKAGE_NAME
+    }
   }).map((page) => {
     return {
       ...page,
-      path: `pages/Page_${toPinyin(page.meta.title)}.ets`,
+      path: `pages/${generatePageFileName(page.meta.title)}.ets`,
     }
   });
+}
+
+/** 下载应用 */
+const compilerHarmonyApplication = async (params, config) => {
+  const { data, projectPath, projectName, fileName, depModules, origin, type } = params;
+  const { Logger } = config;
+  const pageCode = getPageCode(data.toJson);
 
   // 目标项目路径
   const targetAppPath = path.join(projectPath, "Application");
 
   // 拷贝项目
   await fse.copy(path.join(__dirname, "./hm/Application"), targetAppPath, { overwrite: true })
-
+  // 拷贝comlib
+  await fse.copy(path.join(__dirname, "./hm/comlib"), path.join(targetAppPath, "entry/src/main/comlib"), { overwrite: true })
   // est路径
   const targetEtsPath = path.join(targetAppPath, "entry/src/main/ets");
+  // 拷贝utils
+  await fse.copy(path.join(__dirname, "./hm/utils"), path.join(targetEtsPath, "utils"), { overwrite: true })
+  // 拷贝_proxy
+  await fse.copy(path.join(__dirname, "./hm/_proxy"), path.join(targetEtsPath, "_proxy"), { overwrite: true })
 
   const sceneMap = {};
 
@@ -310,7 +326,7 @@ const compilerHarmonyApplication = async (params, config) => {
   })
 
   const entryPath = path.join(targetEtsPath, "./pages/Index.ets");
-  await fse.copy(path.join(__dirname, "./hm/Application/entry/src/main/ets/pages/Index.ets"), entryPath, { overwrite: true });
+  await fse.copy(path.join(__dirname, "./hm/pages/Index.ets"), entryPath, { overwrite: true });
   
   let entryFileContent = await fse.readFile(entryPath, 'utf-8')
 
@@ -327,49 +343,21 @@ const compilerHarmonyApplication = async (params, config) => {
 const compilerHarmonyComponent = async (params, config) => {
   const { data, projectPath, projectName, fileName, depModules, origin, type } = params;
   const { Logger } = config;
-  const pageCode = toHarmonyCode(data.toJson, {
-    getComponentMetaByNamespace(namespace, config) {
-      if (namespace === "mybricks.harmony._muilt-inputJs") {
-        return {
-          dependencyImport: {
-            packageName: COMPONENT_PACKAGE_NAME,
-            dependencyNames: ["codes"],
-            importType: "named",
-          },
-          componentName: "codes"
-        };
-      }
-
-      let componentName = convertNamespaceToComponentName(namespace);
-      const dependencyNames: string[] = [];
-
-      if (config.type === "js") {
-        componentName = componentName[0].toLowerCase() + componentName.slice(1);
-      }
-
-      dependencyNames.push(componentName);
-  
-      return {
-        dependencyImport: {
-          packageName: COMPONENT_PACKAGE_NAME,
-          dependencyNames,
-          importType: "named",
-        },
-        componentName: componentName,
-      };
-    },
-  }).map((page) => {
-    return {
-      ...page,
-      path: `pages/Page_${toPinyin(page.meta.title)}.ets`,
-    }
-  });
+  const pageCode = getPageCode(data.toJson);
 
   // 目标项目路径
-  const targetComponentPath = path.join(projectPath, "Component");
+  const targetPath = path.join(projectPath, "Component");
 
   // 拷贝项目
-  await fse.copy(path.join(__dirname, "./hm/Component"), targetComponentPath, { overwrite: true })
+  await fse.copy(path.join(__dirname, "./hm/Component"), targetPath, { overwrite: true })
+  // 拷贝comlib
+  await fse.copy(path.join(__dirname, "./hm/comlib"), path.join(targetPath, "comlib"), { overwrite: true })
+  // 拷贝utils
+  await fse.copy(path.join(__dirname, "./hm/utils"), path.join(targetPath, "utils"), { overwrite: true })
+  // 拷贝_proxy
+  await fse.copy(path.join(__dirname, "./hm/_proxy"), path.join(targetPath, "_proxy"), { overwrite: true })
+  let _proxyIndexCode = await fse.readFile(path.join(__dirname, "./hm/_proxy/Index.ets"), 'utf-8')
+  await fse.writeFile(path.join(targetPath, "_proxy/Index.ets"), _proxyIndexCode.replace("../../comlib/index", "../comlib/index"))
 
   const sceneMap = {};
 
@@ -391,11 +379,11 @@ const compilerHarmonyComponent = async (params, config) => {
       content = handlePopupCode(page);
     }
 
-    fse.outputFileSync(path.join(targetComponentPath, page.path), content, { encoding: "utf8" })
+    fse.outputFileSync(path.join(targetPath, page.path), content, { encoding: "utf8" })
   });
 
   // 写入搭建Js
-  const jsCodePath = path.join(targetComponentPath, "_proxy/codes.js");
+  const jsCodePath = path.join(targetPath, "_proxy/codes.js");
   await fse.ensureFile(jsCodePath)
   await fse.writeFile(jsCodePath, `export default (function(comModules) {
     ${decodeURIComponent(data.allModules?.all)};
@@ -439,8 +427,8 @@ const compilerHarmonyComponent = async (params, config) => {
     }
   })
 
-  const entryPath = path.join(targetComponentPath, "./pages/Index.ets");
-  await fse.copy(path.join(__dirname, "./hm/Application/entry/src/main/ets/pages/Index.ets"), entryPath, { overwrite: true });
+  const entryPath = path.join(targetPath, "./pages/Index.ets");
+  await fse.copy(path.join(__dirname, "./hm/pages/Index.ets"), entryPath, { overwrite: true });
   
   let entryFileContent = await fse.readFile(entryPath, 'utf-8')
 

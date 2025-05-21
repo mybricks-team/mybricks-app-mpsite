@@ -224,3 +224,6 @@ export const localizeFile = async (projectPath, files) => {
 function getContentHash (fileContent, len = 8) {
   return crypto.createHash('md5').update(fileContent ?? Math.random()).digest('hex').slice(0, len);
 }
+
+export * from "./pinyin"
+export * from "./string"

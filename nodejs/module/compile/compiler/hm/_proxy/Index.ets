@@ -23,7 +23,7 @@ import {
   mybricks_harmony_formPassword_Data,
   mybricks_harmony_smsInput as BasicMyBricksHarmonySmsInput,
   mybricks_harmony_smsInput_Data
-} from "./../../comlib/index"
+} from "../../comlib/index"
 import basicCodes from "./codes";
 import { createJSHandle, createInputsHandle, createEventsHandle, Page } from "../utils/mybricks"
 import { MyBricks } from "../utils/types"
