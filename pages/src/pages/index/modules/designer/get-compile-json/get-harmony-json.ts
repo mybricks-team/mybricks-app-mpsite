@@ -84,6 +84,7 @@ export class GetHarmonyJson {
                 pageConfig.navigationBarTitleText = config.navigationBarTitleText;
                 pageConfig.disableScroll = config.disableScroll;
                 pageConfig.homeButton = config.homeButton;
+                pageConfig.showBackIcon = config.showBackIcon;
                 break;
               case "custom":
                 pageConfig.navigationStyle = "custom";

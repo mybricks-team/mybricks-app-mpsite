@@ -1,4 +1,5 @@
 import { window } from '@kit.ArkUI';
+import { appRouter } from './AppRouter'
 
 @ObservedV2
 class AppWindow {
@@ -95,7 +96,7 @@ export struct AppCommonHeader {
     })
   }
 
-  @Param onBack?: Function | null = null
+  @Param showBackIcon?: boolean = false
 
   build() {
     Stack() {
@@ -113,7 +114,7 @@ export struct AppCommonHeader {
           .alignRules({
             middle: { anchor: "__container__", align: HorizontalAlign.Center },
           })
-        if (!!this.onBack) {
+        if (!!this.showBackIcon) {
           Column(){
             SymbolGlyph($r('sys.symbol.chevron_left'))
               .fontSize(32)
@@ -131,7 +132,7 @@ export struct AppCommonHeader {
             left: { anchor: "__container__", align: HorizontalAlign.Start },
           })
           .onClick(() => {
-            this.onBack?.()
+            appRouter.pop()
           })
         }
       }

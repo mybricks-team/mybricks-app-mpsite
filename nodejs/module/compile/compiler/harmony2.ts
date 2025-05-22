@@ -47,7 +47,8 @@ const handlePageCode = (page: ReturnType<typeof toHarmonyCode>[0], {
   statusBarStyle,
   navigationBarStyle,
   navigationBarTitleText,
-  navigationStyle = 'default'
+  navigationStyle = 'default',
+  showBackIcon = false
 }) => {
   if (page.content.includes("MyBricks.")) {
     page.importManager.addImport({
@@ -82,6 +83,7 @@ export default struct Page {
         title: ${JSON.stringify(navigationBarTitleText)},
         titleColor: ${JSON.stringify(navigationBarStyle?.color)},
         barBackgroundColor: ${JSON.stringify(navigationBarStyle?.backgroundColor)},
+        showBackIcon: ${Boolean(showBackIcon)}
       })
       Index()
     }
