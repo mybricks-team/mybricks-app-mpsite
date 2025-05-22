@@ -259,6 +259,10 @@ const compilerHarmonyApplication = async (params, config) => {
   // 拷贝_proxy
   await fse.copy(path.join(__dirname, "./hm/_proxy"), path.join(targetEtsPath, "_proxy"), { overwrite: true })
 
+  const proxyFile = path.join(targetEtsPath, "_proxy", 'Index.ets');
+  const proxyFileContent = await fse.readFile(proxyFile, 'utf-8');
+  await fse.writeFile(proxyFile, proxyFileContent.replace('{ domain: undefined }', `{ domain: ${data.appConfig?.defaultCallServiceHost ? JSON.stringify(data.appConfig?.defaultCallServiceHost) : undefined}}`), 'utf-8')
+
   const sceneMap = {};
 
   pageCode.forEach((page) => {
@@ -359,7 +363,7 @@ const compilerHarmonyComponent = async (params, config) => {
   // 拷贝_proxy
   await fse.copy(path.join(__dirname, "./hm/_proxy"), path.join(targetPath, "_proxy"), { overwrite: true })
   let _proxyIndexCode = await fse.readFile(path.join(__dirname, "./hm/_proxy/Index.ets"), 'utf-8')
-  await fse.writeFile(path.join(targetPath, "_proxy/Index.ets"), _proxyIndexCode.replace("../../comlib/index", "../comlib/index"))
+  await fse.writeFile(path.join(targetPath, "_proxy/Index.ets"), _proxyIndexCode.replace("../../comlib/index", "../comlib/index").replace('{ domain: undefined }', `{ domain: ${data.appConfig?.defaultCallServiceHost ? JSON.stringify(data.appConfig?.defaultCallServiceHost) : undefined}}`))
 
   const sceneMap = {};
 

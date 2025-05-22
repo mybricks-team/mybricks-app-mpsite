@@ -111,7 +111,7 @@ export class GetHarmonyJson {
       });
   }
 
-  getJson = async ({ toJson, comlibs, events = {} }) => {
+  getJson = async ({ toJson, comlibs, events = {}, appConfig }) => {
     const pages = this.getPages(toJson);
     const tabBarJson = this.getTabbarConfig();
     const entryPageId = this.getEntryPage(toJson);
@@ -131,6 +131,7 @@ export class GetHarmonyJson {
       pages,
       entryPageId,
       tabBarJson,
+      appConfig,
       allModules,
     };
 

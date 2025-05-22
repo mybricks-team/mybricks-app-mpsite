@@ -317,6 +317,20 @@ export function call(
   });
 }
 
-export const genCallConnector = (connectorDefinitions) => (connector, params) => {
-  return call(connectorDefinitions[connector?.id], params)
+export const genCallConnector = (connectorDefinitions, httpConfig) => (connector, params) => {
+  return call(connectorDefinitions[connector?.id], params, {
+    before(options) {
+      const newOptions = { ...options };
+      /**
+       * 如果 url 不以 http 开头，添加默认域名
+       */
+      if (
+        !/^(http|https):\/\/.*/.test(newOptions.url) &&
+        httpConfig?.domain
+      ) {
+        newOptions.url = `${httpConfig?.domain}${newOptions.url}`;
+      }
+      return newOptions
+    }
+  })
 }

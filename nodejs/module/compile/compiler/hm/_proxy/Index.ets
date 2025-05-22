@@ -95,7 +95,7 @@ const _env: MyBricks._Env = {
 }
 
 const env: MyBricks.Env = {
-  callConnector: genCallConnector(basicCodes)
+  callConnector: genCallConnector(basicCodes, { domain: undefined })
 }
 
 export const Controller = () => {

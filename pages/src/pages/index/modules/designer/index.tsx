@@ -1209,6 +1209,9 @@ const Designer = ({ appData }) => {
               ...toJson,
             },
             comlibs: comlibs,
+            appConfig: {
+              defaultCallServiceHost:  pageModel.appConfig?.defaultCallServiceHost,
+            }
           })
         } else {
           json = await getMiniappJson({
