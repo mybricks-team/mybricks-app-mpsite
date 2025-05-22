@@ -172,8 +172,11 @@ export const createInputsHandle = (that, init = false) => {
 }
 
 // JS
-export const createJSHandle = (fn, props) => {
+export const createJSHandle = (fn, options) => {
   let controller
+
+  const props = options?.props;
+  const env = options?.env
 
   const inputs = new Proxy({}, {
     getOwnPropertyDescriptor() {
@@ -217,6 +220,7 @@ export const createJSHandle = (fn, props) => {
     inputs,
     outputs,
     logger: log,
+    env
   })
 
   const isJsMultipleInputs = props.inputs[0]

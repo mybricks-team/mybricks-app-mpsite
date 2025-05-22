@@ -46,4 +46,8 @@ export declare namespace MyBricks {
       close: () => void
     }
   }
+
+  type Env = {
+    callConnector: Any
+  }
 }

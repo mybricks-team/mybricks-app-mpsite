@@ -4,6 +4,9 @@
   "description": "Please describe the basic information.",
   "main": "",
   "author": "",
-  "license": ""
+  "license": "",
+  "dependencies": {
+    "@ohos/axios": "^2.2.6"
+  }
 }
 

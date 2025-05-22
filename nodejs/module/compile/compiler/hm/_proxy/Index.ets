@@ -1,6 +1,7 @@
 import { appRouter } from "../utils"
 import {
   mybricks_harmony__showToast as basicMyBricksHarmony_showToast,
+  mybricks_harmony__connector as basicMyBricksHarmony_connector,
   mybricks_harmony_popup as BasicMyBricksHarmonyPopup,
   mybricks_harmony_popup_Data,
   mybricks_harmony_systemPage as BasicMyBricksHarmonySystemPage,
@@ -26,6 +27,7 @@ import {
 } from "../../comlib/index"
 import basicCodes from "./codes";
 import { createJSHandle, createInputsHandle, createEventsHandle, Page } from "../utils/mybricks"
+import { genCallConnector } from "../utils/CallConnector"
 import { MyBricks } from "../utils/types"
 
 type Style = Record<string, string | number>;
@@ -92,6 +94,10 @@ const _env: MyBricks._Env = {
   }
 }
 
+const env: MyBricks.Env = {
+  callConnector: genCallConnector(basicCodes)
+}
+
 export const Controller = () => {
   return createInputsHandle({}, true) as MyBricks.Controller
 }
@@ -101,7 +107,12 @@ export const page = new Page(appRouter);
 
 /** _showToast */
 export const myBricksHarmony_showToast = (props: MyBricks.JSParams): (...values: MyBricks.EventValue) => Record<string, MyBricks.EventValue> => {
-  return createJSHandle(basicMyBricksHarmony_showToast, props);
+  return createJSHandle(basicMyBricksHarmony_showToast, { props });
+}
+
+/** connector */
+export const myBricksHarmony_connector = (props: MyBricks.JSParams): (...values: MyBricks.EventValue) => Record<string, MyBricks.EventValue> => {
+  return createJSHandle(basicMyBricksHarmony_connector, { props, env });
 }
 
 /** systemPage */
@@ -404,7 +415,7 @@ export struct MyBricksHarmonySmsInput {
 /** JS计算 */
 const codes: MyBricks.Codes = Object.keys(basicCodes).reduce((pre, key) => {
   pre[key] = (props: MyBricks.JSParams): MyBricks.JSReturn => {
-    return createJSHandle(basicCodes[key], props);
+    return createJSHandle(basicCodes[key], { props });
   }
   return pre
 }, {} as MyBricks.Codes)
