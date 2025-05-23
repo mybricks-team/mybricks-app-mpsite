@@ -2,6 +2,7 @@ import { appRouter } from "../utils"
 import {
   mybricks_harmony__showToast as basicMyBricksHarmony_showToast,
   mybricks_harmony__connector as basicMyBricksHarmony_connector,
+  mybricks_harmony__router as basicMyBricksHarmony_router,
   mybricks_harmony_popup as BasicMyBricksHarmonyPopup,
   mybricks_harmony_popup_Data,
   mybricks_harmony_systemPage as BasicMyBricksHarmonySystemPage,
@@ -22,6 +23,10 @@ import {
   mybricks_harmony_formInput_Data,
   mybricks_harmony_formPassword as BasicMyBricksHarmonyFormPassword,
   mybricks_harmony_formPassword_Data,
+  mybricks_harmony_formSwitch as BasicMyBricksHarmonyFormSwitch,
+  mybricks_harmony_formSwitch_Data,
+  mybricks_harmony_formRadio as BasicMyBricksHarmonyFormRadio,
+  mybricks_harmony_formRadio_Data,
   mybricks_harmony_smsInput as BasicMyBricksHarmonySmsInput,
   mybricks_harmony_smsInput_Data
 } from "../../comlib/index"
@@ -95,7 +100,8 @@ const _env: MyBricks._Env = {
 }
 
 const env: MyBricks.Env = {
-  callConnector: genCallConnector(basicCodes, { domain: undefined })
+  callConnector: genCallConnector(basicCodes, { domain: undefined }),
+  appRouter,
 }
 
 export const Controller = () => {
@@ -113,6 +119,11 @@ export const myBricksHarmony_showToast = (props: MyBricks.JSParams): (...values:
 /** connector */
 export const myBricksHarmony_connector = (props: MyBricks.JSParams): (...values: MyBricks.EventValue) => Record<string, MyBricks.EventValue> => {
   return createJSHandle(basicMyBricksHarmony_connector, { props, env });
+}
+
+/** router */
+export const myBricksHarmony_router = (props: MyBricks.JSParams): (...values: MyBricks.EventValue) => Record<string, MyBricks.EventValue> => {
+  return createJSHandle(basicMyBricksHarmony_router, { props, env });
 }
 
 /** systemPage */
@@ -376,6 +387,58 @@ export struct MyBricksHarmonyFormPassword {
     Column() {
       BasicMyBricksHarmonyFormPassword({
         data: new mybricks_harmony_formPassword_Data(this.data as MyBricks.Any),
+        inputs: createInputsHandle(this),
+        outputs: createEventsHandle(this.events),
+        styles: this.styles,
+      })
+    }
+    .attributeModifier(this.myBricksColumnModifier)
+    .visibility(this.columnVisibility)
+  }
+}
+
+/** formRadio */
+@ComponentV2
+export struct MyBricksHarmonyFormRadio {
+  @Param controller: MyBricks.Controller = Controller();
+  @Param @Require data: MyBricks.Data
+  @Param events: MyBricks.Events = {}
+  @Param styles: Styles = {};
+  @Local columnVisibility: Visibility = Visibility.Visible;
+  @BuilderParam slots : (params: MyBricks.SlotParams) => void = Slot;
+
+  myBricksColumnModifier = new MyBricksColumnModifier(this.styles.root)
+
+  build() {
+    Column() {
+      BasicMyBricksHarmonyFormRadio({
+        data: new mybricks_harmony_formRadio_Data(this.data as MyBricks.Any),
+        inputs: createInputsHandle(this),
+        outputs: createEventsHandle(this.events),
+        styles: this.styles,
+      })
+    }
+    .attributeModifier(this.myBricksColumnModifier)
+    .visibility(this.columnVisibility)
+  }
+}
+
+/** formSwitch */
+@ComponentV2
+export struct MyBricksHarmonyFormSwitch {
+  @Param controller: MyBricks.Controller = Controller();
+  @Param @Require data: MyBricks.Data
+  @Param events: MyBricks.Events = {}
+  @Param styles: Styles = {};
+  @Local columnVisibility: Visibility = Visibility.Visible;
+  @BuilderParam slots : (params: MyBricks.SlotParams) => void = Slot;
+
+  myBricksColumnModifier = new MyBricksColumnModifier(this.styles.root)
+
+  build() {
+    Column() {
+      BasicMyBricksHarmonyFormSwitch({
+        data: new mybricks_harmony_formSwitch_Data(this.data as MyBricks.Any),
         inputs: createInputsHandle(this),
         outputs: createEventsHandle(this.events),
         styles: this.styles,

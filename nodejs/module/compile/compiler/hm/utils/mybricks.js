@@ -3,7 +3,7 @@ const log = (...args) => {
 }
 
 /** 数据流 */
-class Subject {
+export class Subject {
   _values = []
   _observers = new Set()
 
@@ -334,6 +334,21 @@ export class Page {
     return controller
   }
 
+  /** 打开 */
+  replace(name, value) {
+    const controller = pageController()
+
+    if (value?.subscribe) {
+      value.subscribe((value) => {
+        this.appRouter.replace(name, { value, controller })
+      })
+    } else {
+      this.appRouter.replace(name, { value, controller })
+    }
+
+    return controller
+  }
+
   /** 确定 */
   commit(name, value) {
     const params = this.appRouter.getParams(name)
@@ -360,4 +375,25 @@ export class Page {
     params.controller.close.next(value)
     this.appRouter.pop()
   }
+}
+
+// api
+export const emit = (fn, value) => {
+  const subject = new Subject()
+
+  if (!fn) {
+    return subject
+  }
+
+  const res = fn(value)
+
+  if (res instanceof Promise) {
+    res.then((value) => {
+      subject.next(value)
+    })
+  } else {
+    subject.next(value)
+  }
+
+  return subject;
 }
