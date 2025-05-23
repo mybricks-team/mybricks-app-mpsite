@@ -71,6 +71,8 @@ class MyBricksColumnModifier implements AttributeModifier<ColumnAttribute> {
       instance.flexGrow(style.flex as number)
       instance.flexShrink(1)
       instance.flexBasis("0%")
+    } else {
+      instance.flexShrink(0)
     }
     // position
     if (["absolute", "fixed"].includes(style.position as string)) {
