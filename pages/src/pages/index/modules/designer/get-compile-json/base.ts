@@ -144,6 +144,9 @@ export class BaseJson {
               };
             }
 
+            //强制加入主包配置
+            pageConfig.forceMainPackage = config.forceMainPackage
+
             switch (config.useNavigationStyle) {
               case "default":
                 pageConfig.navigationStyle = "default";
@@ -195,8 +198,8 @@ export class BaseJson {
             item,
             ...(Array.isArray(pageDepsMap[item.id])
               ? pageDepsMap[item.id]
-                  .map((sid) => toJson.scenes.find((p) => p.id === sid))
-                  .filter((p) => p)
+                .map((sid) => toJson.scenes.find((p) => p.id === sid))
+                .filter((p) => p)
               : []),
           ],
         };

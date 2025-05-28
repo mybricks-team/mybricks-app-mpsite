@@ -68,7 +68,7 @@ class MiniappCompiler extends BaseCompiler {
     // 添加分包级的comDef文件
     const subPkgComponentsPath = path.join(pkgTarget, 'components');
     await fse.ensureDir(subPkgComponentsPath);
-    
+
     // 复制组件文件
     depComponents.map(dep => fse.copyFile(dep.runtimePath, path.join(subPkgComponentsPath, path.basename(dep.runtimePath))));
 
@@ -88,7 +88,7 @@ class MiniappCompiler extends BaseCompiler {
     content += `var pkgComDefs = polyfill({ ${comDefBody.join(",")} })`;
     content += "\r";
     content += `module.exports = Object.assign(pkgComDefs, require('./../../components/comDefs'));`
-    
+
     await fse.writeFile(
       path.resolve(subPkgComponentsPath, `./${pkgId}_comDefs.js`),
       content,
@@ -132,7 +132,7 @@ class MiniappCompiler extends BaseCompiler {
         fse.removeSync(runtimePath)
         return
       }
-    
+
       comDefBody.push(`
         "${namespace}":{
           "namespace": "${namespace}",
@@ -256,14 +256,22 @@ export const compilerMiniapp = async (
     css
   );
 
+  //查找开启强制分包的页面
+  let forceMainPackageList = [];
+  for (let i = 0; i < data?.pages?.length; i++) {
+    if (data.pages?.[i].pageConfig?.forceMainPackage) {
+      forceMainPackageList.push(data.pages?.[i].pagePath?.split("/")?.[1])
+    }
+  }
   /** 主包的页面列表 */
-  const mainPackagePageList = [
+  const mainPackagePageList = [...new Set([
     "404",
     "index",
     "login",
     "main",
     ...(tabBarJson || []).map((t) => t?.pagePath?.split("/")?.[1]),
-  ];
+    ...forceMainPackageList
+  ])];
 
   // 如果首页不在白名单内，添加首页
   if (data.appConfig.entryPagePath) {
@@ -329,11 +337,11 @@ export const compilerMiniapp = async (
     const configContent = JSON.stringify({
       ...(type === "weapp"
         ? {
-            // 不支持递归的小程序需要添加全局的comp
-            usingComponents: Object.assign({
-              comp: "../../comp",
-            }, pageMapPluginConfig[pageId]?.usingComponents ?? {}),
-          }
+          // 不支持递归的小程序需要添加全局的comp
+          usingComponents: Object.assign({
+            comp: "../../comp",
+          }, pageMapPluginConfig[pageId]?.usingComponents ?? {}),
+        }
         : {}),
       ...page.pageConfig,
     });
@@ -511,7 +519,7 @@ export const compilerMiniapp = async (
             (str) => {
               return str.replace(
                 /\.\/\.\.\/\.\.\/components\/comDefs/g,
-                `./../../../components/comDefs` 
+                `./../../../components/comDefs`
               );
             }
           );
@@ -540,7 +548,7 @@ export const compilerMiniapp = async (
       path.resolve(projectPath, "./app.json")
     );
     appJson.subPackages = subPackagesJson;
-    
+
     // 剔除在子包的页面
     appJson.pages = appJson.pages.filter((p) =>
       !subPackages.some(pkg => pkg.pages.includes(p.split("/")[1]))
@@ -763,15 +771,15 @@ function getExtName(fileType: FileType, type: CompileType) {
     }
     case [CompileType.alipay, CompileType.dd].includes(type) &&
       fileType === FileType.css: {
-      return `.acss`;
-    }
+        return `.acss`;
+      }
     case type === CompileType.weapp && fileType === FileType.html: {
       return `.wxml`;
     }
     case [CompileType.alipay, CompileType.dd].includes(type) &&
       fileType === FileType.html: {
-      return `.axml`;
-    }
+        return `.axml`;
+      }
   }
 }
 
@@ -896,7 +904,7 @@ function groupPages(pages, shouldSplitComponents, maxSize = 1.5 * 1024 * 1024) {
   /** 计算剩下的页面中，对给定namespace的页面覆盖数量 */
   function getComponentCoverage(namespace, unassignedPages) {
     const pagesWithComponent = componentToPages.get(namespace) || new Set();
-    return new Set([...pagesWithComponent].filter(pageId => 
+    return new Set([...pagesWithComponent].filter(pageId =>
       unassignedPages.has(pageId)
     )).size;
   }
@@ -958,7 +966,7 @@ function groupPages(pages, shouldSplitComponents, maxSize = 1.5 * 1024 * 1024) {
     const unassignedPages = new Set(
       pages.filter(p => !assignedPages.has(p.id)).map(p => p.id)
     );
-    
+
     let bestComponent = null;
     let maxCoverage = 0;
 
