@@ -1390,7 +1390,7 @@ const getAiView = (enableAI, option) => {
               body: JSON.stringify(
                 APP_ENV === 'production' ? getAiEncryptData({
                   model,
-                  // role,
+                  role,
                   messages,
                   tools,
                   tool_choice: 'auto',
