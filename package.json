@@ -1,7 +1,7 @@
 {
   "name": "mybricks-app-mpsite",
-  "version": "0.5.104",
-  "description": "MyBricks 移动端应用",
+  "version": "0.5.105",
+  "description": "小程序和H5的多端解决方案",
   "scripts": {
     "start:dev": "NODE_ENV=development node nodejs/index.ts",
     "start:watch": "nodemon --ext js,ts --exec 'NODE_ENV=development MYBRICKS_PLATFORM_ADDRESS=https://my.mybricks.world node nodejs/index.ts'",
@@ -59,7 +59,7 @@
     "name": "mybricks-app-mpsite",
     "extName": "mpsite",
     "icon": "/mybricks-app-mpsite/public/icon.svg",
-    "title": "移动端应用",
+    "title": "小程序&H5",
     "setting": "setting.html"
   },
   "nodemonConfig": {
