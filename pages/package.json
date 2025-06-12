@@ -55,7 +55,7 @@
   "dependencies": {
     "@mybricks/editors-domain-common": "^1.0.99-beta0",
     "@mybricks/file-parser": "^1.0.19",
-    "@mybricks/plugin-connector-http": "^1.2.33",
+    "@mybricks/plugin-connector-http": "^1.2.35",
     "@mybricks/plugin-note": "^0.0.14",
     "@mybricks/plugin-tools": "^1.0.12",
     "@mybricks/plugin-varbind": "^1.0.1",
