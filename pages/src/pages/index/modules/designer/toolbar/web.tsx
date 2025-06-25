@@ -7,6 +7,7 @@ import { PreviewPopOver } from "./../pop-overs";
 import { Dropdown, message, Alert, Tooltip, Menu } from "antd";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import cx from "classnames";
+import { publish } from "./icons/publish";
 // import Marquee from 'react-fast-marquee';
 import {
   DownOutlined,
@@ -22,6 +23,8 @@ import css from "./web.less";
 import help from "./icons/help"
 
 import { showDownloadConfig, showHarmonyDownloadConfig } from "./model/downloadModel"
+import { preview } from "./icons/preview";
+import { Export } from "./icons/export";
 
 interface PublishParams {
   type: string;
@@ -188,7 +191,7 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
     <>
       <Toolbar
         title={pageModel.file?.name}
-        updateInfo={<Toolbar.LastUpdate onClick={handleSwitch2SaveVersion} />}
+        updateInfo={<Toolbar.LastUpdate onClick={handleSwitch2SaveVersion} isModify={isModify} />}
       >
         {/* <Alert
           style={{ maxWidth: 350 }}
@@ -266,48 +269,79 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
         <Toolbar.Save disabled={!operable} onClick={onSave} dotTip={isModify} />
 
         {
-          CompileType.harmony !== selectType ? <PreviewPopOver onCompile={previewHandle}>
-            <Toolbar.Button onClick={previewHandle}>预览</Toolbar.Button>
-          </PreviewPopOver> : null
+          CompileType.harmony !== selectType ? 
+          <PreviewPopOver onCompile={previewHandle}>
+
+            {/* <Toolbar.Button onClick={previewHandle}>预览</Toolbar.Button> */}
+            <Tooltip
+              placement="bottom"
+              title={"预览"}
+            >
+              <div className={css.preview_btn} onClick={previewHandle}>
+                {preview}
+              </div>
+            </Tooltip>
+          </PreviewPopOver> 
+          : null
         }
 
         {
-          CompileType.harmony !== selectType ? <Toolbar.Button disabled={!globalOperable} onClick={publishHandle}>发布</Toolbar.Button> : null
+          CompileType.harmony !== selectType ?
+            // <Toolbar.Button disabled={!globalOperable} onClick={publishHandle}>发布</Toolbar.Button> 
+            <Tooltip
+              placement="bottom"
+              title={"发布"}
+            >
+              <div className={css.publish_btn} onClick={publishHandle}>
+                {publish}
+              </div>
+            </Tooltip>
+            : null
         }
 
         {[CompileType.weapp, CompileType.alipay, CompileType.dd, CompileType.miniprogram, CompileType.harmony].includes(
           selectType
-        ) && <Toolbar.Button onClick={compileHandle}>下载</Toolbar.Button>}
+        ) && 
+        // <Toolbar.Button onClick={compileHandle}>下载</Toolbar.Button>
+                <Tooltip
+          placement="bottom"
+          title={"下载源码"}
+        >
+        <div className={css.export_btn} onClick={compileHandle}>
+          {Export}
+        </div>
+        </Tooltip>
+        }
 
 
         {/* 判断是不是老文件（没有应用类型数据） */}
         {window.__isOldFile__ === true && (
           <CompileButtonGroups>
-          <Dropdown
-            overlay={
-              <Menu
-                onClick={(e) => {
-                  setSelectType(e.key);
-                  selectTypeStorage.set(e.key);
-                  window.location.reload();
-                }}
-              >
-                {Object.keys(DescMap).map((type) => (
-                  <Menu.Item key={type} style={{ fontSize: 13 }}>
-                    {DescMap[type]}
-                  </Menu.Item>
-                ))}
-              </Menu>
-            }
-            trigger={["click"]}
-          >
-            <CompileButton onClick={() => { }}>
-              <span style={{ color: "#ea732e", fontWeight: "bold" }}>
-                {DescMap[selectType]}
-              </span>
-              <DownOutlined style={{ marginLeft: 3, color: "#ea732e" }}/>
-            </CompileButton>
-          </Dropdown>
+            <Dropdown
+              overlay={
+                <Menu
+                  onClick={(e) => {
+                    setSelectType(e.key);
+                    selectTypeStorage.set(e.key);
+                    window.location.reload();
+                  }}
+                >
+                  {Object.keys(DescMap).map((type) => (
+                    <Menu.Item key={type} style={{ fontSize: 13 }}>
+                      {DescMap[type]}
+                    </Menu.Item>
+                  ))}
+                </Menu>
+              }
+              trigger={["click"]}
+            >
+              <CompileButton onClick={() => { }}>
+                <span style={{ color: "#ea732e", fontWeight: "bold" }}>
+                  {DescMap[selectType]}
+                </span>
+                <DownOutlined style={{ marginLeft: 3, color: "#ea732e" }} />
+              </CompileButton>
+            </Dropdown>
           </CompileButtonGroups>
         )}
 
