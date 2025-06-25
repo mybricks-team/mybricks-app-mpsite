@@ -15,10 +15,10 @@ import versionPlugin from "mybricks-plugin-version";
 
 import { editorAppenderFn } from "./editorAppender";
 
-import { showAIPageModal, MobilePrompts, MobileDefinitions } from '@mybricks/sdk-for-ai'
 import { COMPONENT_NAMESPACE, LOCAL_EDITOR_ASSETS } from "@/constants";
 import { MpConfig, CompileConfig } from "./custom-configs";
 import { getAiEncryptData } from "./utils/get-ai-encrypt-data";
+import aiViewConfig from './configs/aiView'
 import extendsConfig from "./configs/extends";
 // import systemContent from "./system.txt";
 import { message } from "antd";
@@ -199,11 +199,11 @@ export default function ({
       // VarBind(),
     ],
     // comLibLoader: comlibLoader(ctx),
-    // comLibLoader: () => {
-    //   return new Promise((resolve) => {
-    //     resolve([ctx.comlibs[0].editJs])
-    //   })
-    // },
+    comLibLoader: () => {
+      return new Promise((resolve) => {
+        resolve(['http://127.0.0.1:8000/libEdt.js'])
+      })
+    },
     pageMetaLoader(...args) {
       //加载页面元数据
       // return Promise.resolve(undefined)
@@ -214,7 +214,7 @@ export default function ({
         comLibAdder: comLibAdderFunc(ctx),
       }
       : {}),
-    comLibLoader: comlibLoaderFunc(ctx),
+    // comLibLoader: comlibLoaderFunc(ctx),
     pageContentLoader: async (sceneId) => {
       await contentModel.isOpenedPagesContentLoad();
       const cont = await contentModel.getPageContent({ sceneId });
@@ -669,25 +669,6 @@ export default function ({
           // },
         ],
         adder: [
-          ...(isDesignFilePlatform('harmony') ? [] : [
-            {
-              type: 'defined',
-              title: 'AI生成...',
-              load: () => {
-                return new Promise((resolve, reject) => {
-                  const destroy = showAIPageModal({
-                    prompts: MobilePrompts,
-                    definitions: MobileDefinitions,
-                    onGenerateFinish({ templateJson }) {
-                      resolve(templateJson)
-                      destroy?.()
-                    },
-                  })
-                })
-              }
-            },
-            {}
-          ]),
           {
             type: "normal",
             title: `${getPageTitlePrefix()}标签页`,
@@ -1241,18 +1222,25 @@ function getDesignerParams(args) {
 
   switch (true) {
     case extraOption?.expert === 'image': {
-      model = 'anthropic/claude-3.7-sonnet';
+      model = 'anthropic/claude-sonnet-4';
       role = 'image'
       break;
     }
     case ['image'].includes(extraOption?.aiRole): {
-      model = 'anthropic/claude-3.7-sonnet';
+      model = 'anthropic/claude-sonnet-4';
       role = 'image'
       break
     }
     case ['architect'].includes(extraOption.aiRole): {
-      model = 'openai/gpt-4o-2024-11-20';
+      model = 'google/gemini-2.5-pro-preview';
+      // model = 'openai/gpt-4.1'
+      // model = 'deepseek/deepseek-r1-0528'
       role = 'architect'
+      break
+    }
+    case ['expert'].includes(extraOption.aiRole): {
+      model = 'anthropic/claude-sonnet-4';
+      role = 'expert'
       break
     }
     default: {
@@ -1274,6 +1262,7 @@ const getAiView = (enableAI, option) => {
 
   if (enableAI) {
     return {
+      ...aiViewConfig,
       async requestAsStream(messages, ...args) {
         const { context, tools, model, role } = getDesignerParams(args);
         const { write, complete, error, cancel } = context ?? {};
@@ -1377,7 +1366,7 @@ const getAiView = (enableAI, option) => {
           // ]
 
           const response = await fetch(
-            "//ai.mybricks.world/stream-with-tools",
+            APP_ENV === 'production' ? "//ai.mybricks.world/stream-with-tools" : "//ai.mybricks.world/stream-test",
             {
               method: "POST",
               headers: {

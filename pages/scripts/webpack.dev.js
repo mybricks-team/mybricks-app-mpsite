@@ -110,7 +110,7 @@ module.exports = merge(common, {
       chunks: ['setting'],
     }),
     new webpack.DefinePlugin({
-      APP_ENV: JSON.stringify('production')
+      APP_ENV: JSON.stringify('development')
     }),
     new CopyWebpackPlugin({
       patterns: [

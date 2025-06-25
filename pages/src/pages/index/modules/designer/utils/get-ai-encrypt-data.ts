@@ -1,4 +1,4 @@
-import { Utils } from '@mybricks/sdk-for-ai'
+import { Utils } from '@mybricks/ai-utils'
 
 export const getAiEncryptData = Utils.getAiEncryptData
 
