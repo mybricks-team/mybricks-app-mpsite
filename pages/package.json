@@ -62,7 +62,7 @@
     "@mybricks/render-utils": "^0.0.46",
     "@mybricks/render-web": "^1.2.68",
     "@mybricks/rxui": "^1.0.87",
-    "@mybricks/sdk-for-app": "1.0.64",
+    "@mybricks/sdk-for-app": "1.0.65",
     "@mybricks/to-code-react": "^0.0.5-next.22",
     "classnames": "^2.3.1",
     "compare-versions": "^6.1.0",
