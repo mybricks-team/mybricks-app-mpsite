@@ -1392,6 +1392,7 @@ const getAiView = (enableAI, option) => {
                   tool_choice: 'auto',
                 }
               ),
+              credentials: 'include'
             }
           );
 
