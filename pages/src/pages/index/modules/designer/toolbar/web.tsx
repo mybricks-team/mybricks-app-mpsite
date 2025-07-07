@@ -305,7 +305,7 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
         // <Toolbar.Button onClick={compileHandle}>下载</Toolbar.Button>
                 <Tooltip
           placement="bottom"
-          title={"下载源码"}
+          title={"导出应用源代码"}
         >
         <div className={css.export_btn} onClick={compileHandle}>
           {Export}
