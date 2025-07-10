@@ -24,6 +24,7 @@ import extendsConfig from "./configs/extends";
 import { message } from "antd";
 import { CompileType } from "@/types";
 import { getPageTitlePrefix, isDesignFilePlatform } from '@/utils'
+// import { mock1Res, mock2Res } from './mock'
 // import  AICom  from "../../../../../public/ai-com"
 // import typeConfig from "./configs/type";
 // import { PcEditor } from "/Users/stuzhaoxing-office/Program/editors-pc-common/src/index";
@@ -199,11 +200,11 @@ export default function ({
       // VarBind(),
     ],
     // comLibLoader: comlibLoader(ctx),
-    // comLibLoader: () => {
-    //   return new Promise((resolve) => {
-    //     resolve(['http://127.0.0.1:8000/libEdt.js'])
-    //   })
-    // },
+    comLibLoader: () => {
+      return new Promise((resolve) => {
+        resolve(['http://127.0.0.1:8000/libEdt.js'])
+      })
+    },
     pageMetaLoader(...args) {
       //加载页面元数据
       // return Promise.resolve(undefined)
@@ -214,7 +215,7 @@ export default function ({
         comLibAdder: comLibAdderFunc(ctx),
       }
       : {}),
-    comLibLoader: comlibLoaderFunc(ctx),
+    // comLibLoader: comlibLoaderFunc(ctx),
     pageContentLoader: async (sceneId) => {
       await contentModel.isOpenedPagesContentLoad();
       const cont = await contentModel.getPageContent({ sceneId });
@@ -1275,6 +1276,22 @@ const getAiView = (enableAI, option) => {
         cancel?.(() => {
           cancelControl?.abort?.();
         });
+
+        // const isScenond = messages.length > 2
+        // if (isScenond) {
+        //   setTimeout(() => {
+        //     write(mock2Res);
+        //     complete();
+        //   }, 1000)
+        //   return 
+        // }
+
+        // const isFirstOne = messages.length === 2
+        // if (isFirstOne) {
+        //   write(mock1Res);
+        //   complete();
+        //   return 
+        // }
 
         try {
           // messages[0].content = require('./promte.md').default;
