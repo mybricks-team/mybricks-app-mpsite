@@ -200,11 +200,11 @@ export default function ({
       // VarBind(),
     ],
     // comLibLoader: comlibLoader(ctx),
-    comLibLoader: () => {
-      return new Promise((resolve) => {
-        resolve(['http://127.0.0.1:8000/libEdt.js'])
-      })
-    },
+    // comLibLoader: () => {
+    //   return new Promise((resolve) => {
+    //     resolve(['http://127.0.0.1:8000/libEdt.js'])
+    //   })
+    // },
     pageMetaLoader(...args) {
       //加载页面元数据
       // return Promise.resolve(undefined)
@@ -215,7 +215,7 @@ export default function ({
         comLibAdder: comLibAdderFunc(ctx),
       }
       : {}),
-    // comLibLoader: comlibLoaderFunc(ctx),
+    comLibLoader: comlibLoaderFunc(ctx),
     pageContentLoader: async (sceneId) => {
       await contentModel.isOpenedPagesContentLoad();
       const cont = await contentModel.getPageContent({ sceneId });
