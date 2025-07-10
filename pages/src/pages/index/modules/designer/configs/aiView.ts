@@ -37,14 +37,14 @@ const getNewDSL = genGetNewDsl({
     }
   
     // 处理幻觉
-    if (component.style?.paddingLeft) {
-      component.style.marginLeft = component.style?.paddingLeft
-      delete component.style?.paddingLeft
-    }
-    if (component.style?.paddingRight) {
-      component.style.marginRight = component.style?.paddingRight
-      delete component.style?.paddingRight
-    }
+    // if (component.style?.paddingLeft) {
+    //   component.style.marginLeft = component.style?.paddingLeft
+    //   delete component.style?.paddingLeft
+    // }
+    // if (component.style?.paddingRight) {
+    //   component.style.marginRight = component.style?.paddingRight
+    //   delete component.style?.paddingRight
+    // }
   
     // 处理绝对定位兼容
     const rootStyle = component?.style?.styleAry?.find?.(s => s.selector === ':root')?.css
@@ -69,6 +69,26 @@ const getNewDSL = genGetNewDsl({
       }
   
       delete rootStyle.position
+    }
+
+    // 兼容布局写到rootStyle的情况
+    if (rootStyle?.flexDirection) {
+      if (!component.style) {
+        component.style = {}
+      }
+      component.style.flexDirection = rootStyle.flexDirection
+    }
+    if (rootStyle?.alignItems) {
+      if (!component.style) {
+        component.style = {}
+      }
+      component.style.alignItems = rootStyle.alignItems
+    }
+    if (rootStyle?.justifyContent) {
+      if (!component.style) {
+        component.style = {}
+      }
+      component.style.justifyContent = rootStyle.justifyContent
     }
   
     // // 兼容一些样式加到了layout上的情况
@@ -155,8 +175,9 @@ const getNewDSL = genGetNewDsl({
               break
             }
             case widthType === 'number': {
-              base.widthMode = 'number'
-              base.width = parseFloat(comStyle?.width)
+              // base.widthMode = 'number'
+              // base.width = parseFloat(comStyle?.width)
+               base.widthMode = 'fit-content'
               break
             }
           }
@@ -252,7 +273,7 @@ const getNewDSL = genGetNewDsl({
     }
   
     delete component.comAry
-  
+
     if (component?.style?.flex) {
       delete component.style.flex
     }
@@ -278,6 +299,11 @@ const getNewDSL = genGetNewDsl({
       delete component?.style?.styleAry
     }
     component.asRoot = true
+  },
+  'system.page:after': (component) => {
+    if (component?.slots?.content.style) {
+      component.slots.content.style.height = '100%'
+    }
   }
 })
 
@@ -307,13 +333,17 @@ const getDSLPrompts = genGetDslPrompts({
   componentSuggestionPrompts: `
   1. 基础布局必须使用flex组件，禁止使用容器(mybricks.taro.containerBasic)；
   2. 文本、图片、按钮组件属于基础组件，任何情况下都可以优先使用，即使不在允许使用的组件里；
-  3. 关于图片和图标
-    3.1 如果是常规图片，使用https://ai.mybricks.world/image-search?term=dog&w=100&h=200，其中term代表搜索词，w和h可以配置图片宽高；
-    3.2 如果是图标和Logo，可以使用https://placehold.co来配置一个带文本和颜色的图标，其中text需要为图标的英文搜索词，禁止使用emoji或者特殊符号；
-  4. 尽可能使用margin替代padding，多注意组件是否需要配置margin；
-  5. 仔细是否需要用到绝对定位，是相对于父元素的；
-  6. system.page下方元素注意配置左右margin；
-  7. 由于没有图标组件，需要使用图片组件替代；
+  3. 关于图片链接，首先明确我们会在发现图标、图片、Logo的时候使用图片组件；
+    - 如果是Logo，使用https://placehold.co?text=Logo来配置一个带文本和颜色的图标；
+    - 如果是图标，使用https://placehold.co?text=icon来配置一个带文本和颜色的图标，并且建议对图片组件配置圆角；
+    - 如果是图片，使用https://ai.mybricks.world/image-search?term=dog&w=100&h=200，其中term代表搜索词，w和h可以配置图片宽高；
+    注意参数：
+      - 对于https://placehold.co的text参数的值，必须为英文字符，，不允许为中文字符，如果是中文可以用拼音首字母；
+      - 对于https://placehold.co的颜色，背景颜色和文颜色要区分开；
+  4. 关于图标，图标禁止使用emoji或者特殊符号，需要使用图片组件来替代实现，使用第3点提及的链接；
+  5. 注意margin和padding的结合使用，如果可以则建议用margin；
+  6. 仔细是否需要用到绝对定位，是相对于父元素的；
+  7. system.page下方元素注意配置左右margin，特殊情况比如导航栏这类通栏效果，和背景通栏效果不要配置margin；
   `
 })
 
