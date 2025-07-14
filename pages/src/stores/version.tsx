@@ -3,6 +3,7 @@ import { notification } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import dayjs from "dayjs";
 import { pageModel } from "./page";
+import updateTip from "./components/updateTip";
 
 const tipStyle = { color: "#FA6400" };
 
@@ -20,7 +21,7 @@ class Version {
   /** 允许对比 */
   allowCompare = true;
 
-  constructor() {}
+  constructor() { }
 
   // 对比
   compare(file) {
@@ -65,14 +66,11 @@ class Version {
 
         notification.open({
           key: this.compareNotificationKey,
-          message: '版本更新提示',
+          message: '',
+          style: { borderRadius: "8px", padding: "4px" },
           description: (
             <>
-              <div>当前最新保存版本号为 <b style={tipStyle}>{file.version}</b></div>
-              <div>由 <b style={tipStyle}>{file.updatorName || file.updatorId || file.creatorName || file.creatorId}</b> 保存</div>
-              <div>当前保存内容：</div>
-              <b style={tipStyle}>应用全局配置</b>
-              {description.length ? description.map((des) => des) : null}
+              {updateTip({ versions: file.version, updatorName: file.updatorName || file.updatorId || file.creatorName || file.creatorId, description, isglobalUpdate: true })}
             </>
           ),
           duration: null,
@@ -98,7 +96,7 @@ class Version {
               } else {
                 description.push(<>，<b style={tipStyle}>{value.title}</b></>)
               }
-              
+
               value.fileContentId = extraFile.fileContentId // 更新本地信息
               value.updated = true // 说明有版本更新，不允许上锁了
             }
@@ -113,13 +111,11 @@ class Version {
 
         notification.open({
           key: this.compareNotificationKey,
-          message: '版本更新提示',
+          message: '',
+          style: { borderRadius: "8px", padding: "4px" },
           description: (
             <>
-              <div>当前最新保存版本号为 <b style={tipStyle}>{file.version}</b></div>
-              <div>由 <b style={tipStyle}>{file.updatorName || file.updatorId || file.creatorName || file.creatorId}</b> 保存</div>
-              <div>当前保存内容：</div>
-              {description.map((des) => des)}
+              {updateTip({ versions: file.version, updatorName: file.updatorName || file.updatorId || file.creatorName || file.creatorId, description, isglobalUpdate: false })}
             </>
           ),
           duration: null,
@@ -140,13 +136,13 @@ export const versionModel = new Version();
  * @returns    最终展示的时间格式
  */
 export function unifiedTime(time) {
-	if (isToday(time)) {
-		return dayjs(time).format('HH:mm');
-	} else if (isThisYear(time)) {
-		return dayjs(time).format('M月D日 HH:mm');
-	}
+  if (isToday(time)) {
+    return dayjs(time).format('HH:mm');
+  } else if (isThisYear(time)) {
+    return dayjs(time).format('M月D日 HH:mm');
+  }
 
-	return dayjs(time).format('YYYY年M月D日');
+  return dayjs(time).format('YYYY年M月D日');
 }
 
 /**
@@ -155,10 +151,10 @@ export function unifiedTime(time) {
  * @returns    是否今天
  */
 function isToday(time) {
-	const t = dayjs(time).format('YYYY-MM-DD');
-	const n = dayjs().format('YYYY-MM-DD');
+  const t = dayjs(time).format('YYYY-MM-DD');
+  const n = dayjs().format('YYYY-MM-DD');
 
-	return t === n;
+  return t === n;
 }
 
 /**
@@ -167,8 +163,8 @@ function isToday(time) {
  * @returns    是否今年
  */
 function isThisYear(time) {
-	const t = dayjs(time).format('YYYY');
-	const n = dayjs().format('YYYY');
+  const t = dayjs(time).format('YYYY');
+  const n = dayjs().format('YYYY');
 
-	return t === n;
+  return t === n;
 }

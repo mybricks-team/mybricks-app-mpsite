@@ -156,9 +156,9 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
 
 
   const publishHandle = () => {
-    if (!globalOperable) {
-      return;
-    }
+    // if (!globalOperable) {
+    //   return;
+    // }
     if ([CompileType.weapp, CompileType.alipay, CompileType.miniprogram, CompileType.dd].includes(selectType)) {
       //支付宝小程序发布还没做，所以点击后暂时先用小程序的发布逻辑
       showWeappRequireModal({
@@ -228,12 +228,13 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
         // pollable={false} // 测试
         />
 
-
+{/* 
         <Tooltip
           placement="bottom"
           title={"查看教程文档"}
-        >
+        > */}
           <div
+            data-mybricks-tip={`{content:'查看教程文档',position:'bottom'}`}
             className={css.help_btn}
             onClick={() => {
               window.open(
@@ -246,23 +247,27 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
               alt=""
             />
           </div>
-        </Tooltip>
+        {/* </Tooltip> */}
 
         {pageModel.isNew &&
           window.__type__ === "mpa" &&
           (globalOperable || operable) ? (
-          <Tooltip
-            placement="bottom"
-            title={
-              globalOperable
-                ? "当前保存包含应用内容以及上锁画布"
-                : "当前保存仅包含上锁画布"
-            }
-          >
+          // <Tooltip
+          //   placement="bottom"
+          //   title={
+          //     globalOperable
+          //       ? "当前保存包含应用内容以及上锁画布"
+          //       : "当前保存仅包含上锁画布"
+          //   }
+          // >
             <ExclamationCircleOutlined
               style={{ color: isModify ? "#FA6400" : "inherit", opacity: 0.5 }}
+              data-mybricks-tip={`{content:'${globalOperable
+                ? "当前保存包含应用内容以及上锁画布"
+                : "当前保存仅包含上锁画布"
+              }',position:'bottom'}`}
             />
-          </Tooltip>
+          // </Tooltip>
         ) : null}
 
 
@@ -273,14 +278,15 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
           <PreviewPopOver onCompile={previewHandle}>
 
             {/* <Toolbar.Button onClick={previewHandle}>预览</Toolbar.Button> */}
-            <Tooltip
+            {/* <Tooltip
               placement="bottom"
               title={"预览"}
-            >
-              <div className={css.preview_btn} onClick={previewHandle}>
+
+            > */}
+              <div className={css.preview_btn} onClick={previewHandle} data-mybricks-tip={`{content:'预览',position:'bottom'}`} >
                 {preview}
               </div>
-            </Tooltip>
+            {/* </Tooltip> */}
           </PreviewPopOver> 
           : null
         }
@@ -288,14 +294,14 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
         {
           CompileType.harmony !== selectType ?
             // <Toolbar.Button disabled={!globalOperable} onClick={publishHandle}>发布</Toolbar.Button> 
-            <Tooltip
-              placement="bottom"
-              title={"发布"}
-            >
-              <div className={css.publish_btn} onClick={publishHandle}>
+            // <Tooltip
+            //   placement="bottom"
+            //   title={"发布"}
+            // >
+              <div className={css.publish_btn} onClick={publishHandle} data-mybricks-tip={`{content:'发布',position:'bottom'}`}>
                 {publish}
               </div>
-            </Tooltip>
+            // </Tooltip>
             : null
         }
 
@@ -303,14 +309,14 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
           selectType
         ) && 
         // <Toolbar.Button onClick={compileHandle}>下载</Toolbar.Button>
-                <Tooltip
-          placement="bottom"
-          title={"导出应用源代码"}
-        >
-        <div className={css.export_btn} onClick={compileHandle}>
+        //         <Tooltip
+        //   placement="bottom"
+        //   title={"导出应用源代码"}
+        // >
+        <div className={css.export_btn} onClick={compileHandle} data-mybricks-tip={`{content:'导出应用源代码',position:'left'}`}>
           {Export}
         </div>
-        </Tooltip>
+        // </Tooltip>
         }
 
 
