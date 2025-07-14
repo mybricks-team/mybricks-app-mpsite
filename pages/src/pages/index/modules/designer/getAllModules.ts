@@ -153,6 +153,9 @@ export const getAllModulesJsCode = async (pages, plugins, options = {}) => {
   let jsCode = JS_HEADER;
   /** 按页面分开的代码 */
   let pagesJsCode = {};
+
+  const allModulesFilterMap = {}
+
   for (let i = 0; i < pages.length; i++) {
     let page = pages[i];
     let json = page?.pageToJson ?? {};
@@ -190,7 +193,10 @@ export const getAllModulesJsCode = async (pages, plugins, options = {}) => {
             }
             pagesJsCode[pageId] += content;
           } else {
-            jsCode += content;
+            if (!allModulesFilterMap[`js_${key}`]) {
+              allModulesFilterMap[`js_${key}`] = true;
+              jsCode += content;
+            }
           }
 
           delete jsonComs[key].model.data.inputSchema;
@@ -221,7 +227,10 @@ export const getAllModulesJsCode = async (pages, plugins, options = {}) => {
                 }
                 pagesJsCode[pageId] += content;
               } else {
-                jsCode += content;
+                if (!allModulesFilterMap[`ui_${key}`]) {
+                  allModulesFilterMap[`ui_${key}`] = true;
+                  jsCode += content;
+                }
               }
               delete com.model.data._renderCode;
             } else {
