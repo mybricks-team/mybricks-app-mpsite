@@ -1,6 +1,6 @@
 {
   "name": "mybricks-app-mpsite",
-  "version": "0.5.117",
+  "version": "0.5.118",
   "description": "小程序和H5的多端解决方案",
   "scripts": {
     "start:dev": "NODE_ENV=development node nodejs/index.ts",
@@ -29,7 +29,7 @@
   "dependencies": {
     "@mybricks/color-picker": "^1.0.9",
     "@mybricks/rocker-commons": "^0.0.2",
-    "@mybricks/sdk-for-app": "^1.0.66",
+    "@mybricks/sdk-for-app": "^1.0.69",
     "@mybricks/to-code-react": "^0.0.5-next.40",
     "@nestjs/common": "^8.0.0",
     "@nestjs/core": "^8.0.0",
