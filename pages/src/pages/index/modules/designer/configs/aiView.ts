@@ -1,5 +1,5 @@
-// import { getNewDSL as genGetNewDsl, getDSLPrompts as genGetDslPrompts, getSystemPrompts as genGetSystemPrompts, DslHelper, Services } from '/Users/cocolbell/Desktop/projects/mybricks/sdk-for-ai/dist/index.umd'
-import { getNewDSL as genGetNewDsl, getDSLPrompts as genGetDslPrompts, getSystemPrompts as genGetSystemPrompts, DslHelper, Services } from '@mybricks/ai-utils'
+import { getNewDSL as genGetNewDsl, getDSLPrompts as genGetDslPrompts, getSystemPrompts as genGetSystemPrompts, DslHelper, Services } from '/Users/cocolbell/Desktop/projects/mybricks/ai-utils/dist/index.umd'
+// import { getNewDSL as genGetNewDsl, getDSLPrompts as genGetDslPrompts, getSystemPrompts as genGetSystemPrompts, DslHelper, Services } from '@mybricks/ai-utils'
 
 const { checkValueType, getValidSlotStyle, getValidSizeValue, transformToValidBackground } = DslHelper
 
@@ -347,7 +347,7 @@ const getDSLPrompts = genGetDslPrompts({
   `
 })
 
-export const getExamplePrompts = () => {
+const getExamplePrompts = () => {
   return `
   <example>
     <user_query>搭建两个竖排的按钮，按钮宽度固定 + 铺满</user_query>
@@ -375,10 +375,10 @@ export const getExamplePrompts = () => {
   `
 }
 
-const getAvailable = Services.getAvailable
+export const getAIResponse = Services.getAIResponse
 
 export default {
-  getAvailable,
+  getAvailable: Services.getAvailable,
   getNewDSL,
   getDSLPrompts,
   getSystemPrompts,

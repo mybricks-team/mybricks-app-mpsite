@@ -18,7 +18,7 @@ import { editorAppenderFn } from "./editorAppender";
 import { COMPONENT_NAMESPACE, LOCAL_EDITOR_ASSETS } from "@/constants";
 import { MpConfig, CompileConfig } from "./custom-configs";
 import { getAiEncryptData } from "./utils/get-ai-encrypt-data";
-import aiViewConfig from './configs/aiView'
+import aiViewConfig, { getAIResponse } from './configs/aiView'
 import extendsConfig from "./configs/extends";
 // import systemContent from "./system.txt";
 import { message } from "antd";
@@ -1273,9 +1273,9 @@ const getAiView = (enableAI, option) => {
 
         const cancelControl = !!AbortController ? new AbortController() : null;
 
-        cancel?.(() => {
-          cancelControl?.abort?.();
-        });
+        // cancel?.(() => {
+        //   cancelControl?.abort?.();
+        // });
 
         // const isScenond = messages.length > 2
         // if (isScenond) {
@@ -1383,50 +1383,67 @@ const getAiView = (enableAI, option) => {
           //   }
           // ]
 
-          const response = await fetch(
-            APP_ENV === 'production' ? "//ai.mybricks.world/stream-with-tools" : "//ai.mybricks.world/stream-test",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                ...(role ? {
-                  "M-Request-Role": role,
-                } : {})
-              },
-              signal: cancelControl?.signal,
-              body: JSON.stringify(
-                APP_ENV === 'production' ? getAiEncryptData({
-                  model,
-                  role,
-                  messages,
-                  tools,
-                  tool_choice: 'auto',
-                  // tool_choice: {"type": "function", "function": {"name": "query_knowledges"}},
-                }) : {
-                  model,
-                  messages,
-                  tools,
-                  tool_choice: 'auto',
-                }
-              ),
-              credentials: 'include'
-            }
-          );
+          const { abort } = await getAIResponse({
+            model,
+            messages,
+            role,
+            tools
+          }, {
+            onMessage: (chunk) => {
+              write(chunk);
+            },
+            onComplete: (content) => {
+              complete();
+            },
+            devMode: APP_ENV !== 'production',
+          })
 
-          const reader = response.body.getReader();
-          const decoder = new TextDecoder();
+          cancel?.(abort)
 
-          while (true) {
-            const { done, value } = await reader.read();
-            if (done) {
-              break;
-            }
+          // const response = await fetch(
+          //   APP_ENV === 'production' ? "//ai.mybricks.world/stream-with-tools" : "//ai.mybricks.world/stream-test",
+          //   {
+          //     method: "POST",
+          //     headers: {
+          //       "Content-Type": "application/json",
+          //       ...(role ? {
+          //         "M-Request-Role": role,
+          //       } : {})
+          //     },
+          //     signal: cancelControl?.signal,
+          //     body: JSON.stringify(
+          //       APP_ENV === 'production' ? getAiEncryptData({
+          //         model,
+          //         role,
+          //         messages,
+          //         tools,
+          //         tool_choice: 'auto',
+          //         // tool_choice: {"type": "function", "function": {"name": "query_knowledges"}},
+          //       }) : {
+          //         model,
+          //         messages,
+          //         tools,
+          //         tool_choice: 'auto',
+          //       }
+          //     ),
+          //     credentials: 'include'
+          //   }
+          // );
 
-            const chunk = decoder.decode(value, { stream: true });
-            write(chunk);
-          }
+          // const reader = response.body.getReader();
+          // const decoder = new TextDecoder();
 
-          complete();
+          // while (true) {
+          //   const { done, value } = await reader.read();
+          //   if (done) {
+          //     break;
+          //   }
+
+          //   const chunk = decoder.decode(value, { stream: true });
+          //   write(chunk);
+          // }
+
+          // complete();
         } catch (ex) {
           error(ex);
         }
