@@ -1,5 +1,5 @@
-import { getNewDSL as genGetNewDsl, getDSLPrompts as genGetDslPrompts, getSystemPrompts as genGetSystemPrompts, DslHelper, Services } from '/Users/cocolbell/Desktop/projects/mybricks/ai-utils/dist/index.umd'
-// import { getNewDSL as genGetNewDsl, getDSLPrompts as genGetDslPrompts, getSystemPrompts as genGetSystemPrompts, DslHelper, Services } from '@mybricks/ai-utils'
+// import { getNewDSL as genGetNewDsl, getDSLPrompts as genGetDslPrompts, getSystemPrompts as genGetSystemPrompts, DslHelper, Services } from '/Users/cocolbell/Desktop/projects/mybricks/ai-utils/dist/index.umd'
+import { getNewDSL as genGetNewDsl, getDSLPrompts as genGetDslPrompts, getSystemPrompts as genGetSystemPrompts, DslHelper, Services } from '@mybricks/ai-utils'
 
 const { checkValueType, getValidSlotStyle, getValidSizeValue, transformToValidBackground } = DslHelper
 
