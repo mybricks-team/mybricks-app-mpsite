@@ -121,12 +121,24 @@ const injectComlibsScriptContent = async (data) => {
       .map((t) => getScrtptContentFromNetwork(t))
   );
   // 这里只需要让_mybricks_loaded_comlibs_调用的时候执行组件初始化就行，这个时机才有React、Taro依赖的东西，同时不需要返回有意义的对象，因为rendertaro会去获取_comlib_rt_的东西
-  const scriptContent = `
-      function execComlibs() {
-          ${res.map((r) => r.content).join("\n")}
-      }
-      window._mybricks_loaded_comlibs_ = function() { execComlibs(); return Promise.resolve({}) }
-  `;
+const scriptContent = `
+  // 先定义空函数，避免未定义错误
+  window._mybricks_loaded_comlibs_ = window._mybricks_loaded_comlibs_ || function() {
+    return Promise.resolve({});
+  };
+
+  // 真正加载逻辑
+  function execComlibs() {
+    ${res.map(r => r.content).join('\n')}
+  }
+
+  // 覆盖原先的函数
+  window._mybricks_loaded_comlibs_ = function() {
+    execComlibs();
+    return Promise.resolve({});
+  };
+
+`;
   return scriptContent;
 };
 
