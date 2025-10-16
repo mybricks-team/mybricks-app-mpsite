@@ -133,7 +133,7 @@ export function toJSON(toplViewModel, opts: {
           const realFPin = fPin.forkedFrom || fPin
           
           const fp = realFPin.parent
-          if (fp._type === 0) {//frame
+          if (fp?._type === 0) {//frame
             const forkedFromJointPin = realFPin.forkedAsJoint//joint
             if (forkedFromJointPin) {
               const pinHostId = forkedFromJointPin.from?.hostId || forkedFromJointPin.hostId
