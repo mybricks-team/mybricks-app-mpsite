@@ -1,5 +1,4 @@
-import * as Arrays from "../utils/arrays";
-import {toFrameJSON} from './module'
+import {toFrameJSON} from './forUIModule'
 
 export function toJSON(toplViewModel, opts: {
   needClone?: boolean,
@@ -11,7 +10,7 @@ export function toJSON(toplViewModel, opts: {
   const pinRelsReg = {}
   const pinProxyReg = {}
   
-  const fxFrames = []
+  const frames = []
   
   //const themes = []
   
@@ -84,6 +83,11 @@ export function toJSON(toplViewModel, opts: {
           return
         }
         
+        if(cons.find(tc=>tc.id===con.id)){
+          debugger
+          return//重复连接
+        }
+        
         let timerPinInputId
         if (fPin.parent.timerInputPin) {
           timerPinInputId = fPin.parent.timerInputPin.id
@@ -122,21 +126,18 @@ export function toJSON(toplViewModel, opts: {
             comId: realParentCom.runtime.id,
             def: realParentCom.runtime.def,
             timerPinInputId,
-            // pinId: realFPin.hostId,
-            // pinType: realFPin.type,
-            // direction: realFPin.direction,
-            pinId: realFPin.hostId || realFPin.pinHostId,
-            pinType: realFPin.type || "normal",
-            direction: realFPin.direction || "input",
+            pinId: realFPin.hostId,
+            pinType: realFPin.type,
+            direction: realFPin.direction,
             extBinding: realFPin.extBinding,
-            isIgnored: con.isIgnored,
-            isBreakpoint: opts?.forDebug ? con.isBreakpoint : void 0/////TODO
+            isIgnored: opts?.forDebug ? con.isIgnored : void 0,
+            isBreakpoint: opts?.forDebug ? con.isBreakpoint : void 0
           })
         } else {
           const realFPin = fPin.forkedFrom || fPin
           
           const fp = realFPin.parent
-          if (fp?._type === 0) {//frame
+          if (fp._type === 0) {//frame
             const forkedFromJointPin = realFPin.forkedAsJoint//joint
             if (forkedFromJointPin) {
               const pinHostId = forkedFromJointPin.from?.hostId || forkedFromJointPin.hostId
@@ -153,7 +154,7 @@ export function toJSON(toplViewModel, opts: {
                 pinId: pinHostId,
                 pinType: 'joint',
                 direction: forkedFromJointPin.direction,
-                isIgnored: con.isIgnored,
+                isIgnored: opts?.forDebug ? con.isIgnored : void 0,
                 isBreakpoint: opts?.forDebug ? con.isBreakpoint : void 0
               }
               
@@ -179,7 +180,7 @@ export function toJSON(toplViewModel, opts: {
                 pinId: realFPin.hostId,
                 pinType: realFPin.type,
                 direction: realFPin.direction,
-                isIgnored: con.isIgnored,
+                isIgnored: opts?.forDebug ? con.isIgnored : void 0,
                 isBreakpoint: opts?.forDebug ? con.isBreakpoint : void 0
               })//{frameId, comId, pinId}
             }
@@ -204,59 +205,11 @@ export function toJSON(toplViewModel, opts: {
     }
   }
   
-  if (toplViewModel.varComAry) {//全局变量
-    toplViewModel.varComAry.forEach(com => {
-      const rt = com.runtime
-      const def = rt.def
-      
-      const configPinIdAry = []
-      const inputPinIdAry = []
-      const outPinIdAry = []
-      
-      const geo = rt.geo
-      
-      const model = opts?.needClone ? JSON.parse(JSON.stringify(rt.model)) : rt.model
-      
-      comsReg[rt.id] = {
-        id: rt.id,
-        def,
-        title: rt.title,
-        model,
-        reservedEditorAry: geo ? geo.reservedEditorAry : void 0,
-        configs: configPinIdAry,
-        inputs: inputPinIdAry,
-        outputs: outPinIdAry
-      }
-      // if(com.title==='对话框'){
-      //   debugger
-      // }
-      
-      Arrays.each(pin => {
-          scanInputPin(pin, rt.id)
-          inputPinIdAry.push(pin.hostId)
-        }, com.inputPins,
-        com.inputPinsInModel,
-        com.inputPinExts,
-      )
-      
-      Arrays.each(pin => {
-          scanOutputPin(pin, rt.id)
-          outPinIdAry.push(pin.hostId)
-        }, com.outputPins,
-        com.outputPinsInModel,
-        com.outputPinExts,
-        com.outputPinNexts)
-      // if (com.runtime.def.rtType === 'js') {
-      //
-      // }
-    })
-  }
-  
-  if (toplViewModel.frames) {//全局Fx
+  if (toplViewModel.frames) {
     toplViewModel.frames.forEach(frame => {
-      if (frame.type === 'fx') {
+      if (frame.bizType === 'service') {
         const frameJSON = toFrameJSON(frame, {}, opts)
-        fxFrames.push(frameJSON)
+        frames.push(frameJSON)
       }
     })
   }
@@ -266,6 +219,6 @@ export function toJSON(toplViewModel, opts: {
     consReg,
     pinRels: pinRelsReg,
     pinProxies: pinProxyReg,
-    fxFrames
+    frames
   }
 }

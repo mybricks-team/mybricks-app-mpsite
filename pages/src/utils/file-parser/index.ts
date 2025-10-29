@@ -1,6 +1,10 @@
-import {toJSON} from './to-json/module'
-import {toJSON as toGlobalJSON} from './to-json/global'
+import {toJSON} from './to-json/forUIModule'
+import {toJSON as toGlobalJSON} from './to-json/forUIGlobal'
+import {toJSON as toServiceJSON} from './to-json/forService'
 import {parsePage, parseProject} from './rxui-parser'
+import { getPageTemplateJSON } from './template'
+
+export {getPageTemplateJSON} from './template'
 
 export function getGlobalJSON(toplViewModel, opts?: {
   needClone?: boolean,
@@ -9,26 +13,69 @@ export function getGlobalJSON(toplViewModel, opts?: {
   return toGlobalJSON(toplViewModel, opts || {})
 }
 
+export function getServiceJSON(toplViewModel, opts?: {
+  needClone?: boolean,
+  withMockData?: boolean
+}) {
+  return toServiceJSON(toplViewModel, opts || {})
+}
+
 export function getJSONFromModule(module: {
                                     slot,
                                     frame
                                   },
                                   opts?: {
+                                    forMPA?: boolean,
+                                    forDebug?:boolean,
                                     needClone?: boolean,
                                     withMockData?: boolean,
                                     onlyDiff?: {
                                       getComDef: () => {}
                                     }
                                   }) {
-  return toJSON(module, opts || {})
+  if (opts?.forMPA) {
+    const {slot, frame} = module
+    
+    const json = [toJSON({
+      slot: slot,
+      frame: frame
+    }, opts || {})]
+    
+    if (slot.slots && slot.slots.length > 0) {
+      slot.slots.forEach((curSlot, idx) => {
+        const curFrame = frame === null || frame === void 0 ? void 0 : frame.frameAry.find(frame => {
+          if (frame.id === curSlot.id) {
+            return frame;
+          }
+        })
+        
+        json.push(toJSON({
+          slot: curSlot,
+          frame: curFrame
+        }, opts || {}))
+      })
+    }
+    
+    return json
+  } else {
+    return toJSON(module, opts || {})
+  }
 }
 
-export function toJSONFromPageDump(pageJSON: string) {
+export function toJSONFromPageDump(pageJSON: string, opts?: { forMPA: boolean }) {
   const content = JSON.parse(pageJSON).content
   
   const temp = parsePage(content)
   
-  return getJSONFromModule(temp as any)
+  return getJSONFromModule(temp as any, opts)
+}
+
+export function getPageTemplateJSONFromDumpJson(pageJSON: string, opts?: { forMPA: boolean }) {
+  const content = JSON.parse(pageJSON)?.content
+  
+  const temp = parsePage(content?.['xg.desn.stageview'])?.mainModule;
+
+  return getPageTemplateJSON(temp as any)
 }
 
 export function toJSONFromProjectDump(pageJSON: string | { projectContent }) {
