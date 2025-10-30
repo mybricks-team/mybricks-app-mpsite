@@ -332,6 +332,7 @@ export function toFrameJSON(frame, regs: {
             timerPinInputId = fPin.parent.timerInputPin.id
           }
         }
+
         
         const frame = con.parent.parent
         if (frame) {//frame 可能不存在（对应的diagramModelparent为空)
