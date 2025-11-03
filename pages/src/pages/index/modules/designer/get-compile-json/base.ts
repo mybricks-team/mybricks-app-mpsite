@@ -94,6 +94,11 @@ export class BaseJson {
 
     const pageAliasMap = {};
 
+    toJson.scenes.push(...Object.entries(toJson.modules).reduce((pre: any, [_, { json }]: any) => {
+      pre.push(json)
+      return pre
+    }, []))
+
     toJson.scenes
       .filter((item) => {
         return isPageScene(item);
