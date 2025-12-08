@@ -24,6 +24,7 @@ import extendsConfig from "./configs/extends";
 import { message } from "antd";
 import { CompileType } from "@/types";
 import { getPageTitlePrefix, isDesignFilePlatform } from '@/utils'
+import AIPlugin from './utils/get-ai-plugin'
 // import { mock1Res, mock2Res } from './mock'
 // import  AICom  from "../../../../../public/ai-com"
 // import typeConfig from "./configs/type";
@@ -76,6 +77,7 @@ function getComs() {
 
 export default function ({
   ctx,
+  appData,
   pageModel,
   save,
   designerRef,
@@ -83,6 +85,9 @@ export default function ({
   appConfig,
   setOperable,
 }) {
+  const aiViewConfig = getAiView(true, {
+    model: DEFAULT_AI_MODEL,
+  })
   // console.log("应用设置: ", appConfig);
   return {
     type: window.__type__,
@@ -197,6 +202,17 @@ export default function ({
         dump: contentModel.dump,
         loadContent: (importData) => contentModel.loadContent(importData, ctx),
       }),
+             AIPlugin({
+        key: pageModel?.fileId,
+        user: {
+          name: appData.user.name || appData.user.email || "user",
+          avatar: appData.user.avatar
+        },
+        // requestAsStream
+        requestAsStream: ({ messages, emits, aiRole }) => {
+          return aiViewConfig.requestAsStream(messages, undefined, emits, { aiRole });
+        }
+      })
       // VarBind(),
     ],
     // comLibLoader: comlibLoader(ctx),
@@ -833,9 +849,7 @@ export default function ({
     // aiView: getAiView(appConfig?.publishLocalizeConfig?.enableAI, {
     //   model: appConfig?.publishLocalizeConfig?.selectAIModel
     // }), // TODO: 开发settings页面后再放开注释
-    aiView: isDesignFilePlatform('harmony') ? null : getAiView(true, {
-      model: DEFAULT_AI_MODEL,
-    }),
+    aiView: aiViewConfig,
     com: {
       env: {
         callConnector(connector, params, connectorConfig) {

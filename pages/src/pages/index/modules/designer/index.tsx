@@ -1492,6 +1492,7 @@ const Designer = ({ appData }) => {
               ctx: window?.mybricks?.createObservable(
                 Object.assign(ctx, { latestComlibs })
               ),
+              appData,
               pageModel: window?.mybricks?.createObservable(pageModel),
               save: onSave,
               designerRef,
