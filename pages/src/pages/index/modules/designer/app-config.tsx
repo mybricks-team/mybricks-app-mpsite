@@ -1217,7 +1217,12 @@ export function mergeEditorOptions(
   return options;
 }
 
-const DEFAULT_MODEL = 'deepseek-chat';
+const DEFAULT_MODEL = 'google/gemini-2.5-flash';
+// const DEFAULT_MODEL = 'z-ai/glm-4.6'
+// const DEFAULT_MODEL = 'openai/gpt-4.1-mini'
+// const DEFAULT_MODEL = 'anthropic/claude-haiku-4.5'
+// const DEFAULT_MODEL = 'openai/gpt-5-mini'
+// const DEFAULT_MODEL = 'x-ai/grok-4.1-fast'
 function getDesignerParams(args) {
   let context = args[0];
   let tools = undefined;

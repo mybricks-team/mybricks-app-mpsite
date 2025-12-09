@@ -11,7 +11,7 @@
     "build": "npm run bootstrap && cd ./pages && npm run build",
     "publishToNpm:offline": "npm i && cd pages && npm run build:offline && cd ../ && node sync_offline.js",
     "publishToNpm:serviceUpdate": "npm run build && node sync.js --origin=https://my.mybricks.world",
-    "publishToNpm": "npm run build && npm publish --registry=https://registry.npmjs.org && node sync.js --origin=https://my.mybricks.world --noServiceUpdate"
+    "publishToNpm:noServiceUpdate": "npm run build && node sync.js --origin=https://my.mybricks.world --noServiceUpdate"
   },
   "keywords": [
     "mybricks",
