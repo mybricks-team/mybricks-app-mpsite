@@ -18,7 +18,8 @@ import { editorAppenderFn } from "./editorAppender";
 import { COMPONENT_NAMESPACE, LOCAL_EDITOR_ASSETS } from "@/constants";
 import { MpConfig, CompileConfig } from "./custom-configs";
 import { getAiEncryptData } from "./utils/get-ai-encrypt-data";
-import aiViewConfig, { getAIResponse } from './configs/aiView'
+import aiViewConfig from './configs/aiView'
+import { getAIResponse } from './utils/get-ai-response'
 import extendsConfig from "./configs/extends";
 // import systemContent from "./system.txt";
 import { message } from "antd";
