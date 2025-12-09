@@ -86,8 +86,6 @@ export const getAIResponse = async ({ model, messages, role, tools }, options?) 
 
   const { onMessage, onComplete, devMode = false, devUrl = '//ai.mybricks.world/stream-test' } = options ?? {};
 
-  console.log('fetching ai response from:', devMode ? devUrl : streamUrl);
-
   const response = await fetch(devMode ? devUrl : streamUrl, {
     method: 'POST',
     headers: {
