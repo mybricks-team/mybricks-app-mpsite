@@ -23,6 +23,7 @@ function systemAppendPrompts () {
 <对于当前搭建有以下特殊上下文>
 <搭建画布信息>
   当前搭建画布的宽度为375，所有元素的尺寸需要关注此信息，且尽可能自适应宽度进行布局。
+  搭建的画布高度应该不小于670
     比如：
       1.布局需要自适应画布宽度，考虑100%通栏，要么配置宽度+间距；
       2.配置上下左右和宽度高度时，一定要基于画布尺寸进行合理的计算；
@@ -30,95 +31,6 @@ function systemAppendPrompts () {
   最后，必须给页面设置页面高度。
 </搭建画布信息>
 
-<允许使用的图标>
-airplane_fill
-alarm_fill_1
-arrow_clockwise
-arrow_counterclockwise
-arrow_counterclockwise_clock
-arrow_down_right_and_arrow_up_left
-arrow_left
-arrow_right
-arrow_right_up_and_square
-arrow_up_left_and_arrow_down_right
-arrow_up_to_line
-arrowshape_turn_up_right_fill
-backward_end_fill
-battery
-battery_75percent
-bell_fill
-bluetooth
-bluetooth_slash
-bookmark
-calendar
-camera
-camera_fill
-checkmark
-checkmark_circle
-checkmark_circle_fill
-checkmark_square
-checkmark_square_fill
-chevron_down
-chevron_left
-chevron_right
-chevron_up
-clock
-dial
-doc_plaintext
-doc_plaintext_and_pencil
-doc_text_badge_arrow_up
-doc_text_badge_magnifyingglass
-ellipsis_message
-envelope
-eye
-eye_slash
-fast_forward
-folder
-folder_badge_plus
-forward_end_fill
-gearshape
-hand_thumbsup_fill
-headphones_fill
-heart
-heart_fill
-heart_slash
-house
-house_fill
-line_viewfinder
-list_square_bill
-livephoto
-lock
-lock_open
-magnifyingglass
-message
-message_on_message
-mic
-music
-music_note_list
-paintpalette
-paperclip
-pause
-picture
-picture_2
-picture_damage
-play_circle_fill
-play_fill
-play_round_rectangle_fill
-play_video
-plus
-qrcode
-record_circle
-resolution_video
-save
-share
-template
-text_clipboard
-timer
-trash
-wifi
-worldclock
-xmark
-</允许使用的图标>
 </对于当前搭建有以下特殊上下文>`
 }
 
@@ -190,7 +102,7 @@ function generatePageActionExamplesPrompts() {
 <user_query>搭建一个个人中心页面框架</user_query>
 <assistant_response>
   首先，必须根据页面内容设置一个合适的页面的高度。
-  其次，必须对页面布局设置一个合理的布局。
+  其次，必须把页面设置为flex布局，且为垂直方向的布局。不要在页面中再放置容器组件来做布局，这样会增加不必要的复杂度。
   然后
   基于用户当前的选择上下文，我们来实现一个个人中心页面框架，由于是框架，所以我仅给出主体部分，思考过程如下：
   1. 搭建页面时一般用从上到下的楼层化搭建方式，我们推荐在页面最外层设置为flex的垂直布局，设置子组件的左右margin以及高度，这样好调整位置；
@@ -225,7 +137,7 @@ function generatePageActionExamplesPrompts() {
   所以提供一个flex容器，确定子组件的宽度，并将内容平铺上去。
   
   首先，必须根据页面内容设置一个合适的页面的高度。
-  其次，必须对页面布局设置一个合理的布局。
+  其次，必须对页面布局设置为flex布局，且为垂直方向的布局。不要在页面中再放置容器组件来做布局，这样会增加不必要的复杂度。
   
   ${fileFormat({
     content: `["_root_",":root","setLayout",{"height": 360}]

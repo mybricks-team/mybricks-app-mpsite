@@ -345,19 +345,18 @@ const getDSLPrompts = genGetDslPrompts({
   特殊地，系统已经内置了底部导航栏和顶部导航栏，仅关注页面内容即可，不用实现此部分内容。
   `,
   componentSuggestionPrompts: `
-  1. 基础布局必须使用flex组件，禁止使用容器(mybricks.taro.containerBasic)；
-  2. 文本、图片、按钮组件属于基础组件，任何情况下都可以优先使用，即使不在允许使用的组件里；
-  3. 关于图片链接，首先明确我们会在发现图标、图片、Logo的时候使用图片组件；
+  1. 文本、图片、按钮组件属于基础组件，任何情况下都可以优先使用，即使不在允许使用的组件里；
+  2. 关于图片链接，首先明确我们会在发现图标、图片、Logo的时候使用图片组件；
     - 如果是Logo，使用https://placehold.co?text=Logo来配置一个带文本和颜色的图标；
     - 如果是图标，使用https://placehold.co?text=icon来配置一个带文本和颜色的图标，并且建议对图片组件配置圆角；
     - 如果是图片，使用https://ai.mybricks.world/image-search?term=dog&w=100&h=200，其中term代表搜索词，w和h可以配置图片宽高；
     注意参数：
       - 对于https://placehold.co的text参数的值，必须为英文字符，，不允许为中文字符，如果是中文可以用拼音首字母；
       - 对于https://placehold.co的颜色，背景颜色和文颜色要区分开；
-  4. 关于图标，图标禁止使用emoji或者特殊符号，需要使用图片组件来替代实现，使用第3点提及的链接；
-  5. 注意margin和padding的结合使用，如果可以则建议用margin；
-  6. 仔细是否需要用到绝对定位，是相对于父元素的；
-  7. system.page下方元素注意配置左右margin，特殊情况比如导航栏这类通栏效果，和背景通栏效果不要配置margin；
+  3. 关于图标，图标禁止使用emoji或者特殊符号，需要使用图片组件来替代实现，使用第3点提及的链接；
+  4. 注意margin和padding的结合使用，如果可以则建议用margin；
+  5. 仔细是否需要用到绝对定位，是相对于父元素的；
+  6. system.page下方元素注意配置左右margin，特殊情况比如导航栏这类通栏效果，和背景通栏效果不要配置margin；
   `
 })
 
