@@ -1,3 +1,4 @@
+import { SCENE_TEMPLATES } from '@/constants'
 import AIPlugin, { fileFormat } from '@mybricks/plugin-ai'
 
 
@@ -10,7 +11,10 @@ export default ({ requestAsStream, user, key }: any) => AIPlugin({
     prdExamplesPrompts: prdExamplesPrompts(),
     generatePageActionExamplesPrompts: generatePageActionExamplesPrompts(),
   },
-  key
+  key,
+  createTemplates: {
+    page: SCENE_TEMPLATES.page
+  }
 })
 
 

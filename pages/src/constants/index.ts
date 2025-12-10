@@ -10,7 +10,7 @@ export const MySelf_COM_LIB = {
 export const MP_BASIC_COM_LIB = {
   id: "default",
   namespace: "mybricks.normal-miniapp.taro",
-  
+
   // editJs: "http://127.0.0.1:8081/lib/edit.js",
   // coms: "http://127.0.0.1:8081/mp/rtCom.js",
   editJs: "./public/comlibs/comlib-h5-normal/0.3.85/edit.js",
@@ -28,23 +28,69 @@ export const HARMONY_COM_LIB = {
 }
 
 export const COMPONENT_NAMESPACE = {
-  get systemPage () {
+  get systemPage() {
     if (window.__PLATFORM__ === 'harmony') {
       return 'mybricks.harmony.systemPage'
     }
     return 'mybricks.taro.systemPage'
   },
-  get systemWebview () {
+  get systemWebview() {
     if (window.__PLATFORM__ === 'harmony') {
       return 'mybricks.harmony.systemWebview'
     }
     return 'mybricks.taro.systemWebview'
   },
-  get popup () {
+  get popup() {
     if (window.__PLATFORM__ === 'harmony') {
       return 'mybricks.harmony.popup'
     }
     return 'mybricks.taro.popup'
+  }
+}
+
+export const SCENE_TEMPLATES = {
+  page: ({ title }) => {
+    return {
+      type: "normal",
+      title: title,
+      template: {
+        namespace: COMPONENT_NAMESPACE.systemPage,
+        deletable: false,
+        asRoot: true,
+        data: {
+          useTabBar: false,
+        },
+      },
+      inputs: [
+        {
+          id: "open",
+          title: "打开",
+          schema: {
+            type: "object",
+          },
+        },
+      ],
+    }
+  },
+  tabbarPage: ({ title }) => {
+    return {
+      type: "normal",
+      title: title,
+      template: {
+        namespace: COMPONENT_NAMESPACE.systemPage,
+        deletable: false,
+        asRoot: true,
+      },
+      inputs: [
+        {
+          id: "open",
+          title: "打开",
+          schema: {
+            type: "object",
+          },
+        },
+      ],
+    }
   }
 }
 

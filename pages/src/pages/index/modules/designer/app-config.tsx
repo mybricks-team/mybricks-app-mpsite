@@ -15,7 +15,7 @@ import versionPlugin from "mybricks-plugin-version";
 
 import { editorAppenderFn } from "./editorAppender";
 
-import { COMPONENT_NAMESPACE, LOCAL_EDITOR_ASSETS } from "@/constants";
+import { COMPONENT_NAMESPACE, LOCAL_EDITOR_ASSETS, SCENE_TEMPLATES } from "@/constants";
 import { MpConfig, CompileConfig } from "./custom-configs";
 import { getAiEncryptData } from "./utils/get-ai-encrypt-data";
 import aiViewConfig from './configs/aiView'
@@ -688,45 +688,8 @@ export default function ({
           // },
         ],
         adder: [
-          {
-            type: "normal",
-            title: `${getPageTitlePrefix()}标签页`,
-            template: {
-              namespace: COMPONENT_NAMESPACE.systemPage,
-              deletable: false,
-              asRoot: true,
-            },
-            inputs: [
-              {
-                id: "open",
-                title: "打开",
-                schema: {
-                  type: "object",
-                },
-              },
-            ],
-          },
-          {
-            type: "normal",
-            title: `${getPageTitlePrefix()}页面`,
-            template: {
-              namespace: COMPONENT_NAMESPACE.systemPage,
-              deletable: false,
-              asRoot: true,
-              data: {
-                useTabBar: false,
-              },
-            },
-            inputs: [
-              {
-                id: "open",
-                title: "打开",
-                schema: {
-                  type: "object",
-                },
-              },
-            ],
-          },
+          SCENE_TEMPLATES.tabbarPage({ title: `${getPageTitlePrefix()}标签页` }),
+          SCENE_TEMPLATES.page({ title: `${getPageTitlePrefix()}页面` }),
           {
             type: "popup",
             title: "对话框",
