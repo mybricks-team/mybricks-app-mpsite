@@ -107,6 +107,7 @@ function generatePageActionExamplesPrompts() {
 <assistant_response>
   首先，必须根据页面内容设置一个合适的页面的高度。
   其次，必须把页面设置为flex布局，且为垂直方向的布局。不要在页面中再放置容器组件来做布局，这样会增加不必要的复杂度。
+  注意这个action是必须的: ["_root_",":root","doConfig",{"path":"root/布局","value":{"display":"flex","flexDirection":"column","alignItems":"center"}}]
   然后
   基于用户当前的选择上下文，我们来实现一个个人中心页面框架，由于是框架，所以我仅给出主体部分，思考过程如下：
   1. 搭建页面时一般用从上到下的楼层化搭建方式，我们推荐在页面最外层设置为flex的垂直布局，设置子组件的左右margin以及高度，这样好调整位置；
@@ -142,6 +143,7 @@ function generatePageActionExamplesPrompts() {
   
   首先，必须根据页面内容设置一个合适的页面的高度。
   其次，必须对页面布局设置为flex布局，且为垂直方向的布局。不要在页面中再放置容器组件来做布局，这样会增加不必要的复杂度。
+  注意这个action是必须的: ["_root_",":root","doConfig",{"path":"root/布局","value":{"display":"flex","flexDirection":"column","alignItems":"center"}}]
   
   ${fileFormat({
     content: `["_root_",":root","setLayout",{"height": 360}]

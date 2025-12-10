@@ -50,7 +50,8 @@
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^4.9.3",
     "webpack-merge": "^5.8.0",
-    "webpackbar": "^5.0.2"
+    "webpackbar": "^5.0.2",
+    "@mybricks/sdk-for-ai":"1.0.1"
   },
   "dependencies": {
     "@mybricks/plugin-ai": "^0.0.1",
@@ -79,6 +80,7 @@
     "react-dom": "17.0.2",
     "react-qr-code": "^2.0.12",
     "react-router-dom": "6.4.1",
-    "rxui-t": "0.0.5"
+    "rxui-t": "0.0.5",
+    "@mybricks/sdk-for-ai":"1.0.1"
   }
 }
