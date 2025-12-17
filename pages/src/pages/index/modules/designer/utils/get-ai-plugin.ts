@@ -35,6 +35,20 @@ function systemAppendPrompts () {
 当用户提供的设计稿或者文字描述中，存在一个文本框，文本框右侧有一个类似展开图标时，需要使用 下拉选择 组件 来实现该功能。
 </下拉组件的使用>
 
+<替换组件的特殊逻辑>
+核心原则： 删除组件后添加新组件时，务必使用全新的、未被使用过的 comId，避免标识符冲突。
+<错误的示例>
+["u_mBVqY",":root","delete"]
+["u_AwkL4","content","addChild",{"title":"曲风选择器","ns":"mybricks.taro.formSelect","comId":"u_mBVqY","layout":{"width":"fit-content","height":"fit-content","marginRight":8},"configs":[{"path":"下拉选择/基础属性/提示内容","value":"曲风"},{"path":"下拉选择/基础属性/选项","value":[{"label":"流行","value":"pop"},{"label":"摇滚","value":"rock"},{"label":"古典","value":"classic"},{"label":"民谣","value":"folk"},{"label":"电子","value":"electronic"},{"label":"爵士","value":"jazz"}]},{"path":"样式/箭头","value":"down"},{"path":"样式/输入框","style":{"borderRadius":"12px","paddingTop":"4px","paddingBottom":"4px","paddingLeft":"10px","paddingRight":"10px","backgroundColor":"#2A3947","border":"none"}},{"path":"样式/内容文本","style":{"fontSize":"12px","color":"#8B9AAD","lineHeight":"18px"}},{"path":"样式/提示内容文本","style":{"fontSize":"12px","color":"#8B9AAD","lineHeight":"18px"}},{"path":"样式/箭头样式","style":{"fontSize":"10px","color":"#8B9AAD"}}]}]
+</错误的示例>
+
+<正确的示例>
+["u_mBVqY",":root","delete"]
+["u_AwkL4","content","addChild",{"title":"曲风选择器","ns":"mybricks.taro.formSelect","comId":"u_Aoskd","layout":{"width":"fit-content","height":"fit-content","marginRight":8},"configs":[{"path":"下拉选择/基础属性/提示内容","value":"曲风"},{"path":"下拉选择/基础属性/选项","value":[{"label":"流行","value":"pop"},{"label":"摇滚","value":"rock"},{"label":"古典","value":"classic"},{"label":"民谣","value":"folk"},{"label":"电子","value":"electronic"},{"label":"爵士","value":"jazz"}]},{"path":"样式/箭头","value":"down"},{"path":"样式/输入框","style":{"borderRadius":"12px","paddingTop":"4px","paddingBottom":"4px","paddingLeft":"10px","paddingRight":"10px","backgroundColor":"#2A3947","border":"none"}},{"path":"样式/内容文本","style":{"fontSize":"12px","color":"#8B9AAD","lineHeight":"18px"}},{"path":"样式/提示内容文本","style":{"fontSize":"12px","color":"#8B9AAD","lineHeight":"18px"}},{"path":"样式/箭头样式","style":{"fontSize":"10px","color":"#8B9AAD"}}]}]
+</正确的示例>
+
+</替换组件的特殊逻辑>
+
 </对于当前搭建有以下特殊上下文>`
 }
 
@@ -107,7 +121,7 @@ function generatePageActionExamplesPrompts() {
 <assistant_response>
   首先，必须根据页面内容设置一个合适的页面的高度。
   其次，必须把页面设置为flex布局，且为垂直方向的布局。不要在页面中再放置容器组件来做布局，这样会增加不必要的复杂度。
-  注意这个action是必须的: ["_root_",":root","doConfig",{"path":"root/布局","value":{"display":"flex","flexDirection":"column","alignItems":"center"}}]
+  注意这个action是必须的，因为页面内容区必须是flex布局，不然会重叠在一起导致错位:: ["_root_",":root","doConfig",{"path":"页面/内容区/布局","value":{"display":"flex","flexDirection":"column","alignItems":"center"}}]
   然后
   基于用户当前的选择上下文，我们来实现一个个人中心页面框架，由于是框架，所以我仅给出主体部分，思考过程如下：
   1. 搭建页面时一般用从上到下的楼层化搭建方式，我们推荐在页面最外层设置为flex的垂直布局，设置子组件的左右margin以及高度，这样好调整位置；
@@ -143,7 +157,7 @@ function generatePageActionExamplesPrompts() {
   
   首先，必须根据页面内容设置一个合适的页面的高度。
   其次，必须对页面布局设置为flex布局，且为垂直方向的布局。不要在页面中再放置容器组件来做布局，这样会增加不必要的复杂度。
-  注意这个action是必须的: ["_root_",":root","doConfig",{"path":"root/布局","value":{"display":"flex","flexDirection":"column","alignItems":"center"}}]
+  注意这个action是必须的，因为页面内容区必须是flex布局，不然会重叠在一起导致错位: ["_root_",":root","doConfig",{"path":"页面/内容区/布局","value":{"display":"flex","flexDirection":"column","alignItems":"center"}}]
   
   ${fileFormat({
     content: `["_root_",":root","setLayout",{"height": 360}]
