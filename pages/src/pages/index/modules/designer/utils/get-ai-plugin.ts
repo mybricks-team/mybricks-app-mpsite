@@ -35,83 +35,288 @@ function systemAppendPrompts () {
 当用户提供的设计稿或者文字描述中，存在一个文本框，文本框右侧有一个类似展开图标时，需要使用 下拉选择 组件 来实现该功能。
 </下拉组件的使用>
 
-<替换组件的特殊逻辑>
-核心原则： 删除组件后添加新组件时，务必使用全新的、未被使用过的 comId，避免标识符冲突。
-<错误的示例>
-["u_mBVqY",":root","delete"]
-["u_AwkL4","content","addChild",{"title":"曲风选择器","ns":"mybricks.taro.formSelect","comId":"u_mBVqY","layout":{"width":"fit-content","height":"fit-content","marginRight":8},"configs":[{"path":"下拉选择/基础属性/提示内容","value":"曲风"},{"path":"下拉选择/基础属性/选项","value":[{"label":"流行","value":"pop"},{"label":"摇滚","value":"rock"},{"label":"古典","value":"classic"},{"label":"民谣","value":"folk"},{"label":"电子","value":"electronic"},{"label":"爵士","value":"jazz"}]},{"path":"样式/箭头","value":"down"},{"path":"样式/输入框","style":{"borderRadius":"12px","paddingTop":"4px","paddingBottom":"4px","paddingLeft":"10px","paddingRight":"10px","backgroundColor":"#2A3947","border":"none"}},{"path":"样式/内容文本","style":{"fontSize":"12px","color":"#8B9AAD","lineHeight":"18px"}},{"path":"样式/提示内容文本","style":{"fontSize":"12px","color":"#8B9AAD","lineHeight":"18px"}},{"path":"样式/箭头样式","style":{"fontSize":"10px","color":"#8B9AAD"}}]}]
-</错误的示例>
-
-<正确的示例>
-["u_mBVqY",":root","delete"]
-["u_AwkL4","content","addChild",{"title":"曲风选择器","ns":"mybricks.taro.formSelect","comId":"u_Aoskd","layout":{"width":"fit-content","height":"fit-content","marginRight":8},"configs":[{"path":"下拉选择/基础属性/提示内容","value":"曲风"},{"path":"下拉选择/基础属性/选项","value":[{"label":"流行","value":"pop"},{"label":"摇滚","value":"rock"},{"label":"古典","value":"classic"},{"label":"民谣","value":"folk"},{"label":"电子","value":"electronic"},{"label":"爵士","value":"jazz"}]},{"path":"样式/箭头","value":"down"},{"path":"样式/输入框","style":{"borderRadius":"12px","paddingTop":"4px","paddingBottom":"4px","paddingLeft":"10px","paddingRight":"10px","backgroundColor":"#2A3947","border":"none"}},{"path":"样式/内容文本","style":{"fontSize":"12px","color":"#8B9AAD","lineHeight":"18px"}},{"path":"样式/提示内容文本","style":{"fontSize":"12px","color":"#8B9AAD","lineHeight":"18px"}},{"path":"样式/箭头样式","style":{"fontSize":"10px","color":"#8B9AAD"}}]}]
-</正确的示例>
-
-</替换组件的特殊逻辑>
-
+<允许使用的图标>
+airplane_fill
+alarm_fill_1
+arrow_clockwise
+arrow_counterclockwise
+arrow_counterclockwise_clock
+arrow_down_right_and_arrow_up_left
+arrow_left
+arrow_right
+arrow_right_up_and_square
+arrow_up_left_and_arrow_down_right
+arrow_up_to_line
+arrowshape_turn_up_right_fill
+backward_end_fill
+battery
+battery_75percent
+bell_fill
+bluetooth
+bluetooth_slash
+bookmark
+calendar
+camera
+camera_fill
+checkmark
+checkmark_circle
+checkmark_circle_fill
+checkmark_square
+checkmark_square_fill
+chevron_down
+chevron_left
+chevron_right
+chevron_up
+clock
+dial
+doc_plaintext
+doc_plaintext_and_pencil
+doc_text_badge_arrow_up
+doc_text_badge_magnifyingglass
+ellipsis_message
+envelope
+eye
+eye_slash
+fast_forward
+folder
+folder_badge_plus
+forward_end_fill
+gearshape
+hand_thumbsup_fill
+headphones_fill
+heart
+heart_fill
+heart_slash
+house
+house_fill
+line_viewfinder
+list_square_bill
+livephoto
+lock
+lock_open
+magnifyingglass
+message
+message_on_message
+mic
+music
+music_note_list
+paintpalette
+paperclip
+pause
+picture
+picture_2
+picture_damage
+play_circle_fill
+play_fill
+play_round_rectangle_fill
+play_video
+plus
+qrcode
+record_circle
+resolution_video
+save
+share
+template
+text_clipboard
+timer
+trash
+wifi
+worldclock
+xmark
+</允许使用的图标>
 </对于当前搭建有以下特殊上下文>`
 }
 
 function prdExamplesPrompts () {
   return `
 <example>
-<user_query>根据图片搭建页面</user_query>
-<assistant_response>
-好的，经过对图片的全面分析，结论如下：
-${fileFormat({
-  content: `**themes**
-  界面采用简约的卡片式布局，整体背景采用浅紫色，内容区域使用纯白色背景，营造出清爽简洁的视觉效果。
-  
-  **layout**
-  界面总体采用从上往下的纵向流式布局，顶部内容通栏，每个区块以圆角卡片的形式呈现，底部通栏为固定布局；
-  1. 顶部区域为通栏，中间居中展示一个图标 + 标题；
-  2. 导航区域为两行四列的导航入口；
-  3. 套餐区域为横向三列的均分布局卡片；
-    3.1 卡片内所有文本元素从上到下依次排列，右上角可能存在一个圆形的角标；
-  4. 联系人区域是居左的标题 + 居右的联系人详情，联系人详情包含头像和昵称，以及一个可选择箭头；
-  5. 结算区域是固定的底部内容，包含左侧的价格计算+右侧的支付按钮；
-  
-  **colors**
-  界面主色调为明亮的蓝紫色，用于突出按钮和重要文字。背景采用柔和的浅紫色，搭配纯白色的内容区域，形成层次分明的视觉层级。
-  
-  **attention**
-  注意以下细节：
-  - 截图中的总体背景没有意义，可以考虑去掉；
-  - 注意各区块间距，顶部通栏就不要使用外间距了；
-  - 卡片中字体内容较丰富，注意字体大小，不要换行和重叠；
-  - 图片中的电话区域选择与输入手机号为一体设计、整体圆角；
-  - 验证码区域的获取验证码按钮为蓝色，按钮文字为白色；
+  <user_query>我要做一个移动端的银行App首页</user_query>
+  <assistant_response>
+好的，我来为你生成一个现代化、安全可信的移动端银行金融类 App 首页需求分析规格说明书和组件选型建议。整体设计以**用户资产为核心**，布局清晰、交互简洁，符合金融类产品的专业调性。
 
-  **risk**
-  参考图片宽度为720像素，目标画布宽度为375像素，我们需要对元素尺寸进行合理的缩放，所以在搭建时需要注意内容不要溢出画布，主要关注以下部分：
-  1. 导航区域为两行四列的网格均分布局，两行使用换行来实现，同时内容需要考虑固定宽度，避免超出画布；
-  2. 套餐区域中的卡片为三列的均分布局，其中卡片的内容信息较丰富，建议固定宽高，同时将文本字体减少至10px;
-  3. “适合各种活动的场地”为动态内容，注意配置文本字体极小，并且配置溢出能力，避免换行；
-  4. 底部居左部分内容宽度缩小后会超过一半，注意将字体调整至极小，避免遮挡右侧内容；
-  5. 右侧图标 + 文本横向排列时，注意文本宽度，防止遮挡图标；`,
-  fileName: 'XX页面需求文档.md'
+${fileFormat({
+  content: `# 概述
+本文档用于规划一个面向个人用户的移动端银行 App 首页，核心目标是让用户**一眼看清账户资产状态**，并快速访问常用金融服务。设计强调**安全性、清晰度与高效操作**。
+
+# 设计规范
+- *设计风格*：现代金融风，干净、克制、高信任感。
+- *色彩体系*：
+  - 主色调：深蓝 \`#1A365D\`（代表稳重与安全）
+  - 强调色：金色 \`#D4AF37\` 或青金石蓝 \`#2A5CAA\`（用于渐变资产卡片）
+  - 背景色：浅灰 \`#F8F9FA\`
+  - 文字色：标题 \`#111111\`，正文 \`#444444\`，辅助信息 \`#888888\`
+- *字号规范*（基于 16px 基准）：
+  - 页面标题：\`20px\` 粗体
+  - 卡片标题：\`16px\` 中等
+  - 金额数字：\`24px\` 粗体（关键数据放大）
+  - 辅助文字：\`12px\`
+- *间距与圆角*：
+  - 模块垂直间距：\`16px\`
+  - 卡片圆角：\`12px\`
+  - 按钮圆角：\`8px\`
+  - 安全区域适配：顶部状态栏下留出安全边距
+
+# 设计亮点
+- **渐变色资产卡片**：使用从深蓝到金色的线性渐变背景展示“当前总余额”，营造尊贵与安全感。
+- **资产概览可视化**：通过不同颜色展示活期、定期、理财占比。
+- **快捷服务入口**：底部固定常用功能（转账、收款、充值、贷款），图标+文字，点击即达。
+- **安全提示强化**：在关键操作区域加入“已加密”、“设备受信任”等小标签，增强用户心理安全感。
+
+# 内容结构（自上而下）
+
+## 顶部状态区
+- 用户问候语：“早上好，张**”（带头像，圆形 40px）
+- 右侧：消息通知图标 + 安全锁图标（表示当前会话安全）
+
+## 核心资产卡片（渐变色重点模块）
+- **背景**：线性渐变 （或深蓝→金色）
+- **内容**：
+  - 标题：“我的总资产”（白色，16px）
+  - 金额：“¥ 186,420.50”（白色，24px 粗体，带千分位）
+  - 子信息：“较昨日 +¥1,200.00”（浅金色，12px）
+  - 底部小字：“点击查看明细”（白色半透，带下划线）
+- **交互**：点击可展开资产分布详情（活期 ¥80k / 定期 ¥60k / 理财 ¥46k）
+
+## 资产分布可视化
+- 各类信息数据化，直观展示资金构成
+- 每部分带标签和百分比（如“活期 43%”）
+
+## 快捷功能入口（2×4 网格）
+- 图标 + 文字，共 转账等8 个高频功能：
+- 图标风格统一（线性图标，主色深蓝）
+
+## 近期交易记录
+- 标题：“最近交易” + “查看更多 >”
+- 列表项（每项高度 64px）：
+  - 左侧：交易类型图标（绿色支出/红色收入）
+  - 中间：商户名 + 时间（如“星巴克 · 今天 10:23”）
+  - 右侧：金额（支出为负，收入为正，颜色区分）
+- 最多显示 5 条，支持下拉刷新
+
+## 安全提示横幅（底部上方）
+- 浅蓝色背景 \`#E6F0FA\`
+- 内容：“您的账户已开启双重验证，当前设备已受信任 ✅”
+
+# 参考风格
+招商银行 App、工商银行 App、支付宝“财富”页、Apple Wallet 金融卡片设计。
+`,
+  fileName: '移动端银行App首页需求文档.md',
 })}
 
 推荐采用以下组件进行搭建：
 ${fileFormat({
   content: `[
   {
-    "namespace": "mybricks.somelib.card"
+    "namespace": "mybricks.somelib.text"
   },
   {
     "namespace": "mybricks.somelib.icon"
   },
   {
-    "namespace": "mybricks.somelib.text"
+    "namespace": "mybricks.somelib.image"
   },
   {
     "namespace": "mybricks.somelib.button"
+  },
+  {
+    "namespace": "mybricks.somelib.list"
   }
 ]`,
-  fileName: 'XX页面所需要的组件信息.json'
+  fileName: '银行App首页所需要的组件信息.json'
 })}
-</assistant_response>
-</example>`
+  </assistant_response>
+</example>
+
+<example>
+  <user_query>我要做一个问卷App首页</user_query>
+  <assistant_response>
+好的，我来为你生成一个移动端问卷App首页需求文档和组件选型建议。整体设计强调**简洁高效、功能清晰、信息分层明确**，采用**浅色渐变背景 + 卡片式操作区 + 横向标签导航 + 列表式内容展示**。
+
+${fileFormat({
+  content: `# 概述
+本文档用于规划一款灵活高效的移动端问卷App首页，目标是让用户快速发起调研、考试或投票，并浏览热门模板。界面风格现代、清爽，突出核心功能入口，符合企业级调研工具的专业调性。
+
+# 设计规范
+- *设计风格*：极简科技风，强调**功能直达**与**信息层级清晰**
+- *色彩体系*：
+  - 主背景：浅蓝白渐变 \`linear-gradient(135deg, #F0F7FF, #FFFFFF)\`
+  - 主色调：深蓝 \`#0066CC\`（用于主按钮）
+  - 辅助色：天蓝 \`#4DB8FF\`（考试）、绿色 \`#2EC47B\`（投票）
+  - 文字色：标题 \`#111111\`，正文 \`#666666\`，辅助信息 \`#999999\`
+- *字号规范*：
+  - 页面标题：\`28px\` 粗体
+  - 功能按钮文字：\`16px\`
+  - 问卷标题：\`18px\`
+  - 参与人数：\`12px\`
+- *间距与圆角*：
+  - 模块间距：\`20px\`
+  - 卡片圆角：\`16px\`
+  - 按钮圆角：\`12px\`
+
+# 设计亮点
+- **三大核心功能并列呈现**：通过三种颜色的卡片按钮区分“创建问卷”、“创建考试”、“发起投票”，视觉上清晰可辨、主次分明。
+- **顶部品牌强化**：大标题 + 品牌标语 + 使用者头像动态提示，增强社交信任感。
+- *整页背景渐变*：背景使用从顶部到右下角的浅蓝白渐变，营造轻松愉悦的氛围。
+- *入口强调*：三个入口操作按钮采用大尺寸卡片设计，点击区域大，且均带轻微阴影，提升层次感。
+
+# 内容结构
+
+## 顶部区域
+- **主标题**：“灵活高效的问卷/考试工具”（28px，加粗）
+- **副标题**：“累计创建问卷200万份”（14px，灰色）
+- **品牌标识**：左侧显示Logo，右侧为居右上角的“新手引导”按钮（绿色圆角矩形）
+- **用户动态提示**：一行小字“吴彦祖正在创建问卷...”，下方配一组圆形用户头像（最多5个）
+
+## 核心功能区（两栏布局）
+- **左侧主卡片**蓝色渐变背景：
+  - 标题：“极致轻便 / 多场景触达 / 数据处理”
+  - 按钮：“创建问卷”（白色椭圆按钮，内文蓝色）
+- **右侧两个功能按钮**（上下排列）：
+  - 上方：蓝色卡片，图标+文字“创建考试”
+  - 下方：绿色卡片，图标+文字“发起投票”（带纸飞机图标）
+
+## 内容导航标签
+- 横向标签栏，当前选中“热门问卷”，其他为“热门投票”、“热门测试”
+- 标签字体：16px，选中时蓝色，未选中灰色
+
+## 热门内容列表
+- 每项为一条水平卡片，高度约 80px
+- 左侧：文件图标（白色底，蓝色边框），底部带标签（如“问卷”、“有奖问卷”）
+- 中间：问卷标题（18px，自动截断）
+- 右侧：参与人数（12px，灰色）
+- 分隔线：浅灰色 1px 实线
+
+
+# 参考风格
+京东良研、腾讯问卷、问卷星、Google Forms 移动端首页。
+`,
+  fileName: '问卷工具App首页需求文档.md',
+})}
+
+推荐采用以下组件进行搭建：
+${fileFormat({
+  content: `[
+  {
+    "namespace": "mybricks.somelib.text"
+  },
+  {
+    "namespace": "mybricks.somelib.icon"
+  },
+  {
+    "namespace": "mybricks.somelib.button"
+  },
+  {
+    "namespace": "mybricks.somelib.list"
+  },
+  {
+    "namespace": "mybricks.somelib.image"
+  }
+]`,
+  fileName: '问卷工具App首页所需要的组件信息.json'
+})}
+  </assistant_response>
+</example>
+`
 }
 
 function generatePageActionExamplesPrompts() {
@@ -122,6 +327,7 @@ function generatePageActionExamplesPrompts() {
   首先，必须根据页面内容设置一个合适的页面的高度。
   其次，必须把页面设置为flex布局，且为垂直方向的布局。不要在页面中再放置容器组件来做布局，这样会增加不必要的复杂度。
   注意这个action是必须的，因为页面内容区必须是flex布局，不然会重叠在一起导致错位:: ["_root_",":root","doConfig",{"path":"页面/内容区/布局","value":{"display":"flex","flexDirection":"column","alignItems":"center"}}]
+  注意对于容器组件，绝对不能在style中设置margin属性，这样会导致布局错乱，必须在layout中设置margin属性。
   然后
   基于用户当前的选择上下文，我们来实现一个个人中心页面框架，由于是框架，所以我仅给出主体部分，思考过程如下：
   1. 搭建页面时一般用从上到下的楼层化搭建方式，我们推荐在页面最外层设置为flex的垂直布局，设置子组件的左右margin以及高度，这样好调整位置；
@@ -133,6 +339,8 @@ function generatePageActionExamplesPrompts() {
   ${fileFormat({
     content: `["_root_",":root","setLayout",{"height": 820}]
     ["_root_",":root","doConfig",{"path":"root/标题","value":"个人中心页面框架"}]
+    ["_root_",":root","doConfig",{"path":"页面/基础属性/作为标签页","value":true}]
+    ["_root_",".mybricks-tabItem","doConfig",{"path":"常规/标签名","value":"个人中心页面框架"}]
     ["_root_",":root","doConfig",{"path":"root/布局","value":{"display":"flex","flexDirection":"column","alignItems":"center"}}]
     ["_root_",":root","doConfig",{"path":"root/样式","style":{"background":"#F5F5F5"}}]
     ["_root_","_rootSlot_","addChild",{"title":"顶部信息","ns":"some.banner","comId":"u_top32","layout":{"width":"100%","height":80,"marginTop":8,"marginLeft":12,"marginRight":12},"configs":[{"path":"常规/布局","value":{"display":"flex"}}]}]
@@ -158,10 +366,13 @@ function generatePageActionExamplesPrompts() {
   首先，必须根据页面内容设置一个合适的页面的高度。
   其次，必须对页面布局设置为flex布局，且为垂直方向的布局。不要在页面中再放置容器组件来做布局，这样会增加不必要的复杂度。
   注意这个action是必须的，因为页面内容区必须是flex布局，不然会重叠在一起导致错位: ["_root_",":root","doConfig",{"path":"页面/内容区/布局","value":{"display":"flex","flexDirection":"column","alignItems":"center"}}]
+  注意对于容器组件，绝对不能在style中设置margin属性，这样会导致布局错乱，必须在layout中设置margin属性。
   
   ${fileFormat({
     content: `["_root_",":root","setLayout",{"height": 360}]
     ["_root_",":root","doConfig",{"path":"root/标题","value":"一行三列的导航"}]
+    ["_root_",":root","doConfig",{"path":"页面/基础属性/作为标签页","value":true}]
+    ["_root_",".mybricks-tabItem","doConfig",{"path":"常规/标签名","value":"一行三列的导航"}]
     ["_root_",":root","doConfig",{"path":"root/布局","value":{"display":"flex","flexDirection":"column","alignItems":"center"}}]
     ["_root_","_rootSlot_","addChild",{"title":"Flex容器","ns":"some.container","comId":"u_iiusd7","layout":{"width":"100%","height":200,"marginLeft":8,"marginRight":8},"configs":[{"path":"常规/布局","value":{"display":"flex","flexDirection":"row","justifyContent":"space-between","alignItems":"center","flexWrap":"wrap"}}]}]
     ["u_iiusd7","content","addChild",{"title":"导航1","ns":"some.icon","comId":"u_icon1","layout":{"width":120,"height":120,"marginTop":8},"configs":[{"path":"样式/文本","style":{"background":"#0000FF"}}]}]`,

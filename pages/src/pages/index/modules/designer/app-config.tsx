@@ -1181,7 +1181,8 @@ export function mergeEditorOptions(
   return options;
 }
 
-const DEFAULT_MODEL = 'google/gemini-2.5-flash';
+const DEFAULT_MODEL = 'google/gemini-3-flash-preview';
+// const DEFAULT_MODEL = 'google/gemini-2.5-flash';
 // const DEFAULT_MODEL = 'z-ai/glm-4.6'
 // const DEFAULT_MODEL = 'openai/gpt-4.1-mini'
 // const DEFAULT_MODEL = 'anthropic/claude-haiku-4.5'
