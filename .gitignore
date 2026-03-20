@@ -40,3 +40,6 @@ buildfe
 node_modules
 /nodejs/.tmp
 /nodejs/module/.download-assets
+
+/assets/
+mybricks-app-mpsite-*.zip
