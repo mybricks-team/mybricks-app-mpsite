@@ -39,4 +39,4 @@ buildfe
 
 node_modules
 /nodejs/.tmp
-/nodejs/.download-assets
+/nodejs/module/.download-assets

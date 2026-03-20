@@ -10,9 +10,13 @@ const rootPath = path.resolve(__dirname, "./../../");
 module.exports = merge(common, {
   mode: "development",
   devtool: "inline-source-map",
+  output: {
+    publicPath: "/mybricks-app-mpsite/",
+  },
   devServer: {
     static: {
       directory: path.resolve(rootPath, "./assets"),
+      publicPath: "/mybricks-app-mpsite/",
     },
     hot: true,
     client: {
@@ -90,7 +94,13 @@ module.exports = merge(common, {
         // target: 'https://www.hzao.com.cn',
         // target: 'http://127.0.0.1:3100',
         secure: false,
-        changeOrigin: true
+        changeOrigin: true,
+        bypass: (req) => {
+          if (req.url?.startsWith("/mybricks-app-mpsite/")) {
+            return req.url;
+          }
+          return undefined;
+        },
       },
       // {
       //   context: [
