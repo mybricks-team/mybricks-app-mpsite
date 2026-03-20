@@ -3,9 +3,9 @@
   "version": "0.5.146",
   "description": "小程序和H5的多端解决方案",
   "scripts": {
-    "start:dev": "NODE_ENV=development node nodejs/index.ts",
-    "start:watch": "nodemon --ext js,ts --exec 'NODE_ENV=development MYBRICKS_PLATFORM_ADDRESS=https://my.mybricks.world node nodejs/index.ts'",
-    "test:watch": "nodemon --ext js,ts --exec 'NODE_ENV=development MYBRICKS_PLATFORM_ADDRESS=http://work.manateeai.com/ node nodejs/index.ts'",
+    "start:dev": "cross-env NODE_ENV=development TS_NODE_SKIP_IGNORE=true node nodejs/index.ts",
+    "start:watch": "cross-env NODE_ENV=development TS_NODE_SKIP_IGNORE=true MYBRICKS_PLATFORM_ADDRESS=https://my.mybricks.world nodemon --ext js,ts --exec \"node nodejs/index.ts\"",
+    "test:watch": "cross-env NODE_ENV=development TS_NODE_SKIP_IGNORE=true MYBRICKS_PLATFORM_ADDRESS=http://work.manateeai.com/ nodemon --ext js,ts --exec \"node nodejs/index.ts\"",
     "bootstrap": "cd ./pages && npm install",
     "dev": "cd ./pages && npm run dev",
     "build": "npm run bootstrap && cd ./pages && npm run build",
@@ -47,9 +47,10 @@
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^20.11.24",
+    "cross-env": "^10.1.0",
+    "jszip": "^3.10.1",
     "ts-node": "^8.9.1",
-    "typescript": "^4.2.3",
-    "jszip": "^3.10.1"
+    "typescript": "^4.2.3"
   },
   "publishConfig": {
     "access": "public",

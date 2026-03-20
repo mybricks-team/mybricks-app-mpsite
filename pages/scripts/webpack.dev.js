@@ -43,6 +43,13 @@ module.exports = merge(common, {
         secure: false,
         changeOrigin: true,
       },
+      {
+        context: ['/mybricks-app-mpsite/api/compile/miniapp/compile'],
+        pathRewrite: { '^/mybricks-app-mpsite/api': '/api' },
+        target: 'http://localhost:3000',
+        secure: false,
+        changeOrigin: true,
+      },
       // {
       //   context: ['/mybricks-app-mpsite/api'],
       //   pathRewrite: { '^/mybricks-app-mpsite/api': '/api' },
