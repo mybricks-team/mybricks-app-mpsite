@@ -13,6 +13,8 @@ import weapp from "./../../icons/weapp";
 import alipay from "./../../icons/alipay"
 import dd from "./../../icons/dd";
 import h5 from "./../../icons/h5";
+import taro from "./../../icons/taro";
+
 
 class SelectTypeStorage {
     key = `_mybricks_mpsite_${new URL(location.href).searchParams.get(
@@ -77,7 +79,7 @@ export const AppSelector = ({ onCompile }) => {
                 [css.item]: true,
                 [css.active]: selectType === CompileType.taro
             })} onClick={() => { itemClick(CompileType.taro) }}>
-                <img src={dd} alt="" />
+                <img src={taro} alt="" />
                 <div className={css.text}>Taro</div>
             </div>
         </div>
