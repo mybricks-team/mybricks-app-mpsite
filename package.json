@@ -7,9 +7,11 @@
     "start:watch": "cross-env NODE_ENV=development TS_NODE_SKIP_IGNORE=true MYBRICKS_PLATFORM_ADDRESS=https://my.mybricks.world nodemon --ext js,ts --exec \"node nodejs/index.ts\"",
     "test:watch": "cross-env NODE_ENV=development TS_NODE_SKIP_IGNORE=true MYBRICKS_PLATFORM_ADDRESS=http://work.manateeai.com/ nodemon --ext js,ts --exec \"node nodejs/index.ts\"",
     "bootstrap": "cd ./pages && npm install",
+    "yarn:bootstrap": "cd ./pages && yarn",
     "dev": "cd ./pages && npm run dev",
     "build": "npm run bootstrap && cd ./pages && npm run build",
     "publishToNpm:offline": "npm i && cd pages && npm run build:offline && cd ../ && node sync_offline.js",
+    "yarn:publishToNpm:offline": "yarn && cd pages && npm run yarn:build:offline && cd ../ && node sync_offline.js",
     "publishToNpm:serviceUpdate": "npm run build && node sync.js --origin=https://my.mybricks.world",
     "publishToNpm:noServiceUpdate": "npm run build && node sync.js --origin=https://my.mybricks.world --noServiceUpdate"
   },
