@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "webpack serve --config ./scripts/webpack.dev.js",
     "build": "webpack --config ./scripts/webpack.prod.js",
-    "build:offline": "npm install && webpack --config ./scripts/webpack.offline.js"
+    "build:offline": "npm install && webpack --config ./scripts/webpack.offline.js",
+    "yarn:build:offline": "yarn && webpack --config ./scripts/webpack.offline.js"
   },
   "keywords": [],
   "author": "",
