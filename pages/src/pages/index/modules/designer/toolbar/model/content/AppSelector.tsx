@@ -72,6 +72,14 @@ export const AppSelector = ({ onCompile }) => {
                 <img src={dd} alt="" />
                 <div className={css.text}>钉钉小程序</div>
             </div>
+
+            <div className={classNames({
+                [css.item]: true,
+                [css.active]: selectType === CompileType.taro
+            })} onClick={() => { itemClick(CompileType.taro) }}>
+                <img src={dd} alt="" />
+                <div className={css.text}>Taro</div>
+            </div>
         </div>
         <div className={classNames(css.footer, "fangzhou-theme")}><Button type="primary" onClick={() => { downloadClick() }}>构建并下载产物</Button></div>
     </>

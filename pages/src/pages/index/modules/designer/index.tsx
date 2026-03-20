@@ -1195,7 +1195,11 @@ const Designer = ({ appData }) => {
 
       try {
         const isHarmony = [CompileType.harmonyComponent, CompileType.harmonyApplication].includes(type)
-        const toJson = await contentModel.toJSON(isHarmony ? { withDiagrams: true } : null);
+        const isTaro = type === CompileType.taro
+        const toJson = await contentModel.toJSON({
+          withDiagrams: isHarmony || isTaro,
+          withIOSchema: isTaro,
+        });
 
         let comlibs = [...ctx.comlibs];
         if (window.__DEBUG_COMLIB__) {
@@ -1225,6 +1229,18 @@ const Designer = ({ appData }) => {
               defaultCallServiceHost:  pageModel.appConfig?.defaultCallServiceHost,
             }
           })
+        } else if(isTaro) {
+          json = {
+            ...toJson,
+            status: {
+              projectId: pageModel.sdk.projectId,
+              fileId: pageModel.fileId,
+              apiEnv: "prod",
+              ...pageModel.appConfig,
+              appid: pageModel.wxConfig.appid,
+              appsecret: pageModel.wxConfig.appsecret,
+            },
+          }
         } else {
           json = await getMiniappJson({
             toJson: {
@@ -1250,7 +1266,7 @@ const Designer = ({ appData }) => {
           })
         }
 
-        const url = isHarmony ? "/api/compile/harmony/compile" : "/api/compile/miniapp/compile"
+        const url = isHarmony ? "/api/compile/harmony/compile" : isTaro ? "/api/compile/taro/compile" : "/api/compile/miniapp/compile"
 
         const res = await axios({
           url,

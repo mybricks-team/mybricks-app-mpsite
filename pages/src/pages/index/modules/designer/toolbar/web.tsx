@@ -51,6 +51,7 @@ const DescMap = {
   [CompileType.h5]: "H5",
   [CompileType.alipay]: "支付宝小程序(Beta)",
   [CompileType.dd]: "钉钉小程序(Beta)",
+  [CompileType.taro]: "Taro",
 };
 
 class SelectTypeStorage {
@@ -305,7 +306,7 @@ export const WebToolbar: React.FC<WebToolbarProps> = ({
             : null
         }
 
-        {[CompileType.weapp, CompileType.alipay, CompileType.dd, CompileType.miniprogram, CompileType.harmony].includes(
+        {[CompileType.weapp, CompileType.alipay, CompileType.dd, CompileType.miniprogram, CompileType.harmony, CompileType.taro].includes(
           selectType
         ) && 
         // <Toolbar.Button onClick={compileHandle}>下载</Toolbar.Button>

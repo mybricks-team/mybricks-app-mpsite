@@ -29,7 +29,7 @@ import {
 } from "./utils";
 import { publishPush } from "./push";
 import { Logger } from "@mybricks/rocker-commons";
-import { compilerH5, compilerMiniapp, compilerHarmony, compilerHarmony2  } from "./compiler";
+import { compilerH5, compilerMiniapp, compilerHarmony, compilerHarmony2, compilerTaro  } from "./compiler";
 import { CompileType } from "./compiler/types";
 import { getNextVersion } from "../tools/analysis";
 import axios from "axios";
@@ -546,6 +546,64 @@ export default class CompileController {
       };
     } catch (error) {
       Logger.info("[compile] compile harmony fail " + error.message, error);
+      return {
+        code: -1,
+        errCode: error.errCode,
+        message:
+          error?.message ||
+          (error.code ? `构建失败，错误码：${error.code}` : "构建失败"),
+        stack: error?.stack,
+      };
+    }
+  }
+
+  /**
+   * compile taro
+   */
+  @Post("taro/compile")
+  @UseInterceptors(LimitInterceptor)
+  async taroCompile(
+    @Body("userId") userId: string,
+    @Body("fileId") fileId: number,
+    @Body("fileName") fileName: string,
+    @Body("data") data: any,
+    @Body("type") type: string = "weapp",
+    @Req() req: any
+  ) {
+    try {
+      fse.ensureDirSync(tempFolderPath);
+
+      const projectName = `project-${fileId}-build-${type}`;
+      const projectPath = path.resolve(tempFolderPath, `./${projectName}`);
+
+      await fse.ensureDir(projectPath);
+      await fse.emptyDir(projectPath);
+
+      Logger.info("[compile] init miniapp template start");
+
+      await compilerTaro(
+        {
+          data,
+          projectPath,
+          projectName,
+          fileName,
+          depModules: getDepModules(data.depModules),
+          origin: req.headers.origin,
+          type,
+        },
+        { Logger }
+      );
+
+      Logger.info("[compile] init taro template success");
+
+      return {
+        code: 1,
+        message: "构建成功",
+        data: {
+        },
+      };
+    } catch (error) {
+      Logger.info("[compile] compile fail " + error.message, error);
       return {
         code: -1,
         errCode: error.errCode,

@@ -31,6 +31,7 @@ module.exports = merge(common, {
           "/api/compile/miniapp/publish",
           "/api/compile/miniapp/compile",
           "/api/compile/harmony/compile",
+          "/api/compile/taro/compile",
           "/api/compile/alipay/preview",
           "/api/compile/alipay/publish",
           "/api/compile/alipay/compile",
@@ -44,13 +45,6 @@ module.exports = merge(common, {
           "/api/compile/miniapp/searchUser"
         ],
         target: "http://localhost:3000",
-        secure: false,
-        changeOrigin: true,
-      },
-      {
-        context: ['/mybricks-app-mpsite/api/compile/miniapp/compile'],
-        pathRewrite: { '^/mybricks-app-mpsite/api': '/api' },
-        target: 'http://localhost:3000',
         secure: false,
         changeOrigin: true,
       },

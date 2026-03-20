@@ -17,5 +17,6 @@ export enum CompileType {
   miniprogram = 'miniprogram',
   harmony = 'harmony',
   harmonyComponent = 'harmonyComponent',
-  harmonyApplication = 'harmonyApplication'
+  harmonyApplication = 'harmonyApplication',
+  taro = 'taro'
 }
