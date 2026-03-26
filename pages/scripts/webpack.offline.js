@@ -43,6 +43,11 @@ module.exports = merge(common, {
       template: path.resolve(__dirname, "../assets/index.html"),
       chunks: ["index"],
     }),
+    new HtmlWebpackPlugin({
+      filename: 'setting.html',
+      template: path.resolve(__dirname, '../assets/setting.html'),
+      chunks: ['setting'],
+    }),
     // new BundleAnalyzerPlugin({
     //   analyzerMode: 'static',
     // }),

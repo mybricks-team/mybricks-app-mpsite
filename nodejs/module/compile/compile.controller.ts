@@ -43,6 +43,7 @@ const existMiniprogramCI = !!ci;
 
 // import * as profiler from 'v8-profiler-node8';
 
+const COMPILE_MODULE_PATH = path.resolve(__dirname, "./");
 const tempFolderPath = path.resolve(__dirname, "../../.tmp"); //临时目录
 
 const DEP_MODULES = [
@@ -51,8 +52,8 @@ const DEP_MODULES = [
     version: "3.8.12",
     library: "F2",
     urls: [
-      // path.resolve(__dirname, './lib_modules/antv-f2/3.8.12/f2.min.js')
-      path.resolve(__dirname, "./lib_modules/antv-f2/3.8.12/f2-all.min.js"),
+      // path.resolve(COMPILE_MODULE_PATH, './lib_modules/antv-f2/3.8.12/f2.min.js')
+      path.resolve(COMPILE_MODULE_PATH, "./lib_modules/antv-f2/3.8.12/f2-all.min.js"),
     ],
   },
 ];
@@ -77,13 +78,13 @@ const getDepModules = (depModules) => {
 
 const getTemplatePath = (type = "weapp") => {
   if (type === 'harmony') {
-    return path.resolve(__dirname, `./templates/harmony.zip`);
+    return path.resolve(COMPILE_MODULE_PATH, `./templates/harmony.zip`);
   }
-  return path.resolve(__dirname, `./templates/${type}`);
+  return path.resolve(COMPILE_MODULE_PATH, `./templates/${type}`);
 };
 
 if (!fs.existsSync(tempFolderPath)) {
-  fs.mkdirSync(tempFolderPath);
+  fs.mkdirSync(tempFolderPath, { recursive: true });
 }
 
 @Controller("api/compile")
