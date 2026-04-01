@@ -22,18 +22,17 @@ function systemAppendPrompts () {
   return `
 <对于当前搭建有以下特殊上下文>
 <搭建画布信息>
+  当前搭建的是微信小程序，不使用默认顶部导航栏时，需要关注系统顶部状态栏和右上角胶囊按钮。
+    比如：
+      1.提供顶部安全区域，建议配置30；
+      2.提供右上角胶囊按钮安全区域，坐标为(375-100, 44)，宽高为(100, 32)；
   当前搭建画布的宽度为375，所有元素的尺寸需要关注此信息，且尽可能自适应宽度进行布局。
-  搭建的画布高度应该不小于670
     比如：
       1.布局需要自适应画布宽度，考虑100%通栏，要么配置宽度+间距；
       2.配置上下左右和宽度高度时，一定要基于画布尺寸进行合理的计算；
   特殊地，系统已经内置了底部导航栏和顶部导航栏，仅关注页面内容即可，不用实现此部分内容。
   最后，必须给页面设置页面高度。
 </搭建画布信息>
-
-<下拉组件的使用>
-当用户提供的设计稿或者文字描述中，存在一个文本框，文本框右侧有一个类似展开图标时，需要使用 下拉选择 组件 来实现该功能。
-</下拉组件的使用>
 
 <允许使用的图标>
 airplane_fill
@@ -130,13 +129,13 @@ xmark
 function prdExamplesPrompts () {
   return `
 <example>
-  <user_query>我要做一个移动端的银行App首页</user_query>
+  <user_query>我要做一个移动端的银行小程序首页</user_query>
   <assistant_response>
-好的，我来为你生成一个现代化、安全可信的移动端银行金融类 App 首页需求分析规格说明书和组件选型建议。整体设计以**用户资产为核心**，布局清晰、交互简洁，符合金融类产品的专业调性。
+好的，我来为你生成一个现代化、安全可信的移动端银行金融类小程序首页需求分析规格说明书和组件选型建议。整体设计以**用户资产为核心**，布局清晰、交互简洁，符合金融类产品的专业调性。
 
 ${fileFormat({
   content: `# 概述
-本文档用于规划一个面向个人用户的移动端银行 App 首页，核心目标是让用户**一眼看清账户资产状态**，并快速访问常用金融服务。设计强调**安全性、清晰度与高效操作**。
+本文档用于规划一个面向个人用户的移动端银行小程序首页，核心目标是让用户**一眼看清账户资产状态**，并快速访问常用金融服务。设计强调**安全性、清晰度与高效操作**。
 
 # 设计规范
 - *设计风格*：现代金融风，干净、克制、高信任感。
@@ -145,13 +144,14 @@ ${fileFormat({
   - 强调色：金色 \`#D4AF37\` 或青金石蓝 \`#2A5CAA\`（用于渐变资产卡片）
   - 背景色：浅灰 \`#F8F9FA\`
   - 文字色：标题 \`#111111\`，正文 \`#444444\`，辅助信息 \`#888888\`
-- *字号规范*（由于屏幕宽度375px，大部分情况下，字体以14px作为基准）：
-  - 页面标题：\`20px\` 粗体
-  - 卡片标题：\`16px\` 中等
-  - 金额数字：\`14px\` 中等
-  - 辅助文字：\`10px\`
+- *字号规范*（基于 14px 基准）：
+  - 页面标题：\`16px\` 粗体
+  - 卡片标题：\`14px\` 中等
+  - 金额数字：\`20px\` 粗体（关键数据放大）
+  - 辅助文字：\`12px\`
 - *间距与圆角*：
-  - 模块垂直间距：\`16px\`
+  - 页面间距：\`10px\`
+  - 模块垂直间距：\`10px\`
   - 卡片圆角：\`12px\`
   - 按钮圆角：\`8px\`
   - 安全区域适配：顶部状态栏下留出安全边距
@@ -171,10 +171,10 @@ ${fileFormat({
 ## 核心资产卡片（渐变色重点模块）
 - **背景**：线性渐变 （或深蓝→金色）
 - **内容**：
-  - 标题：“我的总资产”（16px）
-  - 金额：“¥ 186,420.50”（22px 带千分位）
+  - 标题：“我的总资产”（白色，16px）
+  - 金额：“¥ 186,420.50”（白色，24px 粗体，带千分位）
   - 子信息：“较昨日 +¥1,200.00”（浅金色，12px）
-  - 底部小字：“点击查看明细”（10px，带下划线）
+  - 底部小字：“点击查看明细”（白色半透，带下划线）
 - **交互**：点击可展开资产分布详情（活期 ¥80k / 定期 ¥60k / 理财 ¥46k）
 
 ## 资产分布可视化
@@ -198,9 +198,9 @@ ${fileFormat({
 - 内容：“您的账户已开启双重验证，当前设备已受信任 ✅”
 
 # 参考风格
-招商银行 App、工商银行 App、支付宝“财富”页、Apple Wallet 金融卡片设计。
+招商银行小程序、工商银行小程序设计。
 `,
-  fileName: '移动端银行App首页需求文档.md',
+  fileName: '移动端银行小程序首页需求文档.md',
 })}
 
 推荐采用以下组件进行搭建：
@@ -222,36 +222,36 @@ ${fileFormat({
     "namespace": "mybricks.somelib.list"
   }
 ]`,
-  fileName: '银行App首页所需要的组件信息.json'
+  fileName: '银行小程序首页所需要的组件信息.json'
 })}
   </assistant_response>
 </example>
 
 <example>
-  <user_query>我要做一个问卷App首页</user_query>
+  <user_query>我要做一个问卷小程序首页</user_query>
   <assistant_response>
-好的，我来为你生成一个移动端问卷App首页需求文档和组件选型建议。整体设计强调**简洁高效、功能清晰、信息分层明确**，采用**浅色渐变背景 + 卡片式操作区 + 横向标签导航 + 列表式内容展示**。
+好的，我来为你生成一个移动端问卷小程序首页需求文档和组件选型建议。整体设计强调**简洁高效、功能清晰、信息分层明确**，采用**浅色渐变背景 + 卡片式操作区 + 横向标签导航 + 列表式内容展示**。
 
 ${fileFormat({
   content: `# 概述
-本文档用于规划一款灵活高效的移动端问卷App首页，目标是让用户快速发起调研、考试或投票，并浏览热门模板。界面风格现代、清爽，突出核心功能入口，符合企业级调研工具的专业调性。
+本文档用于规划一款灵活高效的移动端问卷小程序首页，目标是让用户快速发起调研、考试或投票，并浏览热门模板。界面风格现代、清爽，突出核心功能入口，符合企业级调研工具的专业调性。
 
 # 设计规范
 - *设计风格*：极简科技风，强调**功能直达**与**信息层级清晰**
 - *色彩体系*：
   - 主背景：浅蓝白渐变 \`linear-gradient(135deg, #F0F7FF, #FFFFFF)\`
-  - 主色调：深蓝 \`#0066CC\`（用于主按钮）
+  - 主色调：深蓝 \`#0066CC\`
   - 辅助色：天蓝 \`#4DB8FF\`（考试）、绿色 \`#2EC47B\`（投票）
   - 文字色：标题 \`#111111\`，正文 \`#666666\`，辅助信息 \`#999999\`
 - *字号规范*：
-  - 页面标题：\`18px\` 
+  - 页面标题：\`28px\` 粗体
   - 功能按钮文字：\`16px\`
   - 问卷标题：\`18px\`
-  - 参与人数：\`10px\`
+  - 参与人数：\`12px\`
 - *间距与圆角*：
-  - 模块间距：\`20px\`
-  - 卡片圆角：\`16px\`
-  - 按钮圆角：\`12px\`
+  - 模块间距：\`10px\`
+  - 卡片圆角：\`8px\`
+  - 按钮圆角：\`8px\`
 
 # 设计亮点
 - **三大核心功能并列呈现**：通过三种颜色的卡片按钮区分“创建问卷”、“创建考试”、“发起投票”，视觉上清晰可辨、主次分明。
@@ -262,6 +262,7 @@ ${fileFormat({
 # 内容结构
 
 ## 顶部区域
+- 布局整体上内边距下移约 88px，避免遮挡系统状态栏和右上角胶囊栏遮挡。
 - **主标题**：“灵活高效的问卷/考试工具”（28px，加粗）
 - **副标题**：“累计创建问卷200万份”（14px，灰色）
 - **品牌标识**：左侧显示Logo，右侧为居右上角的“新手引导”按钮（绿色圆角矩形）
@@ -280,17 +281,18 @@ ${fileFormat({
 - 标签字体：16px，选中时蓝色，未选中灰色
 
 ## 热门内容列表
+- 重复数据，循环列表展示，每项为一个水平卡片，高度约 80px
 - 每项为一条水平卡片，高度约 80px
 - 左侧：文件图标（白色底，蓝色边框），底部带标签（如“问卷”、“有奖问卷”）
 - 中间：问卷标题（18px，自动截断）
-- 右侧：参与人数（10px，灰色）
+- 右侧：参与人数（12px，灰色）
 - 分隔线：浅灰色 1px 实线
 
 
 # 参考风格
-京东良研、腾讯问卷、问卷星、Google Forms 移动端首页。
+京东良研、腾讯问卷、问卷星小程序首页。
 `,
-  fileName: '问卷工具App首页需求文档.md',
+  fileName: '问卷工具小程序首页需求文档.md',
 })}
 
 推荐采用以下组件进行搭建：
@@ -312,121 +314,7 @@ ${fileFormat({
     "namespace": "mybricks.somelib.image"
   }
 ]`,
-  fileName: '问卷工具App首页所需要的组件信息.json'
-})}
-  </assistant_response>
-</example>
-
-
-<example>
-  <user_query>参考用户给的图片，进行还原开发
-  - 图片内容：
-   - 一个标题为AI找搭子的App首页
-    - 包含以下内容:
-      - 顶部聊天入口卡片：
-        - 背景：渐变色linear-gradient(90deg, rgba(211,204,248,1) 0%, rgba(240,229,243,1) 100%);
-        - 左侧主标题：让AI来帮你找搭子吧
-        - 左侧副标题：AI将和你进行1v1深度对话，并分析你的需求，帮你匹配到合适的搭子
-        - 右侧按钮：去对话（带右箭头）背景颜色：#000000
-        - 按钮的上方有一个图片，里面放置一个切图
-
-      - 数据分析卡片：
-        - 背景：白色
-        - 标题：数据分析（右侧有一个信息icon）
-        - 内容：包含三列数据（描述文本在下，数字在上）
-          - 第一列：标题：AI对你的了解程度，数值：0%（0和%分开两个组件，方便后期数字写活，其他场景同理）
-          - 第二列：标题：对话次数，数值：0次（0和次分开两个组件）
-          - 第三列：标题：用户满意度，数值：4.8分（）4.8和分分开两个组件）
-
-      - AI匹配记录列表：
-        - 形式：由匹配卡片组成的列表，列表本身没有背景色，每个卡片有白色背景
-        - 卡片内容：
-          - 左侧：匹配上的对方头像和昵称以及AI匹配度：xx分
-          - 右侧：一个去聊聊的按钮
-    - 页面背景：#F0F2FA
-    - 整体为小清新风格，有柔和的渐变色调
-
-
-${fileFormat({
-  content: `# 概述
-本文档用于根据用户提供的图片，开发一个AI找搭子的页面。目标是按照所给的图片，高度还原界面和功能。
-
-# 设计规范
-- *设计风格*：严格对齐设计稿风格，小清新风格，柔和渐变色调 linear-gradient(90deg, rgba(211,204,248,1) 0%, rgba(240,229,243,1) 100%);
-- *色彩体系*：
-  - 主色调：深蓝 \`#D4CDFC\`（代表小清新风格）
-  - 背景色：浅灰 \`#F0F2FA\`
-  - 文字色：标题 \`#292929\`，正文 \`#4A4A4A\`，辅助信息 \`#787878\`
-- *字号规范*（由于屏幕宽度375px，大部分情况下，字体以14px作为基准）：
-  - 页面标题：\`18px\` 粗体
-  - 卡片标题：\`16px\` 粗体
-  - 金额数字：\`16px\` 正常
-  - 辅助文字：\`10px\` 正常
-- *间距与圆角*：
-  - 模块垂直间距：\`10px\`
-  - 卡片圆角：\`12px\`
-  - 按钮圆角：\`8px\`
-  - 安全区域适配：顶部状态栏下留出安全边距
-
-# 设计亮点
-- **渐变色AI对话入口卡片**：使用渐变色linear-gradient(90deg, rgba(211,204,248,1) 0%, rgba(240,229,243,1) 100%)，营造一种轻松，小清新的氛围；右侧按钮上方有一个卡通切图，增加用户亲切感。
-- **数据分析卡片**：一行三列，每一列从上到下为数据、对应的指标；数据比指标稍大，一目了然。且数据和单位分开两个文本组件，数据比单位略大；这样主次分明，且方便后期数据写活。
-- **AI匹配记录**：无底色的列表，靠每个匹配记录卡片的白色背景色来划分
-
-# 内容结构（自上而下）
-
-## 顶部渐变色AI对话入口卡片
-    - 背景：渐变色linear-gradient(90deg, rgba(211,204,248,1) 0%, rgba(240,229,243,1) 100%);
-    - 左侧主标题：让AI来帮你找搭子吧
-    - 左侧副标题：AI将和你进行1v1深度对话，并分析你的需求，帮你匹配到合适的搭子
-    - 右侧按钮：去对话（带右箭头）背景颜色：#000000
-    - 按钮的上方有一个图片，里面放置一个切图
-
-## 数据分析卡片
-    - 背景：白色
-    - 标题：数据分析（右侧有一个信息icon）
-    - 内容：包含三列数据（描述文本在下，数字在上）
-    - 第一列：标题：AI对你的了解程度，数值：0%（0和%分开两个组件，方便后期数字写活，其他场景同理）
-    - 第二列：标题：对话次数，数值：0次（0和次分开两个组件）
-    - 第三列：标题：用户满意度，数值：4.8分（）4.8和分分开两个组件）
-
-## AI匹配记录列表：
-    - 形式：由匹配卡片组成的列表，列表本身没有背景色，每个卡片有白色背景
-    - 卡片内容：
-    - 左侧：匹配上的对方头像和昵称以及AI匹配度：xx分
-    - 右侧：一个去聊聊的按钮
-
-# 注意事项
-    - 用户截图到导航栏部分，需要进行判断：
-      - 如果是纯文本的导航栏：设置页面标题即可，不需要重复在页面中搭建该导航栏
-      - 如果是带图片或者功能区的导航栏：需要隐藏默认导航栏，通过搭建的方式实现顶部导航栏
-
-    - 还原卡片时需要特别注意，避免文字大小过大，以及横向、纵向间距过大，导致内容超出卡片
-
-`,
-  fileName: '图片识别AI找搭子首页需求文档.md',
-})}
-
-推荐采用以下组件进行搭建：
-${fileFormat({
-  content: `[
-  {
-    "namespace": "mybricks.somelib.text"
-  },
-  {
-    "namespace": "mybricks.somelib.icon"
-  },
-  {
-    "namespace": "mybricks.somelib.image"
-  },
-  {
-    "namespace": "mybricks.somelib.button"
-  },
-  {
-    "namespace": "mybricks.somelib.list"
-  }
-]`,
-  fileName: '找搭子APP首页需求文档.json'
+  fileName: '问卷工具小程序首页所需要的组件信息.json'
 })}
   </assistant_response>
 </example>
@@ -439,35 +327,40 @@ function generatePageActionExamplesPrompts() {
 <user_query>搭建一个个人中心页面框架</user_query>
 <assistant_response>
   首先，必须根据页面内容设置一个合适的页面的高度。
-  其次，必须把页面设置为flex布局，且为垂直方向的布局。不要在页面中再放置容器组件来做布局，这样会增加不必要的复杂度。
-  注意这个action是必须的，因为页面内容区必须是flex布局，不然会重叠在一起导致错位:: ["_root_",":root","doConfig",{"path":"页面/内容区/布局","value":{"display":"flex","flexDirection":"column","alignItems":"center"}}]
-  注意对于容器组件，绝对不能在style中设置margin属性，这样会导致布局错乱，必须在layout中设置margin属性。
+  其次，必须对页面布局设置一个合理的布局,搭建页面时一般用从上到下的楼层化搭建方式，我们推荐在页面最外层设置为flex的垂直布局，设置子组件的左右margin以及高度，这样好调整位置。
+
   然后
   基于用户当前的选择上下文，我们来实现一个个人中心页面框架，由于是框架，所以我仅给出主体部分，思考过程如下：
-  1. 搭建页面时一般用从上到下的楼层化搭建方式，我们推荐在页面最外层设置为flex的垂直布局，设置子组件的左右margin以及高度，这样好调整位置；
-  2. 将页面从上到下分成顶部信息、个人信息、中间入口、底部按钮四个部分；
+  1. 将页面从上到下分成顶部信息、个人信息、中间入口、底部按钮四个部分；
+  2. 顶部信息部分，注意需要预留系统状态栏和右上角胶囊按钮的安全区域，避免遮挡内容；
   3. 个人信息部分，图文编排卡片，用flex布局实现左右布局；
-  4. 中间入口是竖排的入口，为了方便上下调整，我们可以使用flex布局；
+    其中
+    - 头像固定宽度64，右侧用户信息容器配置宽度自适应(width=auto)；
+    - 内部的间距由头像的左外间距+用户信息的右外间距组成；
+  4. 中间入口是竖排的入口，使用高度适应内容，保证不会内容溢出；
   5. 底部居下固定的修改个人信息的按钮；
 
   ${fileFormat({
     content: `["_root_",":root","setLayout",{"height": 820}]
     ["_root_",":root","doConfig",{"path":"root/标题","value":"个人中心页面框架"}]
-    ["_root_",":root","doConfig",{"path":"页面/基础属性/作为标签页","value":true}]
-    ["_root_",".mybricks-tabItem","doConfig",{"path":"常规/标签名","value":"个人中心页面框架"}]
     ["_root_",":root","doConfig",{"path":"root/布局","value":{"display":"flex","flexDirection":"column","alignItems":"center"}}]
     ["_root_",":root","doConfig",{"path":"root/样式","style":{"background":"#F5F5F5"}}]
-    ["_root_","_rootSlot_","addChild",{"title":"顶部信息","ns":"some.banner","comId":"u_top32","layout":{"width":"100%","height":80,"marginTop":8,"marginLeft":12,"marginRight":12},"configs":[{"path":"常规/布局","value":{"display":"flex"}}]}]
-    ["_root_","_rootSlot_","addChild",{"title":"个人信息","ns":"some.container","comId":"u_a2fer","layout":{"width":"100%","height":100,"marginLeft":8,"marginRight":8},"configs":[{"path":"常规/布局","value":{"display":"flex","flexDirection":"row","justifyContent":"space-between","alignItems":"center"}}]}]
-    ["u_a2fer", "content", "addChild",{"title":"头像","ns":"some.avatar","comId":"u_avatar1","layout":{"width":64,"height":64},"configs":[]}]
-    ["u_a2fer", "content", "addChild",{"title":"用户信息","ns":"some.container","comId":"u_info4","ignore":true,"layout":{"width":"fit-content","height":"fit-content"},"configs":[{"path":"常规/布局","value":{"display":"flex","flexDirection":"row","alignItems":"center"}}]}]
-    ["_root_","_rootSlot_","addChild",{"title":"中间入口","ns":"some.container","comId":"u_iiusd7","layout":{"width":"100%","height":200,"marginLeft":8,"marginRight":8},"configs":[{"path":"常规/布局","value":{"display":"flex","flexDirection":"column"}}]}]
+    ["_root_","_rootSlot_","addChild",{"title":"顶部信息","ns":"some.banner","comId":"u_top32","layout":{"width":"100%","height":80,"marginTop":10,"marginLeft":10,"marginRight":10},"configs":[{"path":"常规/布局","value":{"display":"flex"}}]}]
+    ["_root_","_rootSlot_","addChild",{"title":"个人信息","ns":"some.container","comId":"u_a2fer","layout":{"width":"100%","height":"fit-content","marginLeft":5,"marginRight":5},"configs":[{"path":"常规/布局","value":{"display":"flex","flexDirection":"row","justifyContent":"space-between","alignItems":"center"}}]}]
+    ["u_a2fer", "content", "addChild",{"title":"头像","ns":"some.avatar","comId":"u_avatar1","layout":{"width":64,"height":64,"marginLeft":5,"marginRight":10},"configs":[]}]
+    ["u_a2fer", "content", "addChild",{"title":"用户信息","ns":"some.container","comId":"u_info4","ignore":true,"layout":{"width":"auto","height":"fit-content","marginRight": 5},"configs":[{"path":"常规/布局","value":{"display":"flex","flexDirection":"row","alignItems":"center"}}]}]
+    ["_root_","_rootSlot_","addChild",{"title":"中间入口","ns":"some.container","comId":"u_iiusd7","layout":{"width":"100%","height":"fit-content","marginLeft":5,"marginRight":5},"configs":[{"path":"常规/布局","value":{"display":"flex","flexDirection":"column"}}]}]
+    ["u_iiusd7", "content", "addChild",{"title":"隐私协议","ns":"some.container","comId":"u_pricy1","enhance":true,"layout":{"width":100,"height":"fit-content"},"configs":[]}]
     ["_root_","_rootSlot_","addChild",{"title":"底部固定按钮","comId":"u_btm21","ns":"some.container","layout":{"width":"100%","height":84,"position":"fixed","bottom":0,"left":0},"configs":[{"path":"常规/布局","value":{"display":"flex"}}]}]`,
     fileName: '生成个人中心页面操作步骤.json'
   })}
 
   注意：
+  - 个人信息横向擦用固定 + 自适应方式，是常见的横向布局示例，保证内容拓展还能维持原有布局；
+  - 各类组件在flex布局下建议使用height=fit-content来自适应高度，比如个人信息、中间入口等，减少计算错误的可能；
+  - 整体遵循5px网格间距系统，包括模块间距为10=5*2；
   - 用户信息布局组件父组件为布局组件，且仅承担布局功能，不承担样式、点击功能，我们添加ignore标记来优化。
+  - 隐私协议为图文信息入口，大概率有点击事件，所以用enhance标记来优化。
 </assistant_response>
 </example>
 
@@ -478,17 +371,13 @@ function generatePageActionExamplesPrompts() {
   所以提供一个flex容器，确定子组件的宽度，并将内容平铺上去。
   
   首先，必须根据页面内容设置一个合适的页面的高度。
-  其次，必须对页面布局设置为flex布局，且为垂直方向的布局。不要在页面中再放置容器组件来做布局，这样会增加不必要的复杂度。
-  注意这个action是必须的，因为页面内容区必须是flex布局，不然会重叠在一起导致错位: ["_root_",":root","doConfig",{"path":"页面/内容区/布局","value":{"display":"flex","flexDirection":"column","alignItems":"center"}}]
-  注意对于容器组件，绝对不能在style中设置margin属性，这样会导致布局错乱，必须在layout中设置margin属性。
+  其次，必须对页面布局设置一个合理的布局。
   
   ${fileFormat({
     content: `["_root_",":root","setLayout",{"height": 360}]
     ["_root_",":root","doConfig",{"path":"root/标题","value":"一行三列的导航"}]
-    ["_root_",":root","doConfig",{"path":"页面/基础属性/作为标签页","value":true}]
-    ["_root_",".mybricks-tabItem","doConfig",{"path":"常规/标签名","value":"一行三列的导航"}]
     ["_root_",":root","doConfig",{"path":"root/布局","value":{"display":"flex","flexDirection":"column","alignItems":"center"}}]
-    ["_root_","_rootSlot_","addChild",{"title":"Flex容器","ns":"some.container","comId":"u_iiusd7","layout":{"width":"100%","height":200,"marginLeft":8,"marginRight":8},"configs":[{"path":"常规/布局","value":{"display":"flex","flexDirection":"row","justifyContent":"space-between","alignItems":"center","flexWrap":"wrap"}}]}]
+    ["_root_","_rootSlot_","addChild",{"title":"Flex容器","ns":"some.container","comId":"u_iiusd7","enhance":true,"layout":{"width":"100%","height":"fit-content","marginLeft":5,"marginRight":5},"configs":[{"path":"常规/布局","value":{"display":"flex","flexDirection":"row","justifyContent":"space-between","alignItems":"center","flexWrap":"wrap"}}]}]
     ["u_iiusd7","content","addChild",{"title":"导航1","ns":"some.icon","comId":"u_icon1","layout":{"width":120,"height":120,"marginTop":8},"configs":[{"path":"样式/文本","style":{"background":"#0000FF"}}]}]`,
     fileName: '一行三列导航操作步骤.json'
   })}
