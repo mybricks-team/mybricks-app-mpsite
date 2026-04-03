@@ -55,7 +55,7 @@
     "@mybricks/sdk-for-ai":"1.0.1"
   },
   "dependencies": {
-    "@mybricks/plugin-ai": "^0.0.1",
+    "@mybricks/plugin-ai": "^0.0.4",
     "@mybricks/editors-domain-common": "^1.0.99-beta0",
     "@mybricks/file-parser": "^1.0.19",
     "@mybricks/plugin-connector-http": "^1.2.35",

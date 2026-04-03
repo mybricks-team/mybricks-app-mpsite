@@ -23,14 +23,19 @@ function systemAppendPrompts () {
 <对于当前搭建有以下特殊上下文>
 <搭建画布信息>
   当前搭建的是微信小程序，不使用默认顶部导航栏时，需要关注系统顶部状态栏和右上角胶囊按钮。
-    比如：
-      1.提供顶部安全区域，建议配置30；
-      2.提供右上角胶囊按钮安全区域，坐标为(375-100, 44)，宽高为(100, 32)；
+    - 提供顶部安全区域，建议配置44；
+    - 提供右上角胶囊栏安全区域，建议配置paddingRight: 100；胶囊栏高度40，注意对齐问题；
+    - 发散思考，不止顶部导航/标题栏，涉及页面顶部第一块区域，都需要考虑安全区域问题；
+    - 尽可能避免页面右上角设计操作元素；
   当前搭建画布的宽度为375，所有元素的尺寸需要关注此信息，且尽可能自适应宽度进行布局。
     比如：
       1.布局需要自适应画布宽度，考虑100%通栏，要么配置宽度+间距；
-      2.配置上下左右和宽度高度时，一定要基于画布尺寸进行合理的计算；
+      2.多个区块相同左右边距时，建议使用普通容器包裹，flex的垂直布局 + 左右padding实现；
+      3.禁止使用100%通栏 + 左右margin，否则会导致元素超出画布宽度；
+      4.配置上下左右和宽度高度时，一定要基于画布尺寸进行合理的计算；
+      5.使用宽度+间距时，注意样式协调，例如宽345+左外边距15，使元素居中显示；
   特殊地，系统已经内置了底部导航栏和顶部导航栏，仅关注页面内容即可，不用实现此部分内容。
+  不允许添加ignore标记。
   最后，必须给页面设置页面高度。
 </搭建画布信息>
 
@@ -164,9 +169,11 @@ ${fileFormat({
 
 # 内容结构（自上而下）
 
-## 顶部状态区
-- 用户问候语：“早上好，张**”（带头像，圆形 40px）
-- 右侧：消息通知图标 + 安全锁图标（表示当前会话安全）
+## 顶部
+- 顶部安全区 44px
+- 内容区(paddingRight: 100px;避免遮挡胶囊栏)
+  - 用户问候语：“早上好，张**”（带头像，圆形 40px）
+  - 右侧：消息通知图标 + 安全锁图标（表示当前会话安全）
 
 ## 核心资产卡片（渐变色重点模块）
 - **背景**：线性渐变 （或深蓝→金色）
@@ -261,12 +268,13 @@ ${fileFormat({
 
 # 内容结构
 
-## 顶部区域
-- 布局整体上内边距下移约 88px，避免遮挡系统状态栏和右上角胶囊栏遮挡。
-- **主标题**：“灵活高效的问卷/考试工具”（28px，加粗）
-- **副标题**：“累计创建问卷200万份”（14px，灰色）
-- **品牌标识**：左侧显示Logo，右侧为居右上角的“新手引导”按钮（绿色圆角矩形）
-- **用户动态提示**：一行小字“吴彦祖正在创建问卷...”，下方配一组圆形用户头像（最多5个）
+## 顶部
+- 顶部安全区 44px
+- 内容区
+  - **主标题**：“灵活高效的问卷/考试工具”（28px，加粗）
+  - **副标题**：“累计创建问卷200万份”（14px，灰色）
+  - **品牌标识**：左侧显示Logo，右侧为居右上角的“新手引导”按钮（绿色圆角矩形）
+  - **用户动态提示**：一行小字“吴彦祖正在创建问卷...”，下方配一组圆形用户头像（最多5个）
 
 ## 核心功能区（两栏布局）
 - **左侧主卡片**蓝色渐变背景：
@@ -327,40 +335,44 @@ function generatePageActionExamplesPrompts() {
 <user_query>搭建一个个人中心页面框架</user_query>
 <assistant_response>
   首先，必须根据页面内容设置一个合适的页面的高度。
-  其次，必须对页面布局设置一个合理的布局,搭建页面时一般用从上到下的楼层化搭建方式，我们推荐在页面最外层设置为flex的垂直布局，设置子组件的左右margin以及高度，这样好调整位置。
+  其次，必须对页面布局设置一个合理的布局,搭建页面时一般用从上到下的楼层化搭建方式，我们推荐在页面最外层设置为flex的垂直布局；
+    拥有相同左右边距的区块，我们推荐普通容器包裹，flex的垂直布局 + 左右padding实现。
 
   然后
   基于用户当前的选择上下文，我们来实现一个个人中心页面框架，由于是框架，所以我仅给出主体部分，思考过程如下：
   1. 将页面从上到下分成顶部信息、个人信息、中间入口、底部按钮四个部分；
   2. 顶部信息部分，注意需要预留系统状态栏和右上角胶囊按钮的安全区域，避免遮挡内容；
-  3. 个人信息部分，图文编排卡片，用flex布局实现左右布局；
+  3. 内容布局容器，包含个人信息、中间入口部分，用flex布局实现上下布局，设置padding统一左右边距为10px；
+  4. 个人信息部分，图文编排卡片，用flex布局实现左右布局；
     其中
     - 头像固定宽度64，右侧用户信息容器配置宽度自适应(width=auto)；
-    - 内部的间距由头像的左外间距+用户信息的右外间距组成；
-  4. 中间入口是竖排的入口，使用高度适应内容，保证不会内容溢出；
-  5. 底部居下固定的修改个人信息的按钮；
+    - 内部的间距由头像的左外间距+用户信息的左外间距组成；
+  5. 中间入口是竖排的入口，使用高度适应内容，保证不会内容溢出；
+  6. 底部居下固定的修改个人信息的按钮；
 
   ${fileFormat({
     content: `["_root_",":root","setLayout",{"height": 820}]
     ["_root_",":root","doConfig",{"path":"root/标题","value":"个人中心页面框架"}]
     ["_root_",":root","doConfig",{"path":"root/布局","value":{"display":"flex","flexDirection":"column","alignItems":"center"}}]
     ["_root_",":root","doConfig",{"path":"root/样式","style":{"background":"#F5F5F5"}}]
-    ["_root_","_rootSlot_","addChild",{"title":"顶部信息","ns":"some.banner","comId":"u_top32","layout":{"width":"100%","height":80,"marginTop":10,"marginLeft":10,"marginRight":10},"configs":[{"path":"常规/布局","value":{"display":"flex"}}]}]
-    ["_root_","_rootSlot_","addChild",{"title":"个人信息","ns":"some.container","comId":"u_a2fer","layout":{"width":"100%","height":"fit-content","marginLeft":5,"marginRight":5},"configs":[{"path":"常规/布局","value":{"display":"flex","flexDirection":"row","justifyContent":"space-between","alignItems":"center"}}]}]
-    ["u_a2fer", "content", "addChild",{"title":"头像","ns":"some.avatar","comId":"u_avatar1","layout":{"width":64,"height":64,"marginLeft":5,"marginRight":10},"configs":[]}]
-    ["u_a2fer", "content", "addChild",{"title":"用户信息","ns":"some.container","comId":"u_info4","ignore":true,"layout":{"width":"auto","height":"fit-content","marginRight": 5},"configs":[{"path":"常规/布局","value":{"display":"flex","flexDirection":"row","alignItems":"center"}}]}]
-    ["_root_","_rootSlot_","addChild",{"title":"中间入口","ns":"some.container","comId":"u_iiusd7","layout":{"width":"100%","height":"fit-content","marginLeft":5,"marginRight":5},"configs":[{"path":"常规/布局","value":{"display":"flex","flexDirection":"column"}}]}]
+    ["_root_","_rootSlot_","addChild",{"title":"顶部信息","ns":"some.banner","comId":"u_top32","layout":{"width":"100%","height":80},"configs":[{"path":"常规/布局","value":{"display":"flex"}},{"path":"样式/文本","style":{"paddingTop":"10px","paddingLeft":"10px","paddingBottom":"10px","paddingRight":"100px"}}]}]
+    ["_root_","_rootSlot_","addChild",{"title":"内容布局容器","ns":"some.container","comId":"u_scroll1","layout":{"width":"100%","height":"fit-content"},"configs":[{"path":"常规/布局","value":{"display":"flex","flexDirection":"column"}},{"path":"样式/样式","style":{"padding":"0 10px"}}]}]
+    ["u_scroll1","content","addChild",{"title":"个人信息","ns":"some.container","comId":"u_a2fer","layout":{"width":"100%","height":"fit-content"},"configs":[{"path":"常规/布局","value":{"display":"flex","flexDirection":"row","alignItems":"center"}}]}]
+    ["u_a2fer", "content", "addChild",{"title":"头像","ns":"some.avatar","comId":"u_avatar1","layout":{"width":64,"height":64,"marginLeft":10},"configs":[]}]
+    ["u_a2fer", "content", "addChild",{"title":"用户信息","ns":"some.container","comId":"u_info4","layout":{"width":"auto","height":"fit-content","marginLeft": 10},"configs":[{"path":"常规/布局","value":{"display":"flex","flexDirection":"row","alignItems":"center"}}]}]
+    ["u_scroll1","content","addChild",{"title":"中间入口","ns":"some.container","comId":"u_iiusd7","layout":{"width":"100%","height":"fit-content"},"configs":[{"path":"常规/布局","value":{"display":"flex","flexDirection":"column"}}]}]
     ["u_iiusd7", "content", "addChild",{"title":"隐私协议","ns":"some.container","comId":"u_pricy1","enhance":true,"layout":{"width":100,"height":"fit-content"},"configs":[]}]
     ["_root_","_rootSlot_","addChild",{"title":"底部固定按钮","comId":"u_btm21","ns":"some.container","layout":{"width":"100%","height":84,"position":"fixed","bottom":0,"left":0},"configs":[{"path":"常规/布局","value":{"display":"flex"}}]}]`,
     fileName: '生成个人中心页面操作步骤.json'
   })}
 
   注意：
-  - 个人信息横向擦用固定 + 自适应方式，是常见的横向布局示例，保证内容拓展还能维持原有布局；
+  - 个人信息横向采用固定 + 自适应方式，是常见的横向布局示例，保证内容拓展还能维持原有布局；
   - 各类组件在flex布局下建议使用height=fit-content来自适应高度，比如个人信息、中间入口等，减少计算错误的可能；
   - 整体遵循5px网格间距系统，包括模块间距为10=5*2；
-  - 用户信息布局组件父组件为布局组件，且仅承担布局功能，不承担样式、点击功能，我们添加ignore标记来优化。
   - 隐私协议为图文信息入口，大概率有点击事件，所以用enhance标记来优化。
+  - 外边距margin只能使用marginTop、marginLeft；框架不能使用margin、marginRight、marginBottom
+  - 外边距margin需要在**layout**里面添加，不能在configs里添加；
 </assistant_response>
 </example>
 
@@ -376,14 +388,41 @@ function generatePageActionExamplesPrompts() {
   ${fileFormat({
     content: `["_root_",":root","setLayout",{"height": 360}]
     ["_root_",":root","doConfig",{"path":"root/标题","value":"一行三列的导航"}]
-    ["_root_",":root","doConfig",{"path":"root/布局","value":{"display":"flex","flexDirection":"column","alignItems":"center"}}]
-    ["_root_","_rootSlot_","addChild",{"title":"Flex容器","ns":"some.container","comId":"u_iiusd7","enhance":true,"layout":{"width":"100%","height":"fit-content","marginLeft":5,"marginRight":5},"configs":[{"path":"常规/布局","value":{"display":"flex","flexDirection":"row","justifyContent":"space-between","alignItems":"center","flexWrap":"wrap"}}]}]
+    ["_root_",":root","doConfig",{"path":"root/布局","value":{"display":"flex","flexDirection":"column"}}]
+    ["_root_","_rootSlot_","addChild",{"title":"Flex容器","ns":"some.container","comId":"u_iiusd7","enhance":true,"layout":{"width":365","height":"fit-content",marginLeft:"5px"},"configs":[{"path":"常规/布局","value":{"display":"flex","flexDirection":"row","justifyContent":"space-between","alignItems":"center","flexWrap":"wrap"}}]}]
     ["u_iiusd7","content","addChild",{"title":"导航1","ns":"some.icon","comId":"u_icon1","layout":{"width":120,"height":120,"marginTop":8},"configs":[{"path":"样式/文本","style":{"background":"#0000FF"}}]}]`,
     fileName: '一行三列导航操作步骤.json'
   })}
 
 注意：
-  - 这个Flex容器是根组件的直接子组件，所以不允许添加ignore标记。
+  - 外边距margin只能使用marginTop、marginLeft；框架不能使用margin、marginRight、marginBottom
+  - 外边距margin需要在**layout**里面添加，不能在configs里添加；
+</assistant_response>
+</example>
+
+<example>
+<user_query>添加一个带操作按钮的顶部导航/标题栏</user_query>
+<assistant_response>
+    1. **整体**: 背景色与页面风格一致，宽度通栏 375px
+    2. **顶部**: 高度44px 状态栏占位区（纯色背景，无内容）
+    3. **内容区**:
+      - 整体为一个横向布局容器；
+      - 高度 40px，与胶囊按钮对齐；左内边距 12px，右侧 paddingRight 100px，避免内容被遮挡
+      - 左侧放置返回图标，用于页面返回操作；
+      - 中间放置标题文本，居中展示页面名称；
+      - 右侧放置操作按钮图标（如分享、更多等），与胶囊按钮区域不重叠；
+  
+  ${fileFormat({
+    content: `["_root_",":root","setLayout",{"height": 100}}]
+    ["_root_","_rootSlot_","addChild",{"title":"顶部导航栏","comId":"u_box01","ns":"mb.containerBasic","layout":{"width":"100%","height":"fit-content"},"configs":[{"path":"普通容器/基础属性/布局","value":{"display":"flex","flexDirection":"column"}},{"path":"样式/样式","style":{"background":"#464646"}}]}]
+["u_box01","content","addChild",{"title":"状态栏占位","comId":"u_sbar1","ns":"mb.containerBasic","layout":{"width":"100%","height":44},"configs":[{"path":"普通容器/基础属性/布局","value":{"display":"flex","flexDirection":"row"}}]}]
+["u_box01","content","addChild",{"title":"顶部导航栏","comId":"u_nav01","ns":"mb.containerBasic","layout":{"width":"100%","height":40},"configs":[{"path":"普通容器/基础属性/布局","value":{"display":"flex","flexDirection":"row","alignItems":"center","justifyContent":"space-between"}},{"path":"样式/样式","style":{"paddingLeft":"12px","paddingRight":"100px"}}]}]
+["u_nav01","content","addChild",{"title":"返回图标","comId":"u_back1","ns":"mb.icon","layout":{"width":24,"height":24},"configs":[{"path":"常规/图标设置/图标","value":"HM_arrow_left"},{"path":"常规/图标设置/大小","value":20},{"path":"常规/图标设置/颜色","value":"#ffffff"}]}]
+["u_nav01","content","addChild",{"title":"导航栏标题","comId":"u_navt1","ns":"mb.text","layout":{"width":"auto","height":"fit-content"},"configs":[{"path":"常规/基础属性/文本内容","value":"页面标题"},{"path":"样式/样式","style":{"fontSize":"16px","color":"#ffffff","fontWeight":"600","lineHeight":"22px","textAlign":"center"}}]}]
+["u_nav01","content","addChild",{"title":"操作图标","comId":"u_more1","ns":"mb.icon","layout":{"width":24,"height":24},"configs":[{"path":"常规/图标设置/图标","value":"HM_more"},{"path":"常规/图标设置/大小","value":20},{"path":"常规/图标设置/颜色","value":"#ffffff"}]}]`,
+    fileName: '带操作按钮的顶部导航栏操作步骤.json'
+  })}
+
 </assistant_response>
 </example>`
 }
