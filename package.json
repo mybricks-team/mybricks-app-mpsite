@@ -1,6 +1,6 @@
 {
   "name": "mybricks-app-mpsite",
-  "version": "0.5.146",
+  "version": "0.5.148",
   "description": "小程序和H5的多端解决方案",
   "scripts": {
     "start:dev": "cross-env NODE_ENV=development TS_NODE_SKIP_IGNORE=true node nodejs/index.ts",
